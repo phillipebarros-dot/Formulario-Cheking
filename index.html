@@ -42,11 +42,7 @@
       font-weight: bold;
       color: #2c3e50;
     }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    select,
-    textarea {
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -130,10 +126,9 @@
 <body>
   <div class="container">
     <h1>CHECKING OPUSMÚLTIPLA</h1>
-
     <div class="attention-box" role="alert" aria-live="assertive">
       ATENÇÃO<br />
-      SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
+      Só aceitaremos checkings enviados por meio de arquivos; links não serão permitidos. O não envio dos relatórios conforme as especificações descritas aqui e nas PIs acarretará no não pagamento das veiculações, até que os relatórios sejam enviados conforme as orientações passadas na contratação da mídia (PI).
     </div>
 
     <form id="checkingForm" enctype="multipart/form-data" novalidate>
@@ -200,7 +195,7 @@
   </div>
 
   <script>
-    (async function () {
+    (function () {
       const form = document.getElementById('checkingForm');
       const fileUpload = document.getElementById('fileUpload');
       const fileInput = document.getElementById('comprovantes');
@@ -219,7 +214,6 @@
       let piFetchController = null;
 
       fileUpload.addEventListener('click', () => fileInput.click());
-
       fileInput.addEventListener('change', (e) => {
         for (const file of e.target.files) {
           files.push(file);
@@ -261,12 +255,10 @@
           piStatus.textContent = '';
           return;
         }
-
         if (piFetchController) {
           piFetchController.abort();
         }
         piFetchController = new AbortController();
-
         piStatus.textContent = 'Buscando dados da PI...';
         piStatus.style.color = '#3498db';
         errorMessage.style.display = 'none';
@@ -279,6 +271,11 @@
             signal: piFetchController.signal,
           });
 
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Erro de comunicação com o servidor.');
+          }
+
           const data = await response.json();
 
           if (data.error) {
@@ -288,7 +285,7 @@
             campanhaInput.value = '';
             produtoInput.value = '';
             periodoInput.value = '';
-          } else if (data.success) {
+          } else if (data.cliente) {
             piStatus.textContent = 'Dados da PI carregados.';
             piStatus.style.color = '#2ecc71';
             clienteInput.value = data.cliente || '';
@@ -299,7 +296,7 @@
               veiculoSelect.value = data.veiculo;
             }
           } else {
-            piStatus.textContent = 'Resposta inesperada do servidor.';
+            piStatus.textContent = 'PI não encontrada.';
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
             campanhaInput.value = '';
@@ -308,7 +305,11 @@
           }
         } catch (error) {
           if (error.name !== 'AbortError') {
-            piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+            if (error.message === 'Failed to fetch') {
+              piStatus.textContent = 'Falha na comunicação com o servidor. Verifique sua conexão ou tente novamente mais tarde.';
+            } else {
+              piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+            }
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
             campanhaInput.value = '';
@@ -329,12 +330,15 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const formData = new FormData(form);
+        if (files.length === 0) {
+          showError('Por favor, insira pelo menos um arquivo de comprovante.');
+          return;
+        }
 
+        const formData = new FormData(form);
         files.forEach((file) => {
           formData.append('comprovantes', file);
         });
-
         formData.append('action', 'submissao');
 
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
@@ -374,7 +378,11 @@
             }
           })
           .catch((error) => {
-            showError('Erro ao enviar formulário: ' + error.message);
+            if (error.message === 'Failed to fetch') {
+              showError('Falha na comunicação com o servidor. Verifique sua conexão ou tente novamente mais tarde.');
+            } else {
+              showError('Erro ao enviar formulário: ' + error.message);
+            }
           });
       });
     })();
