@@ -1,153 +1,375 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Formulário de Checking</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checking OpusMúltipla</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-    #pi-status { margin-top: 5px; font-size: 0.9em; }
-    #error-message { color: #e74c3c; margin-top: 10px; display: none; }
-    button { margin-top: 15px; padding: 10px 15px; background: #3498db; color: #fff; border: none; cursor: pointer; }
-    button:hover { background: #2980b9; }
+    /* Estilos básicos para o formulário */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    /* Estilo para a mensagem de atenção */
+    .attention-box {
+      background-color: #fff8e1;
+      border-left: 6px solid #f39c12;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      font-weight: bold;
+      color: #b35e00;
+      font-size: 1rem;
+      line-height: 1.4;
+      border-radius: 4px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .file-upload {
+      margin-top: 10px;
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #666;
+      user-select: none;
+    }
+    .file-upload:hover {
+      border-color: #3498db;
+      color: #3498db;
+    }
+    .file-upload span {
+      font-weight: bold;
+      color: #3498db;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .file-list {
+      margin-top: 10px;
+    }
+    .file-item {
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 15px;
+      background-color: #2c3e50;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1a252f;
+    }
+    .success-message {
+      background-color: #2ecc71;
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+    .error-message {
+      background-color: #e74c3c;
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+    .loading-message {
+      color: #3498db;
+      font-weight: bold;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>CHECKING OPUSMÚLTIPLA</h1>
 
-  <h1>Formulário de Checking</h1>
+    <div class="attention-box" role="alert" aria-live="assertive">
+      ATENÇÃO<br />
+      SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
+    </div>
 
-  <form id="checking-form">
-    <label for="telefone">Telefone *</label>
-    <input type="text" id="telefone" placeholder="(00) 00000-0000">
+    <form id="checkingForm" enctype="multipart/form-data" novalidate>
+      <label for="nome">Nome *</label>
+      <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
 
-    <label for="email">E-mail *</label>
-    <input type="email" id="email" placeholder="seu@email.com">
+      <label for="telefone">Telefone *</label>
+      <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" />
 
-    <label for="npi">Número da PI *</label>
-    <input type="text" id="npi" placeholder="Digite o número da PI">
-    <div id="pi-status"></div>
+      <label for="email">E-mail *</label>
+      <input type="email" id="email" name="email" required placeholder="seu@email.com" />
 
-    <label for="cliente">Cliente *</label>
-    <input type="text" id="cliente" placeholder="Nome do cliente">
+      <label for="pi">Número da PI *</label>
+      <input type="text" id="pi" name="pi" required placeholder="Ex: 24-001" aria-describedby="piStatus" autocomplete="off" />
+      <div id="piStatus" class="loading-message" aria-live="polite" role="status"></div>
 
-    <label for="veiculo">Veículo *</label>
-    <select id="veiculo">
-      <option value="">Selecione o veículo</option>
-      <option value="TV">TV</option>
-      <option value="Rádio">Rádio</option>
-      <option value="Online">Online</option>
-      <option value="Outro">Outro</option>
-    </select>
-    <small>Este campo pode ser alterado manualmente.</small>
+      <label for="cliente">Cliente *</label>
+      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" readonly />
 
-    <label for="campanha">Campanha *</label>
-    <input type="text" id="campanha" placeholder="Nome da campanha">
+      <label for="veiculo">Veículo *</label>
+      <select id="veiculo" name="veiculo" required aria-describedby="veiculoHelp">
+        <option value="">Selecione o veículo</option>
+        <option value="DO">DOOH - Digital Out of Home</option>
+        <option value="ME">Mídia Exterior - MUB estático</option>
+        <option value="MO">Mídia Exterior - Metrô estático</option>
+        <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
+        <option value="OD">Mídia Exterior - Outdoor</option>
+        <option value="FL">Mídia Exterior - Fronts</option>
+        <option value="MI">Mídia Interna estática</option>
+        <option value="RD">Rádio</option>
+        <option value="CI">Cinema</option>
+        <option value="JO">Mídia Impressa - Jornal</option>
+        <option value="RV">Mídia Impressa - Revista</option>
+        <option value="AT">Projetos Especiais - Ativação</option>
+        <option value="TV">TV</option>
+        <option value="IN">Internet</option>
+      </select>
+      <small id="veiculoHelp" style="color:#666;">Este campo pode ser alterado manualmente.</small>
 
-    <label for="produto">Produto *</label>
-    <input type="text" id="produto" placeholder="Nome do produto">
+      <label for="campanha">Campanha *</label>
+      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly />
 
-    <label for="periodo">Período *</label>
-    <input type="text" id="periodo" placeholder="Período">
+      <label for="produto">Produto *</label>
+      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" readonly />
 
-    <div id="error-message"></div>
+      <label for="periodo">Período *</label>
+      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly />
 
-    <button type="submit">Enviar</button>
-  </form>
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
+
+      <label for="comprovantes">Insira os comprovantes (arquivos) *</label>
+      <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-label="Área para arrastar e soltar arquivos ou clicar para navegar">
+        Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
+        <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
+      </div>
+      <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
+    <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
+  </div>
 
   <script>
-    const npiInput = document.getElementById('npi');
-    const clienteInput = document.getElementById('cliente');
-    const veiculoSelect = document.getElementById('veiculo');
-    const campanhaInput = document.getElementById('campanha');
-    const produtoInput = document.getElementById('produto');
-    const periodoInput = document.getElementById('periodo');
-    const piStatus = document.getElementById('pi-status');
-    const errorMessage = document.getElementById('error-message');
+    (function () {
+      const form = document.getElementById('checkingForm');
+      const fileUpload = document.getElementById('fileUpload');
+      const fileInput = document.getElementById('comprovantes');
+      const fileList = document.getElementById('fileList');
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      const piInput = document.getElementById('pi');
+      const piStatus = document.getElementById('piStatus');
+      const clienteInput = document.getElementById('cliente');
+      const campanhaInput = document.getElementById('campanha');
+      const produtoInput = document.getElementById('produto');
+      const periodoInput = document.getElementById('periodo');
+      const veiculoSelect = document.getElementById('veiculo');
 
-    let piFetchController = null;
+      let files = [];
+      let piFetchController = null;
 
-    // Função para buscar dados da PI no n8n
-    async function buscarDadosPI(npi) {
-      if (!npi) {
-        clienteInput.value = '';
-        campanhaInput.value = '';
-        produtoInput.value = '';
-        periodoInput.value = '';
-        piStatus.textContent = '';
-        return;
-      }
+      fileUpload.addEventListener('click', () => fileInput.click());
 
-      if (piFetchController) piFetchController.abort();
-      piFetchController = new AbortController();
+      fileInput.addEventListener('change', (e) => {
+        for (const file of e.target.files) {
+          files.push(file);
+        }
+        updateFileList();
+      });
 
-      piStatus.textContent = 'Buscando dados da PI...';
-      piStatus.style.color = '#3498db';
-      errorMessage.style.display = 'none';
-
-      try {
-        const response = await fetch('https://n8n.grupoom.com.br/webhook/CheckingForm', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
-          signal: piFetchController.signal,
+      function updateFileList() {
+        fileList.innerHTML = '';
+        files.forEach((file, index) => {
+          const div = document.createElement('div');
+          div.className = 'file-item';
+          div.textContent = file.name + ' ';
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.textContent = 'Remover';
+          removeBtn.style.marginLeft = '10px';
+          removeBtn.onclick = () => {
+            files.splice(index, 1);
+            updateFileList();
+          };
+          div.appendChild(removeBtn);
+          fileList.appendChild(div);
         });
+      }
 
-        const data = await response.json();
-        console.log('Resposta do n8n:', data);
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      }
+      
+      async function buscarDadosPI(npi) {
+        if (!npi) {
+          clienteInput.value = '';
+          campanhaInput.value = '';
+          produtoInput.value = '';
+          periodoInput.value = '';
+          piStatus.textContent = '';
+          return;
+        }
 
-        if (!response.ok) throw new Error(data.error || 'Erro de comunicação com o servidor.');
+        if (piFetchController) {
+          piFetchController.abort();
+        }
+        piFetchController = new AbortController();
 
-        if (Array.isArray(data) && data.length > 0) {
-          const piInfo = data[0];
-          piStatus.textContent = 'Dados da PI carregados.';
-          piStatus.style.color = '#2ecc71';
+        piStatus.textContent = 'Buscando dados da PI...';
+        errorMessage.style.display = 'none';
 
-          clienteInput.value = piInfo.CLIENTE || '';
-          campanhaInput.value = piInfo.CAMPANHA || '';
-          produtoInput.value = piInfo.PRODUTO || '';
-          periodoInput.value = piInfo.PERIODO || '';
+        try {
+          const response = await fetch('https://n8n.grupoom.com.br/webhook-test/CheckingForm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+            signal: piFetchController.signal,
+          });
 
-          if (!veiculoSelect.value && piInfo.MEIO) {
-            veiculoSelect.value = piInfo.MEIO;
+          const data = await response.json();
+          
+          if (!response.ok) {
+             throw new Error(data.error || 'Erro de comunicação com o servidor.');
           }
-        } else {
-          piStatus.textContent = 'PI não encontrada.';
-          piStatus.style.color = '#e74c3c';
-          clienteInput.value = '';
-          campanhaInput.value = '';
-          produtoInput.value = '';
-          periodoInput.value = '';
-        }
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
-          piStatus.style.color = '#e74c3c';
-          clienteInput.value = '';
-          campanhaInput.value = '';
-          produtoInput.value = '';
-          periodoInput.value = '';
+
+          if (data.error) {
+            piStatus.textContent = data.error;
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+          } else {
+            const piInfo = data.json; 
+            piStatus.textContent = 'Dados da PI carregados.';
+            piStatus.style.color = '#2ecc71';
+            clienteInput.value = piInfo.cliente || '';
+            campanhaInput.value = piInfo.campanha || '';
+            produtoInput.value = piInfo.produto || '';
+            periodoInput.value = piInfo.periodo || '';
+            if (!veiculoSelect.value && piInfo.veiculo) {
+              veiculoSelect.value = piInfo.veiculo;
+            }
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+          }
         }
       }
-    }
 
-    // Dispara a busca ao digitar a PI
-    npiInput.addEventListener('input', (e) => {
-      const value = e.target.value.trim();
-      if (value.length >= 3) {
-        buscarDadosPI(value);
-      } else {
-        piStatus.textContent = '';
-      }
-    });
+      let debounceTimeout;
+      piInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          buscarDadosPI(piInput.value.trim());
+        }, 500);
+      });
+      
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        
+        files.forEach((file) => {
+          formData.append('comprovantes', file);
+        });
+        
+        formData.append('action', 'submissao');
 
-    // Submissão do formulário
-    document.getElementById('checking-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Formulário enviado (apenas demonstração).');
-    });
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
+        
+        showError('Enviando, por favor aguarde...');
+
+        fetch(webhookUrl, {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then(errData => {
+                throw new Error(errData.message || 'Erro desconhecido no servidor.');
+              }).catch(() => {
+                throw new Error('Erro de comunicação com o servidor.');
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+             if (data.success) {
+                successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                form.reset();
+                files = [];
+                updateFileList();
+                piStatus.textContent = '';
+             } else {
+                throw new Error(data.message || 'Ocorreu um erro no servidor.');
+             }
+          })
+          .catch((error) => {
+            showError('Erro ao enviar formulário: ' + error.message);
+          });
+      });
+    })();
   </script>
-
 </body>
 </html>
