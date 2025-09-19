@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checking OpusMúltipla</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e67e22;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .disclaimer {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .disclaimer h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            transition: border 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--accent-color);
+        }
+        
+        .file-upload p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-label:hover {
+            background-color: #2980b9;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .remove-file {
+            color: var(--danger-color);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #1a252f;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-color);
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .error {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CHECKING OPUSMÚLTIPLA</h1>
+        </header>
+        
+        <div class="disclaimer">
+            <h3>ATENÇÃO</h3>
+            <p>SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).</p>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            Formulário enviado com sucesso! Em breve entraremos em contato.
+        </div>
+        
+        <form id="checkingForm">
+            <div class="form-group">
+                <label for="nome" class="required">Nome</label>
+                <input type="text" id="nome" name="nome" required>
+                <div class="error" id="nomeError">Por favor, informe seu nome</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefone" class="required">Telefone</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+                <div class="error" id="telefoneError">Por favor, informe um telefone válido</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="example@example.com" required>
+                <div class="error" id="emailError">Por favor, informe um e-mail válido</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="pi" class="required">N° PI</label>
+                <input type="text" id="pi" name="pi" required>
+                <div class="error" id="piError">Por favor, informe o número do PI</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="cliente" class="required">Cliente</label>
+                <input type="text" id="cliente" name="cliente" required>
+                <div class="error" id="clienteError">Por favor, informe o cliente</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="veiculo" class="required">Veículo</label>
+                <select id="veiculo" name="veiculo" required>
+                    <option value="">Selecione um veículo</option>
+                    <option value="DO">DOOH - Digital Out of Home</option>
+                    <option value="ME">Mídia Exterior - MUB estático</option>
+                    <option value="MO">Mídia Exterior - Metrô estático</option>
+                    <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
+                    <option value="OD">Mídia Exterior - Outdoor</option>
+                    <option value="FL">Mídia Exterior - Fronts</option>
+                    <option value="MI">Mídia Interna estática</option>
+                    <option value="RD">Rádio</option>
+                    <option value="CI">Cinema</option>
+                    <option value="JO">Mídia Impressa - Jornal</option>
+                    <option value="RV">Mídia Impressa - Revista</option>
+                    <option value="AT">Projetos Especiais - Ativação</option>
+                    <option value="TV">TV</option>
+                    <option value="IN">Internet</option>
+                </select>
+                <div class="error" id="veiculoError">Este campo é obrigatório</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="campanha" class="required">Campanha</label>
+                <input type="text" id="campanha" name="campanha" required>
+                <div class="error" id="campanhaError">Por favor, informe a campanha</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="produto" class="required">Produto</label>
+                <input type="text" id="produto" name="produto" required>
+                <div class="error" id="produtoError">Por favor, informe o produto</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="periodo" class="required">Período</label>
+                <input type="text" id="periodo" name="periodo" placeholder="Ex: 01/09/2025 a 30/09/2025" required>
+                <div class="error" id="periodoError">Por favor, informe o período</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Insira o comprovante</label>
+                <div class="file-upload">
+                    <p>Arraste e solte os arquivos aqui ou</p>
+                    <label for="comprovante" class="file-label">Navegar pelos arquivos</label>
+                    <input type="file" id="comprovante" class="file-input" multiple>
+                </div>
+                <div class="file-list" id="fileList"></div>
+                <div class="error" id="fileError">Pelo menos um arquivo é obrigatório</div>
+            </div>
+            
+            <button type="submit">Enviar</button>
+        </form>
+        
+        <div class="footer">
+            <p>Powered by n8n</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('checkingForm');
+            const fileInput = document.getElementById('comprovante');
+            const fileList = document.getElementById('fileList');
+            const successMessage = document.getElementById('successMessage');
+            let files = [];
+            
+            // Máscara para telefone
+            const telefoneInput = document.getElementById('telefone');
+            telefoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length <= 10) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                } else {
+                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                }
+                
+                e.target.value = value;
+            });
+            
+            // Manipulação de arquivos
+            fileInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+            
+            // Drag and drop
+            const fileUpload = document.querySelector('.file-upload');
+            fileUpload.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#3498db';
+            });
+            
+            fileUpload.addEventListener('dragleave', function() {
+                this.style.borderColor = '#ddd';
+            });
+            
+            fileUpload.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            function handleFiles(newFiles) {
+                for (let i = 0; i < newFiles.length; i++) {
+                    files.push(newFiles[i]);
+                }
+                updateFileList();
+            }
+            
+            function updateFileList() {
+                fileList.innerHTML = '';
+                files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <span class="remove-file" data-index="${index}">×</span>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+                
+                // Adicionar evento de remoção
+                document.querySelectorAll('.remove-file').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        files.splice(index, 1);
+                        updateFileList();
+                    });
+                });
+            }
+            
+            // Validação do formulário
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                document.querySelectorAll('.error').forEach(error => {
+                    error.style.display = 'none';
+                });
+                
+                let isValid = true;
+                
+                // Validar campos obrigatórios
+                const requiredFields = form.querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        document.getElementById(field.id + 'Error').style.display = 'block';
+                        isValid = false;
+                    }
+                });
+                
+                // Validar e-mail
+                const emailField = document.getElementById('email');
+                if (emailField.value && !isValidEmail(emailField.value)) {
+                    document.getElementById('emailError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validar arquivos
+                if (files.length === 0) {
+                    document.getElementById('fileError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Simular envio para o n8n (em um caso real, isso seria uma requisição para o webhook)
+                    simulateSubmission();
+                }
+            });
+            
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function simulateSubmission() {
+                // Em um caso real, aqui você faria uma requisição para o webhook do n8n
+                // Exemplo com fetch:
+                /*
+                const formData = new FormData();
+                formData.append('nome', document.getElementById('nome').value);
+                formData.append('telefone', document.getElementById('telefone').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('pi', document.getElementById('pi').value);
+                formData.append('cliente', document.getElementById('cliente').value);
+                formData.append('veiculo', document.getElementById('veiculo').value);
+                formData.append('campanha', document.getElementById('campanha').value);
+                formData.append('produto', document.getElementById('produto').value);
+                formData.append('periodo', document.getElementById('periodo').value);
+                formData.append('observacoes', document.getElementById('observacoes').value);
+                
+                files.forEach(file => {
+                    formData.append('comprovantes', file);
+                });
+                
+                fetch('https://seu-n8n.com/webhook/checking', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    files = [];
+                    updateFileList();
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao enviar o formulário. Tente novamente.');
+                });
+                */
+                
+                // Simulação de envio bem-sucedido
+                successMessage.style.display = 'block';
+                form.reset();
+                files = [];
+                updateFileList();
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                // Esconder a mensagem após 5 segundos
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
