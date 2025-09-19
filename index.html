@@ -131,7 +131,6 @@
   <div class="container">
     <h1>CHECKING OPUSMÚLTIPLA</h1>
 
-    <!-- Mensagem de atenção destacada -->
     <div class="attention-box" role="alert" aria-live="assertive">
       ATENÇÃO<br />
       SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
@@ -336,7 +335,7 @@
         piStatus.textContent = 'Buscando dados da PI...';
 
         try {
-          const response = await fetch('https://seu-n8n.com/webhook/ChekingForm', {
+          const response = await fetch('https://n8n.grupoom.com.br/webhook-test/CheckingForm', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
@@ -409,13 +408,16 @@
         formData.append('produto', form.produto.value.trim());
         formData.append('periodo', form.periodo.value.trim());
         formData.append('observacoes', form.observacoes.value.trim());
+        
+        // Adiciona a ação de submissão para o n8n identificar
+        formData.append('action', 'submissao');
 
         files.forEach((file) => {
           formData.append('comprovantes', file);
         });
 
-        // Substitua pela URL do seu webhook n8n
-        const webhookUrl = 'https://seu-n8n.com/webhook/ChekingForm';
+        // URL para testes
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
 
         fetch(webhookUrl, {
           method: 'POST',
@@ -429,13 +431,18 @@
             }
             return response.json();
           })
-          .then(() => {
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            form.reset();
-            files = [];
-            updateFileList();
-            piStatus.textContent = '';
+          .then((data) => {
+             if (data.success) {
+                successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                form.reset();
+                files = [];
+                updateFileList();
+                piStatus.textContent = '';
+             } else {
+                throw new Error(data.message || 'Ocorreu um erro no servidor.');
+             }
           })
           .catch((error) => {
             showError('Erro ao enviar formulário: ' + error.message);
