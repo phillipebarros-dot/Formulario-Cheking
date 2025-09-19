@@ -268,6 +268,7 @@
         piFetchController = new AbortController();
 
         piStatus.textContent = 'Buscando dados da PI...';
+        piStatus.style.color = '#3498db';
         errorMessage.style.display = 'none';
 
         try {
@@ -279,9 +280,9 @@
           });
 
           const data = await response.json();
-          
+
           if (!response.ok) {
-             throw new Error(data.error || 'Erro de comunicação com o servidor.');
+            throw new Error(data.error || 'Erro de comunicação com o servidor.');
           }
 
           if (data.error) {
@@ -292,18 +293,19 @@
             produtoInput.value = '';
             periodoInput.value = '';
           } else {
-            // ----- INÍCIO DA CORREÇÃO -----
-            const piInfo = data.json; // Acessa os dados dentro do objeto "json"
+            const piInfo = data;
+
             piStatus.textContent = 'Dados da PI carregados.';
             piStatus.style.color = '#2ecc71';
-            clienteInput.value = piInfo.cliente || '';
-            campanhaInput.value = piInfo.campanha || '';
-            produtoInput.value = piInfo.produto || '';
-            periodoInput.value = piInfo.periodo || '';
-            if (!veiculoSelect.value && piInfo.veiculo) {
-              veiculoSelect.value = piInfo.veiculo;
+
+            clienteInput.value = piInfo.CLIENTE || '';
+            campanhaInput.value = piInfo.CAMPANHA || '';
+            produtoInput.value = piInfo.PRODUTO || '';
+            periodoInput.value = piInfo.PERIODO || '';
+
+            if (!veiculoSelect.value && piInfo.MEIO) {
+              veiculoSelect.value = piInfo.MEIO;
             }
-            // ----- FIM DA CORREÇÃO -----
           }
         } catch (error) {
           if (error.name !== 'AbortError') {
@@ -327,17 +329,17 @@
       
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
-        
+
         files.forEach((file) => {
           formData.append('comprovantes', file);
         });
-        
+
         formData.append('action', 'submissao');
 
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-        
+
         showError('Enviando, por favor aguarde...');
 
         fetch(webhookUrl, {
@@ -346,7 +348,6 @@
         })
           .then((response) => {
             if (!response.ok) {
-              // Tenta extrair a mensagem de erro do corpo da resposta
               return response.json().then(errData => {
                 throw new Error(errData.message || 'Erro desconhecido no servidor.');
               }).catch(() => {
@@ -356,17 +357,17 @@
             return response.json();
           })
           .then((data) => {
-             if (data.success) {
-                successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-                form.reset();
-                files = [];
-                updateFileList();
-                piStatus.textContent = '';
-             } else {
-                throw new Error(data.message || 'Ocorreu um erro no servidor.');
-             }
+            if (data.success) {
+              successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
+              successMessage.style.display = 'block';
+              errorMessage.style.display = 'none';
+              form.reset();
+              files = [];
+              updateFileList();
+              piStatus.textContent = '';
+            } else {
+              throw new Error(data.message || 'Ocorreu um erro no servidor.');
+            }
           })
           .catch((error) => {
             showError('Erro ao enviar formulário: ' + error.message);
