@@ -278,12 +278,11 @@
             signal: piFetchController.signal,
           });
 
-          if (!response.ok) {
-             const errorData = await response.json().catch(() => ({ error: 'Erro de comunicação com o servidor.' }));
-             throw new Error(errorData.error || 'Erro na requisição');
-          }
-
           const data = await response.json();
+          
+          if (!response.ok) {
+             throw new Error(data.error || 'Erro de comunicação com o servidor.');
+          }
 
           if (data.error) {
             piStatus.textContent = data.error;
@@ -293,19 +292,22 @@
             produtoInput.value = '';
             periodoInput.value = '';
           } else {
+            // ----- INÍCIO DA CORREÇÃO -----
+            const piInfo = data.json; // Acessa os dados dentro do objeto "json"
             piStatus.textContent = 'Dados da PI carregados.';
             piStatus.style.color = '#2ecc71';
-            clienteInput.value = data.cliente || '';
-            campanhaInput.value = data.campanha || '';
-            produtoInput.value = data.produto || '';
-            periodoInput.value = data.periodo || '';
-            if (!veiculoSelect.value && data.veiculo) {
-              veiculoSelect.value = data.veiculo;
+            clienteInput.value = piInfo.cliente || '';
+            campanhaInput.value = piInfo.campanha || '';
+            produtoInput.value = piInfo.produto || '';
+            periodoInput.value = piInfo.periodo || '';
+            if (!veiculoSelect.value && piInfo.veiculo) {
+              veiculoSelect.value = piInfo.veiculo;
             }
+            // ----- FIM DA CORREÇÃO -----
           }
         } catch (error) {
           if (error.name !== 'AbortError') {
-            piStatus.textContent = 'Erro ao buscar dados da PI.';
+            piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
             campanhaInput.value = '';
@@ -344,7 +346,12 @@
         })
           .then((response) => {
             if (!response.ok) {
-              return response.json().then((err) => { throw new Error(err.message || 'Erro desconhecido no servidor.') });
+              // Tenta extrair a mensagem de erro do corpo da resposta
+              return response.json().then(errData => {
+                throw new Error(errData.message || 'Erro desconhecido no servidor.');
+              }).catch(() => {
+                throw new Error('Erro de comunicação com o servidor.');
+              });
             }
             return response.json();
           })
