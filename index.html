@@ -24,7 +24,6 @@
       text-align: center;
       color: #2c3e50;
     }
-    /* Estilo para a mensagem de atenção */
     .attention-box {
       background-color: #fff8e1;
       border-left: 6px solid #f39c12;
@@ -218,40 +217,45 @@
       let files = [];
       let piFetchController = null;
 
+      // Abrir seletor de arquivos ao clicar na área
       fileUpload.addEventListener('click', () => fileInput.click());
 
+      // Adicionar arquivos selecionados à lista
       fileInput.addEventListener('change', (e) => {
         for (const file of e.target.files) {
           files.push(file);
         }
-        updateFileList();
+        atualizarListaArquivos();
       });
 
-      function updateFileList() {
+      // Atualiza a lista de arquivos exibida
+      function atualizarListaArquivos() {
         fileList.innerHTML = '';
         files.forEach((file, index) => {
           const div = document.createElement('div');
           div.className = 'file-item';
           div.textContent = file.name + ' ';
-          const removeBtn = document.createElement('button');
-          removeBtn.type = 'button';
-          removeBtn.textContent = 'Remover';
-          removeBtn.style.marginLeft = '10px';
-          removeBtn.onclick = () => {
+          const btnRemover = document.createElement('button');
+          btnRemover.type = 'button';
+          btnRemover.textContent = 'Remover';
+          btnRemover.style.marginLeft = '10px';
+          btnRemover.onclick = () => {
             files.splice(index, 1);
-            updateFileList();
+            atualizarListaArquivos();
           };
-          div.appendChild(removeBtn);
+          div.appendChild(btnRemover);
           fileList.appendChild(div);
         });
       }
 
-      function showError(msg) {
+      // Exibe mensagem de erro
+      function mostrarErro(msg) {
         errorMessage.textContent = msg;
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';
       }
-      
+
+      // Função para buscar dados da PI no n8n
       async function buscarDadosPI(npi) {
         if (!npi) {
           clienteInput.value = '';
@@ -293,6 +297,7 @@
             produtoInput.value = '';
             periodoInput.value = '';
           } else {
+            // Ajuste para acessar os dados corretamente
             const piInfo = data;
 
             piStatus.textContent = 'Dados da PI carregados.';
@@ -319,6 +324,7 @@
         }
       }
 
+      // Debounce para evitar muitas requisições ao digitar a PI
       let debounceTimeout;
       piInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
@@ -326,12 +332,21 @@
           buscarDadosPI(piInput.value.trim());
         }, 500);
       });
-      
+
+      // Envio do formulário
       form.addEventListener('submit', function (e) {
         e.preventDefault();
 
+        // Validação simples para PI preenchida
+        const piValue = piInput.value.trim();
+        if (!piValue) {
+          mostrarErro('Por favor, preencha o número da PI.');
+          return;
+        }
+
         const formData = new FormData(form);
 
+        // Adiciona arquivos selecionados ao FormData
         files.forEach((file) => {
           formData.append('comprovantes', file);
         });
@@ -340,7 +355,7 @@
 
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
 
-        showError('Enviando, por favor aguarde...');
+        mostrarErro('Enviando, por favor aguarde...');
 
         fetch(webhookUrl, {
           method: 'POST',
@@ -363,14 +378,14 @@
               errorMessage.style.display = 'none';
               form.reset();
               files = [];
-              updateFileList();
+              atualizarListaArquivos();
               piStatus.textContent = '';
             } else {
               throw new Error(data.message || 'Ocorreu um erro no servidor.');
             }
           })
           .catch((error) => {
-            showError('Erro ao enviar formulário: ' + error.message);
+            mostrarErro('Erro ao enviar formulário: ' + error.message);
           });
       });
     })();
