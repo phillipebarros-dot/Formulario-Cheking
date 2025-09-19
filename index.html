@@ -24,6 +24,18 @@
       text-align: center;
       color: #2c3e50;
     }
+    /* Estilo para a mensagem de atenção */
+    .attention-box {
+      background-color: #fff8e1;
+      border-left: 6px solid #f39c12;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      font-weight: bold;
+      color: #b35e00;
+      font-size: 1rem;
+      line-height: 1.4;
+      border-radius: 4px;
+    }
     label {
       display: block;
       margin-top: 15px;
@@ -104,7 +116,12 @@
 <body>
   <div class="container">
     <h1>CHECKING OPUSMÚLTIPLA</h1>
-    <p><strong>ATENÇÃO:</strong> Só aceitaremos checkings por arquivos, links não serão permitidos.</p>
+
+    <!-- Mensagem de atenção destacada -->
+    <div class="attention-box">
+      ATENÇÃO<br />
+      SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
+    </div>
 
     <form id="checkingForm" enctype="multipart/form-data" novalidate>
       <label for="nome">Nome *</label>
