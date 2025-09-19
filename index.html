@@ -66,10 +66,17 @@
       cursor: pointer;
       border-radius: 4px;
       color: #666;
+      user-select: none;
     }
     .file-upload:hover {
       border-color: #3498db;
       color: #3498db;
+    }
+    .file-upload span {
+      font-weight: bold;
+      color: #3498db;
+      text-decoration: underline;
+      cursor: pointer;
     }
     .file-list {
       margin-top: 10px;
@@ -118,7 +125,7 @@
     <h1>CHECKING OPUSMÚLTIPLA</h1>
 
     <!-- Mensagem de atenção destacada -->
-    <div class="attention-box">
+    <div class="attention-box" role="alert">
       ATENÇÃO<br />
       SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
     </div>
@@ -171,8 +178,8 @@
       <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
 
       <label for="comprovantes">Insira os comprovantes (arquivos) *</label>
-      <div class="file-upload" id="fileUpload">
-        Clique ou arraste os arquivos aqui
+      <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-label="Área para arrastar e soltar arquivos ou clicar para navegar">
+        Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
         <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
       </div>
       <div class="file-list" id="fileList"></div>
