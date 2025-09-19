@@ -96,6 +96,7 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #1a252f;
@@ -118,6 +119,12 @@
       display: none;
       text-align: center;
     }
+    .loading-message {
+      color: #3498db;
+      font-weight: bold;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -125,7 +132,7 @@
     <h1>CHECKING OPUSMÚLTIPLA</h1>
 
     <!-- Mensagem de atenção destacada -->
-    <div class="attention-box" role="alert">
+    <div class="attention-box" role="alert" aria-live="assertive">
       ATENÇÃO<br />
       SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
     </div>
@@ -141,13 +148,14 @@
       <input type="email" id="email" name="email" required placeholder="seu@email.com" />
 
       <label for="pi">Número da PI *</label>
-      <input type="text" id="pi" name="pi" required placeholder="Ex: PI-12345" />
+      <input type="text" id="pi" name="pi" required placeholder="Ex: PI-12345" aria-describedby="piStatus" autocomplete="off" />
+      <div id="piStatus" class="loading-message" aria-live="polite" role="status"></div>
 
       <label for="cliente">Cliente *</label>
-      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" />
+      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" readonly />
 
       <label for="veiculo">Veículo *</label>
-      <select id="veiculo" name="veiculo" required>
+      <select id="veiculo" name="veiculo" required aria-describedby="veiculoHelp">
         <option value="">Selecione o veículo</option>
         <option value="DO">DOOH - Digital Out of Home</option>
         <option value="ME">Mídia Exterior - MUB estático</option>
@@ -164,15 +172,16 @@
         <option value="TV">TV</option>
         <option value="IN">Internet</option>
       </select>
+      <small id="veiculoHelp" style="color:#666;">Este campo pode ser alterado manualmente.</small>
 
       <label for="campanha">Campanha *</label>
-      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" />
+      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly />
 
       <label for="produto">Produto *</label>
-      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" />
+      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" readonly />
 
       <label for="periodo">Período *</label>
-      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" />
+      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly />
 
       <label for="observacoes">Observações</label>
       <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
@@ -182,13 +191,13 @@
         Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
         <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
       </div>
-      <div class="file-list" id="fileList"></div>
+      <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
 
       <button type="submit">Enviar</button>
     </form>
 
-    <div class="success-message" id="successMessage">Formulário enviado com sucesso! Obrigado.</div>
-    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
+    <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
   </div>
 
   <script>
@@ -199,8 +208,16 @@
       const fileList = document.getElementById('fileList');
       const successMessage = document.getElementById('successMessage');
       const errorMessage = document.getElementById('errorMessage');
+      const piInput = document.getElementById('pi');
+      const piStatus = document.getElementById('piStatus');
+      const clienteInput = document.getElementById('cliente');
+      const campanhaInput = document.getElementById('campanha');
+      const produtoInput = document.getElementById('produto');
+      const periodoInput = document.getElementById('periodo');
+      const veiculoSelect = document.getElementById('veiculo');
 
       let files = [];
+      let piFetchController = null;
 
       // Abrir seletor de arquivos ao clicar na área
       fileUpload.addEventListener('click', () => fileInput.click());
@@ -238,10 +255,23 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
 
-      // Validação do formulário
-      function validateForm() {
+      // Mostrar erro
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      }
+
+      // Limpar mensagens
+      function clearMessages() {
         errorMessage.style.display = 'none';
         successMessage.style.display = 'none';
+        piStatus.textContent = '';
+      }
+
+      // Validação do formulário
+      function validateForm() {
+        clearMessages();
 
         if (!form.nome.value.trim()) {
           showError('Por favor, informe seu nome.');
@@ -286,11 +316,81 @@
         return true;
       }
 
-      function showError(msg) {
-        errorMessage.textContent = msg;
-        errorMessage.style.display = 'block';
-        successMessage.style.display = 'none';
+      // Buscar dados da PI e preencher campos automaticamente
+      async function buscarDadosPI(npi) {
+        if (!npi) {
+          clienteInput.value = '';
+          campanhaInput.value = '';
+          produtoInput.value = '';
+          periodoInput.value = '';
+          piStatus.textContent = '';
+          return;
+        }
+
+        // Cancelar requisição anterior se existir
+        if (piFetchController) {
+          piFetchController.abort();
+        }
+        piFetchController = new AbortController();
+
+        piStatus.textContent = 'Buscando dados da PI...';
+
+        try {
+          const response = await fetch('https://seu-n8n.com/webhook/ChekingForm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+            signal: piFetchController.signal,
+          });
+
+          if (!response.ok) {
+            throw new Error('Erro na requisição');
+          }
+
+          const data = await response.json();
+
+          if (data.error) {
+            piStatus.textContent = data.error;
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            // Não altera veículo para não atrapalhar usuário
+          } else {
+            piStatus.textContent = 'Dados da PI carregados.';
+            piStatus.style.color = '#2ecc71';
+
+            clienteInput.value = data.cliente || '';
+            campanhaInput.value = data.campanha || '';
+            produtoInput.value = data.produto || '';
+            periodoInput.value = data.periodo || '';
+
+            // Preenche veículo somente se vazio para não sobrescrever escolha do usuário
+            if (!veiculoSelect.value && data.veiculo) {
+              veiculoSelect.value = data.veiculo;
+            }
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            piStatus.textContent = 'Erro ao buscar dados da PI.';
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+          }
+        }
       }
+
+      // Debounce para busca da PI
+      let debounceTimeout;
+      piInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          buscarDadosPI(piInput.value.trim());
+        }, 600);
+      });
 
       // Enviar formulário para o webhook n8n
       form.addEventListener('submit', function (e) {
@@ -335,6 +435,7 @@
             form.reset();
             files = [];
             updateFileList();
+            piStatus.textContent = '';
           })
           .catch((error) => {
             showError('Erro ao enviar formulário: ' + error.message);
