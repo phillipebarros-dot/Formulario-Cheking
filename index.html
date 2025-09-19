@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checking OpusMúltipla</title>
   <style>
-    /* Estilos básicos para o formulário */
     body {
       font-family: Arial, sans-serif;
       background-color: #f5f7fa;
@@ -20,10 +19,7 @@
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
+    h1 { text-align: center; color: #2c3e50; }
     .attention-box {
       background-color: #fff8e1;
       border-left: 6px solid #f39c12;
@@ -31,129 +27,65 @@
       margin-bottom: 25px;
       font-weight: bold;
       color: #b35e00;
-      font-size: 1rem;
-      line-height: 1.4;
       border-radius: 4px;
     }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
+    label { display: block; margin-top: 15px; font-weight: bold; color: #2c3e50; }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+      width: 100%; padding: 10px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 4px; font-size: 16px;
       box-sizing: border-box;
     }
-    textarea {
-      resize: vertical;
-    }
+    textarea { resize: vertical; }
     .file-upload {
-      margin-top: 10px;
-      border: 2px dashed #ccc;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 4px;
-      color: #666;
-      user-select: none;
+      margin-top: 10px; border: 2px dashed #ccc; padding: 20px;
+      text-align: center; cursor: pointer; border-radius: 4px; color: #666;
     }
-    .file-upload:hover {
-      border-color: #3498db;
-      color: #3498db;
-    }
-    .file-upload span {
-      font-weight: bold;
-      color: #3498db;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .file-list {
-      margin-top: 10px;
-    }
-    .file-item {
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #333;
-    }
+    .file-upload:hover { border-color: #3498db; color: #3498db; }
+    .file-upload span { font-weight: bold; color: #3498db; text-decoration: underline; }
+    .file-list { margin-top: 10px; }
+    .file-item { margin-bottom: 5px; font-size: 14px; color: #333; }
     button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 15px;
-      background-color: #2c3e50;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-top: 25px; width: 100%; padding: 15px;
+      background-color: #2c3e50; color: white; font-size: 18px;
+      border: none; border-radius: 6px; cursor: pointer;
     }
-    button:hover {
-      background-color: #1a252f;
+    button:hover { background-color: #1a252f; }
+    .success-message, .error-message {
+      padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center;
     }
-    .success-message {
-      background-color: #2ecc71;
-      color: white;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 20px;
-      display: none;
-      text-align: center;
-    }
-    .error-message {
-      background-color: #e74c3c;
-      color: white;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 20px;
-      display: none;
-      text-align: center;
-    }
-    .loading-message {
-      color: #3498db;
-      font-weight: bold;
-      margin-top: 5px;
-      font-size: 0.9rem;
-    }
+    .success-message { background-color: #2ecc71; color: white; }
+    .error-message { background-color: #e74c3c; color: white; }
+    .loading-message { color: #3498db; font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>CHECKING OPUSMÚLTIPLA</h1>
 
-    <div class="attention-box" role="alert" aria-live="assertive">
-      ATENÇÃO<br />
+    <div class="attention-box" role="alert">
+      ATENÇÃO<br>
       SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CONFORME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).
     </div>
 
     <form id="checkingForm" enctype="multipart/form-data" novalidate>
       <label for="nome">Nome *</label>
-      <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
+      <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
 
       <label for="telefone">Telefone *</label>
-      <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" />
+      <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000">
 
       <label for="email">E-mail *</label>
-      <input type="email" id="email" name="email" required placeholder="seu@email.com" />
+      <input type="email" id="email" name="email" required placeholder="seu@email.com">
 
       <label for="pi">Número da PI *</label>
-      <input type="text" id="pi" name="pi" required placeholder="Ex: 24-001" aria-describedby="piStatus" autocomplete="off" />
-      <div id="piStatus" class="loading-message" aria-live="polite" role="status"></div>
+      <input type="text" id="pi" name="pi" required placeholder="Ex: 24-001" autocomplete="off" aria-describedby="piStatus">
+      <div id="piStatus" class="loading-message" aria-live="polite"></div>
 
       <label for="cliente">Cliente *</label>
-      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" readonly />
+      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" readonly>
 
       <label for="veiculo">Veículo *</label>
-      <select id="veiculo" name="veiculo" required aria-describedby="veiculoHelp">
+      <select id="veiculo" name="veiculo" required>
         <option value="">Selecione o veículo</option>
         <option value="DO">DOOH - Digital Out of Home</option>
         <option value="ME">Mídia Exterior - MUB estático</option>
@@ -170,32 +102,30 @@
         <option value="TV">TV</option>
         <option value="IN">Internet</option>
       </select>
-      <small id="veiculoHelp" style="color:#666;">Este campo pode ser alterado manualmente.</small>
 
       <label for="campanha">Campanha *</label>
-      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly />
+      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly>
 
       <label for="produto">Produto *</label>
-      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" readonly />
+      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" readonly>
 
       <label for="periodo">Período *</label>
-      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly />
+      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly>
 
       <label for="observacoes">Observações</label>
       <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
 
       <label for="comprovantes">Insira os comprovantes (arquivos) *</label>
-      <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-label="Área para arrastar e soltar arquivos ou clicar para navegar">
-        Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
-        <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
+      <div class="file-upload" id="fileUpload">Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
+        <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required>
       </div>
-      <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
+      <div class="file-list" id="fileList"></div>
 
       <button type="submit">Enviar</button>
     </form>
 
-    <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
-    <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
+    <div class="success-message" id="successMessage">Formulário enviado com sucesso! Obrigado.</div>
+    <div class="error-message" id="errorMessage"></div>
   </div>
 
   <script>
@@ -217,58 +147,40 @@
       let files = [];
       let piFetchController = null;
 
-      // Abrir seletor de arquivos ao clicar na área
       fileUpload.addEventListener('click', () => fileInput.click());
-
-      // Adicionar arquivos selecionados à lista
       fileInput.addEventListener('change', (e) => {
-        for (const file of e.target.files) {
-          files.push(file);
-        }
+        for (const file of e.target.files) files.push(file);
         atualizarListaArquivos();
       });
 
-      // Atualiza a lista de arquivos exibida
       function atualizarListaArquivos() {
         fileList.innerHTML = '';
         files.forEach((file, index) => {
           const div = document.createElement('div');
           div.className = 'file-item';
           div.textContent = file.name + ' ';
-          const btnRemover = document.createElement('button');
-          btnRemover.type = 'button';
-          btnRemover.textContent = 'Remover';
-          btnRemover.style.marginLeft = '10px';
-          btnRemover.onclick = () => {
-            files.splice(index, 1);
-            atualizarListaArquivos();
-          };
-          div.appendChild(btnRemover);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = 'Remover';
+          btn.onclick = () => { files.splice(index, 1); atualizarListaArquivos(); };
+          div.appendChild(btn);
           fileList.appendChild(div);
         });
       }
 
-      // Exibe mensagem de erro
       function mostrarErro(msg) {
         errorMessage.textContent = msg;
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';
       }
 
-      // Função para buscar dados da PI no n8n
       async function buscarDadosPI(npi) {
         if (!npi) {
-          clienteInput.value = '';
-          campanhaInput.value = '';
-          produtoInput.value = '';
-          periodoInput.value = '';
+          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
           piStatus.textContent = '';
           return;
         }
-
-        if (piFetchController) {
-          piFetchController.abort();
-        }
+        if (piFetchController) piFetchController.abort();
         piFetchController = new AbortController();
 
         piStatus.textContent = 'Buscando dados da PI...';
@@ -284,94 +196,56 @@
           });
 
           const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Erro de comunicação com o servidor.');
 
-          if (!response.ok) {
-            throw new Error(data.error || 'Erro de comunicação com o servidor.');
-          }
-
-          if (data.error) {
-            piStatus.textContent = data.error;
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-          } else {
-            // Ajuste para acessar os dados corretamente
-            const piInfo = data;
-
+          if (Array.isArray(data) && data.length > 0) {
+            const piInfo = data[0];
             piStatus.textContent = 'Dados da PI carregados.';
             piStatus.style.color = '#2ecc71';
-
             clienteInput.value = piInfo.CLIENTE || '';
             campanhaInput.value = piInfo.CAMPANHA || '';
             produtoInput.value = piInfo.PRODUTO || '';
             periodoInput.value = piInfo.PERIODO || '';
-
-            if (!veiculoSelect.value && piInfo.MEIO) {
-              veiculoSelect.value = piInfo.MEIO;
-            }
-          }
-        } catch (error) {
-          if (error.name !== 'AbortError') {
-            piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+            if (!veiculoSelect.value && piInfo.MEIO) veiculoSelect.value = piInfo.MEIO;
+          } else {
+            piStatus.textContent = 'PI não encontrada.';
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
+          }
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            piStatus.textContent = err.message || 'Erro ao buscar dados da PI.';
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
           }
         }
       }
 
-      // Debounce para evitar muitas requisições ao digitar a PI
       let debounceTimeout;
       piInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-          buscarDadosPI(piInput.value.trim());
-        }, 500);
+        debounceTimeout = setTimeout(() => buscarDadosPI(piInput.value.trim()), 500);
       });
 
-      // Envio do formulário
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-
-        // Validação simples para PI preenchida
         const piValue = piInput.value.trim();
-        if (!piValue) {
-          mostrarErro('Por favor, preencha o número da PI.');
-          return;
-        }
+        if (!piValue) { mostrarErro('Por favor, preencha o número da PI.'); return; }
 
         const formData = new FormData(form);
-
-        // Adiciona arquivos selecionados ao FormData
-        files.forEach((file) => {
-          formData.append('comprovantes', file);
-        });
-
+        files.forEach(f => formData.append('comprovantes', f));
         formData.append('action', 'submissao');
 
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-
         mostrarErro('Enviando, por favor aguarde...');
-
-        fetch(webhookUrl, {
-          method: 'POST',
-          body: formData,
+        fetch('https://n8n.grupoom.com.br/webhook-test/CheckingForm', {
+          method: 'POST', body: formData,
         })
-          .then((response) => {
-            if (!response.ok) {
-              return response.json().then(errData => {
-                throw new Error(errData.message || 'Erro desconhecido no servidor.');
-              }).catch(() => {
-                throw new Error('Erro de comunicação com o servidor.');
-              });
-            }
-            return response.json();
+          .then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.message || 'Erro no servidor.'); })
+              .catch(() => { throw new Error('Erro de comunicação com o servidor.'); });
+            return r.json();
           })
-          .then((data) => {
+          .then(data => {
             if (data.success) {
               successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
               successMessage.style.display = 'block';
@@ -380,13 +254,9 @@
               files = [];
               atualizarListaArquivos();
               piStatus.textContent = '';
-            } else {
-              throw new Error(data.message || 'Ocorreu um erro no servidor.');
-            }
+            } else throw new Error(data.message || 'Ocorreu um erro no servidor.');
           })
-          .catch((error) => {
-            mostrarErro('Erro ao enviar formulário: ' + error.message);
-          });
+          .catch(err => mostrarErro('Erro ao enviar formulário: ' + err.message));
       });
     })();
   </script>
