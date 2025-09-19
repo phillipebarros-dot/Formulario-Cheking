@@ -18,10 +18,3 @@ Este repositório contém o formulário para submissão de checkings da OpusMúl
 - [Planilha de referência do PI](https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit?usp=sharing)
 - [Painel do n8n](https://n8n.grupoom.com.br)
 
-## Contato
-
-Para dúvidas ou suporte, entre em contato com a equipe técnica.
-
----
-
-*Este README foi criado para documentar o formulário Checking OpusMúltipla.*
