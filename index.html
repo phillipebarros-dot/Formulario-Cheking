@@ -200,7 +200,7 @@
   </div>
 
   <script>
-    (function () {
+    (async function () {
       const form = document.getElementById('checkingForm');
       const fileUpload = document.getElementById('fileUpload');
       const fileInput = document.getElementById('comprovantes');
@@ -251,7 +251,7 @@
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';
       }
-      
+
       async function buscarDadosPI(npi) {
         if (!npi) {
           clienteInput.value = '';
@@ -268,6 +268,7 @@
         piFetchController = new AbortController();
 
         piStatus.textContent = 'Buscando dados da PI...';
+        piStatus.style.color = '#3498db';
         errorMessage.style.display = 'none';
 
         try {
@@ -279,10 +280,6 @@
           });
 
           const data = await response.json();
-          
-          if (!response.ok) {
-             throw new Error(data.error || 'Erro de comunicação com o servidor.');
-          }
 
           if (data.error) {
             piStatus.textContent = data.error;
@@ -291,17 +288,23 @@
             campanhaInput.value = '';
             produtoInput.value = '';
             periodoInput.value = '';
-          } else {
-            const piInfo = data.json; 
+          } else if (data.success) {
             piStatus.textContent = 'Dados da PI carregados.';
             piStatus.style.color = '#2ecc71';
-            clienteInput.value = piInfo.cliente || '';
-            campanhaInput.value = piInfo.campanha || '';
-            produtoInput.value = piInfo.produto || '';
-            periodoInput.value = piInfo.periodo || '';
-            if (!veiculoSelect.value && piInfo.veiculo) {
-              veiculoSelect.value = piInfo.veiculo;
+            clienteInput.value = data.cliente || '';
+            campanhaInput.value = data.campanha || '';
+            produtoInput.value = data.produto || '';
+            periodoInput.value = data.periodo || '';
+            if (!veiculoSelect.value && data.veiculo) {
+              veiculoSelect.value = data.veiculo;
             }
+          } else {
+            piStatus.textContent = 'Resposta inesperada do servidor.';
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
           }
         } catch (error) {
           if (error.name !== 'AbortError') {
@@ -322,20 +325,20 @@
           buscarDadosPI(piInput.value.trim());
         }, 500);
       });
-      
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
-        
+
         files.forEach((file) => {
           formData.append('comprovantes', file);
         });
-        
+
         formData.append('action', 'submissao');
 
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-        
+
         showError('Enviando, por favor aguarde...');
 
         fetch(webhookUrl, {
@@ -353,17 +356,22 @@
             return response.json();
           })
           .then((data) => {
-             if (data.success) {
-                successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-                form.reset();
-                files = [];
-                updateFileList();
-                piStatus.textContent = '';
-             } else {
-                throw new Error(data.message || 'Ocorreu um erro no servidor.');
-             }
+            if (data.success) {
+              successMessage.textContent = data.message || 'Formulário enviado com sucesso! Obrigado.';
+              successMessage.style.display = 'block';
+              errorMessage.style.display = 'none';
+              form.reset();
+              files = [];
+              updateFileList();
+              piStatus.textContent = '';
+              clienteInput.value = '';
+              campanhaInput.value = '';
+              produtoInput.value = '';
+              periodoInput.value = '';
+              veiculoSelect.value = '';
+            } else {
+              throw new Error(data.message || 'Ocorreu um erro no servidor.');
+            }
           })
           .catch((error) => {
             showError('Erro ao enviar formulário: ' + error.message);
