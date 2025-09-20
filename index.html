@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -80,6 +79,12 @@
       margin-bottom: 5px;
       font-size: 14px;
       color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
     }
     button {
       margin-top: 25px;
@@ -124,6 +129,37 @@
       margin-top: 5px;
       font-size: 0.9rem;
     }
+    .remove-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .remove-btn:hover {
+      background-color: #c0392b;
+    }
+    .debug-panel {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+    .debug-toggle {
+      color: #3498db;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -134,7 +170,7 @@
       Só aceitaremos checkings enviados por meio de arquivos; links não serão permitidos. O não envio dos relatórios conforme as especificações descritas aqui e nas PIs acarretará no não pagamento das veiculações, até que os relatórios sejam enviados conforme as orientações passadas na contratação da mídia (PI).
     </div>
 
-    <form id="checkingForm" enctype="multipart/form-data" novalidate>
+    <form id="checkingForm" novalidate>
       <label for="nome">Nome *</label>
       <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
 
@@ -195,6 +231,9 @@
 
     <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
     <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
+    
+    <div class="debug-toggle" id="debugToggle">Mostrar detalhes de debug</div>
+    <div class="debug-panel" id="debugPanel"></div>
   </div>
 
   <script>
@@ -213,12 +252,31 @@
       const periodoInput = document.getElementById('periodo');
       const veiculoSelect = document.getElementById('veiculo');
       const submitBtn = document.getElementById('submitBtn');
+      const debugToggle = document.getElementById('debugToggle');
+      const debugPanel = document.getElementById('debugPanel');
 
       let files = [];
       let piFetchController = null;
 
-      // URL de produção correta
+      // URL de produção correta - usando POST
       const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+
+      // Alternar visibilidade do painel de debug
+      debugToggle.addEventListener('click', () => {
+        if (debugPanel.style.display === 'none') {
+          debugPanel.style.display = 'block';
+          debugToggle.textContent = 'Ocultar detalhes de debug';
+        } else {
+          debugPanel.style.display = 'none';
+          debugToggle.textContent = 'Mostrar detalhes de debug';
+        }
+      });
+
+      function logDebug(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugPanel.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+        debugPanel.scrollTop = debugPanel.scrollHeight;
+      }
 
       fileUpload.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (e) => {
@@ -253,18 +311,21 @@
         files.forEach((file, index) => {
           const div = document.createElement('div');
           div.className = 'file-item';
-          div.textContent = file.name + ' ';
+          
+          const fileName = document.createElement('span');
+          fileName.textContent = file.name;
+          div.appendChild(fileName);
+          
           const removeBtn = document.createElement('button');
           removeBtn.type = 'button';
           removeBtn.textContent = 'Remover';
-          removeBtn.style.marginLeft = '10px';
-          removeBtn.style.padding = '2px 8px';
-          removeBtn.style.fontSize = '12px';
+          removeBtn.className = 'remove-btn';
           removeBtn.onclick = () => {
             files.splice(index, 1);
             updateFileList();
           };
           div.appendChild(removeBtn);
+          
           fileList.appendChild(div);
         });
       }
@@ -273,6 +334,7 @@
         errorMessage.textContent = msg;
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';
+        logDebug(`ERRO: ${msg}`);
       }
 
       function hideMessages() {
@@ -306,8 +368,8 @@
           n_pi: npi.toString().trim()
         };
         
-        console.log('Enviando busca PI:', payload);
-        console.log('URL utilizada:', WEBHOOK_URL);
+        logDebug(`Enviando busca PI: ${JSON.stringify(payload)}`);
+        logDebug(`URL utilizada: ${WEBHOOK_URL}`);
 
         try {
           const response = await fetch(WEBHOOK_URL, {
@@ -320,15 +382,15 @@
             signal: piFetchController.signal,
           });
 
-          console.log('Response status:', response.status);
-          console.log('Response headers:', [...response.headers.entries()]);
+          logDebug(`Response status: ${response.status}`);
+          logDebug(`Response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
           let responseText = '';
           try {
             responseText = await response.text();
-            console.log('Response body (raw):', responseText);
+            logDebug(`Response body (raw): ${responseText}`);
           } catch (e) {
-            console.error('Erro ao ler response text:', e);
+            logDebug(`Erro ao ler response text: ${e}`);
           }
 
           if (!response.ok) {
@@ -336,9 +398,9 @@
             try {
               const errorData = JSON.parse(responseText);
               errorMsg = errorData.error || errorData.message || errorMsg;
-              console.log('Error data parsed:', errorData);
+              logDebug(`Error data parsed: ${JSON.stringify(errorData)}`);
             } catch (e) {
-              console.log('Não foi possível parsear erro como JSON:', e);
+              logDebug(`Não foi possível parsear erro como JSON: ${e}`);
               errorMsg += responseText ? ` - ${responseText.substring(0, 200)}` : '';
             }
             throw new Error(errorMsg);
@@ -347,21 +409,21 @@
           let data;
           try {
             data = JSON.parse(responseText);
-            console.log('Success data parsed:', data);
+            logDebug(`Success data parsed: ${JSON.stringify(data)}`);
           } catch (e) {
-            console.error('Erro ao parsear resposta como JSON:', e);
+            logDebug(`Erro ao parsear resposta como JSON: ${e}`);
             throw new Error('Resposta inválida do servidor');
           }
 
           // Log detalhado da resposta para debug
-          console.log('Estrutura completa da resposta:', data);
-          console.log('data.success:', data.success);
-          console.log('data.error:', data.error);
-          console.log('data.cliente:', data.cliente);
-          console.log('data.campanha:', data.campanha);
-          console.log('data.produto:', data.produto);
-          console.log('data.periodo:', data.periodo);
-          console.log('data.veiculo:', data.veiculo);
+          logDebug(`Estrutura completa da resposta: ${JSON.stringify(data)}`);
+          logDebug(`data.success: ${data.success}`);
+          logDebug(`data.error: ${data.error}`);
+          logDebug(`data.cliente: ${data.cliente}`);
+          logDebug(`data.campanha: ${data.campanha}`);
+          logDebug(`data.produto: ${data.produto}`);
+          logDebug(`data.periodo: ${data.periodo}`);
+          logDebug(`data.veiculo: ${data.veiculo}`);
 
           if (data.error) {
             piStatus.textContent = data.error;
@@ -375,25 +437,25 @@
             piStatus.textContent = 'Dados da PI carregados com sucesso.';
             piStatus.style.color = '#2ecc71';
             
-            console.log('Preenchendo campos:');
-            console.log('- Cliente:', data.cliente);
+            logDebug('Preenchendo campos:');
+            logDebug(`- Cliente: ${data.cliente}`);
             clienteInput.value = data.cliente || '';
-            console.log('- Campanha:', data.campanha);  
+            logDebug(`- Campanha: ${data.campanha}`);  
             campanhaInput.value = data.campanha || '';
-            console.log('- Produto:', data.produto);
+            logDebug(`- Produto: ${data.produto}`);
             produtoInput.value = data.produto || '';
-            console.log('- Período:', data.periodo);
+            logDebug(`- Período: ${data.periodo}`);
             periodoInput.value = data.periodo || '';
             
             // Preencher o veículo apenas se não foi selecionado manualmente
             if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
-              console.log('- Veículo:', data.veiculo);
+              logDebug(`- Veículo: ${data.veiculo}`);
               veiculoSelect.value = data.veiculo;
             }
             
-            console.log('Campos preenchidos com sucesso!');
+            logDebug('Campos preenchidos com sucesso!');
           } else {
-            console.log('Resposta sem success nem error:', data);
+            logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
             piStatus.textContent = 'Resposta inesperada do servidor.';
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
@@ -403,7 +465,7 @@
             veiculoSelect.selectedIndex = 0;
           }
         } catch (error) {
-          console.error('Erro na busca PI:', error);
+          logDebug(`Erro na busca PI: ${error}`);
           if (error.name !== 'AbortError') {
             if (error.message.includes('Failed to fetch') || 
                 error.message.includes('NetworkError') || 
@@ -493,12 +555,12 @@
           formData.append('total_arquivos', files.length.toString());
 
           // Debug do FormData
-          console.log('Enviando FormData com os seguintes campos:');
+          logDebug('Enviando FormData com os seguintes campos:');
           for (let [key, value] of formData.entries()) {
             if (value instanceof File) {
-              console.log(`${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+              logDebug(`${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
             } else {
-              console.log(`${key}: ${value}`);
+              logDebug(`${key}: ${value}`);
             }
           }
 
@@ -507,23 +569,23 @@
             body: formData,
           });
 
-          console.log('Submit response status:', response.status);
-          console.log('Submit response headers:', [...response.headers.entries()]);
+          logDebug(`Submit response status: ${response.status}`);
+          logDebug(`Submit response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
           let responseText = '';
           try {
             responseText = await response.text();
-            console.log('Submit response body (raw):', responseText);
+            logDebug(`Submit response body (raw): ${responseText}`);
           } catch (e) {
-            console.error('Erro ao ler submit response text:', e);
+            logDebug(`Erro ao ler submit response text: ${e}`);
           }
 
           let responseData;
           try {
             responseData = JSON.parse(responseText);
-            console.log('Submit response parsed:', responseData);
+            logDebug(`Submit response parsed: ${JSON.stringify(responseData)}`);
           } catch (e) {
-            console.error('Erro ao parsear submit response como JSON:', e);
+            logDebug(`Erro ao parsear submit response como JSON: ${e}`);
             throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 200)}`);
           }
 
@@ -535,6 +597,7 @@
             successMessage.textContent = responseData.message || 'Formulário enviado com sucesso! Obrigado.';
             successMessage.style.display = 'block';
             errorMessage.style.display = 'none';
+            logDebug('Formulário enviado com sucesso!');
             
             // Limpar formulário
             form.reset();
@@ -550,7 +613,7 @@
             throw new Error(responseData.message || 'Ocorreu um erro no servidor.');
           }
         } catch (error) {
-          console.error('Erro no envio:', error);
+          logDebug(`Erro no envio: ${error}`);
           if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
             showError('Erro de conexão. Verifique sua internet e tente novamente.');
           } else {
