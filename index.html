@@ -1,411 +1,218 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checking OpusMúltipla</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin: 0; padding: 20px; }
-    .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #2c3e50; }
-    .attention-box { background-color: #fff8e1; border-left: 6px solid #f39c12; padding: 15px 20px; margin-bottom: 25px; font-weight: bold; color: #b35e00; font-size: 1rem; line-height: 1.4; border-radius: 4px; }
-    label { display: block; margin-top: 15px; font-weight: bold; color: #2c3e50; }
-    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-    textarea { resize: vertical; }
-    .file-upload { margin-top: 10px; border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer; border-radius: 4px; color: #666; user-select: none; }
-    .file-upload:hover { border-color: #3498db; color: #3498db; }
-    .file-upload span { font-weight: bold; color: #3498db; text-decoration: underline; cursor: pointer; }
-    .file-list { margin-top: 10px; }
-    .file-item { margin-bottom: 5px; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; padding: 8px; background-color: #f9f9f9; border-radius: 4px; }
-    button { margin-top: 25px; width: 100%; padding: 15px; background-color: #2c3e50; color: white; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.3s ease; }
-    button:hover { background-color: #1a252f; }
-    button:disabled { background-color: #95a5a6; cursor: not-allowed; }
-    .success-message { background-color: #2ecc71; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
-    .error-message { background-color: #e74c3c; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
-    .loading-message { color: #3498db; font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
-    .remove-btn { background-color: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-    .remove-btn:hover { background-color: #c0392b; }
-    .debug-panel { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; white-space: pre-wrap; }
-    .debug-toggle { color: #3498db; cursor: pointer; font-size: 12px; margin-top: 10px; text-align: right; }
-    .small-muted { color:#666; font-size:13px; margin-top:6px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Validação de PI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Importante para o padding não aumentar a largura */
+        }
+        input[type="text"]:read-only {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #spinner {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        #message {
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        .message-error {
+            color: #dc3545;
+        }
+        .message-success {
+            color: #28a745;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>CHECKING OPUSMÚLTIPLA</h1>
-    <div class="attention-box" role="alert" aria-live="assertive">
-      ATENÇÃO<br />
-      Só aceitaremos checkings enviados por meio de arquivos; links não serão permitidos. O não envio dos relatórios conforme as especificações descritas aqui e nas PIs acarretará no não pagamento das veiculações, até que os relatórios sejam enviados conforme as orientações passadas na contratação da mídia (PI).
+
+    <div class="container">
+        <h1>Validação de PI</h1>
+        <form id="pi-form">
+            <div class="form-group">
+                <label for="numero_pi">Número da PI *</label>
+                <input type="text" id="numero_pi" name="numero_pi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente">Cliente</label>
+                <input type="text" id="cliente" name="cliente" readonly>
+            </div>
+            <div class="form-group">
+                <label for="campanha">Campanha</label>
+                <input type="text" id="campanha" name="campanha" readonly>
+            </div>
+            <div class="form-group">
+                <label for="produto">Produto</label>
+                <input type="text" id="produto" name="produto" readonly>
+            </div>
+             <div class="form-group">
+                <label for="periodo">Período</label>
+                <input type="text" id="periodo" name="periodo" readonly>
+            </div>
+            <div class="form-group">
+                <label for="veiculo">Veículo</label>
+                <input type="text" id="veiculo" name="veiculo" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="arquivos">Anexar Comprovantes</label>
+                <input type="file" id="arquivos" name="arquivos" multiple>
+            </div>
+
+            <button type="submit">Enviar</button>
+
+            <div id="spinner">Carregando...</div>
+            <div id="message"></div>
+        </form>
     </div>
 
-    <form id="checkingForm" novalidate>
-      <label for="nome">Nome *</label>
-      <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
+<script>
+    // #######################################################
+    // CONFIGURAÇÃO - COLOQUE A URL DO SEU WEBHOOK AQUI
+    // #######################################################
+    const N8N_WEBHOOK_URL = 'SUA_URL_DO_WEBHOOK_N8N_AQUI';
 
-      <label for="telefone">Telefone *</label>
-      <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" />
+    const piInput = document.getElementById('numero_pi');
+    const form = document.getElementById('pi-form');
+    const messageDiv = document.getElementById('message');
 
-      <label for="email">E-mail *</label>
-      <input type="email" id="email" name="email" required placeholder="seu@email.com" />
+    // Mapeamento dos IDs dos campos do formulário para as chaves do JSON
+    const fields = {
+        cliente: document.getElementById('cliente'),
+        campanha: document.getElementById('campanha'),
+        produto: document.getElementById('produto'),
+        periodo: document.getElementById('periodo'),
+        veiculo: document.getElementById('veiculo')
+    };
 
-      <label for="pi">Número da PI *</label>
-      <input type="text" id="pi" name="pi" required placeholder="Ex: 24-001" aria-describedby="piStatus" autocomplete="off" />
-      <div id="piStatus" class="loading-message" aria-live="polite" role="status"></div>
-
-      <label for="cliente">Cliente *</label>
-      <input type="text" id="cliente" name="cliente" required placeholder="Nome do cliente" readonly />
-
-      <label for="veiculo">Veículo *</label>
-      <select id="veiculo" name="veiculo" required aria-describedby="veiculoHelp">
-        <option value="">Selecione o veículo</option>
-        <option value="DO">DOOH - Digital Out of Home</option>
-        <option value="ME">Mídia Exterior - MUB estático</option>
-        <option value="MO">Mídia Exterior - Metrô estático</option>
-        <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
-        <option value="OD">Mídia Exterior - Outdoor</option>
-        <option value="FL">Mídia Exterior - Fronts</option>
-        <option value="MI">Mídia Interna estática</option>
-        <option value="RD">Rádio</option>
-        <option value="CI">Cinema</option>
-        <option value="JO">Mídia Impressa - Jornal</option>
-        <option value="RV">Mídia Impressa - Revista</option>
-        <option value="AT">Projetos Especiais - Ativação</option>
-        <option value="TV">TV</option>
-        <option value="IN">Internet</option>
-      </select>
-      <small id="veiculoHelp" class="small-muted">Este campo pode ser alterado manualmente.</small>
-
-      <label for="campanha">Campanha *</label>
-      <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly />
-
-      <label for="produto">Produto *</label>
-      <input type="text" id="produto" name="produto" required placeholder="Nome do produto" readonly />
-
-      <label for="periodo">Período *</label>
-      <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly />
-
-      <label for="observacoes">Observações</label>
-      <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
-
-      <label for="comprovantes">Insira os comprovantes (arquivos) *</label>
-      <div class="file-upload" id="fileUpload" tabindex="0" role="button" aria-label="Área para arrastar e soltar arquivos ou clicar para navegar">
-        Arraste e solte os arquivos aqui ou <span>Navegar pelos arquivos</span>
-        <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
-      </div>
-      <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
-
-      <button type="submit" id="submitBtn">Enviar</button>
-    </form>
-
-    <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
-    <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
-
-    <div class="debug-toggle" id="debugToggle">Mostrar detalhes de debug</div>
-    <div class="debug-panel" id="debugPanel"></div>
-  </div>
-
-  <script>
-    (function () {
-      const form = document.getElementById('checkingForm');
-      const fileUpload = document.getElementById('fileUpload');
-      const fileInput = document.getElementById('comprovantes');
-      const fileList = document.getElementById('fileList');
-      const successMessage = document.getElementById('successMessage');
-      const errorMessage = document.getElementById('errorMessage');
-      const piInput = document.getElementById('pi');
-      const piStatus = document.getElementById('piStatus');
-      const clienteInput = document.getElementById('cliente');
-      const campanhaInput = document.getElementById('campanha');
-      const produtoInput = document.getElementById('produto');
-      const periodoInput = document.getElementById('periodo');
-      const veiculoSelect = document.getElementById('veiculo');
-      const submitBtn = document.getElementById('submitBtn');
-      const debugToggle = document.getElementById('debugToggle');
-      const debugPanel = document.getElementById('debugPanel');
-
-      let files = [];
-      let piFetchController = null;
-      let debounceTimeout = null;
-
-      // Ajuste a URL exata do seu webhook n8n (verifique path e domínio)
-      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-
-      // Debug toggle
-      debugToggle.addEventListener('click', () => {
-        if (debugPanel.style.display === 'none' || debugPanel.style.display === '') {
-          debugPanel.style.display = 'block';
-          debugToggle.textContent = 'Ocultar detalhes de debug';
-        } else {
-          debugPanel.style.display = 'none';
-          debugToggle.textContent = 'Mostrar detalhes de debug';
+    // Função para limpar os campos do formulário
+    function clearFormFields() {
+        for (const key in fields) {
+            fields[key].value = '';
         }
-      });
+    }
 
-      function logDebug(message) {
-        const timestamp = new Date().toLocaleTimeString();
-        const line = `[${timestamp}] ${message}\n`;
-        debugPanel.style.display = 'block';
-        debugToggle.textContent = 'Ocultar detalhes de debug';
-        debugPanel.textContent += line;
-        debugPanel.scrollTop = debugPanel.scrollHeight;
-      }
+    // Função para exibir mensagens para o usuário
+    function showMessage(text, type = 'error') {
+        messageDiv.textContent = text;
+        messageDiv.className = type === 'error' ? 'message-error' : 'message-success';
+    }
 
-      function showError(msg) {
-        errorMessage.textContent = msg;
-        errorMessage.style.display = 'block';
-        successMessage.style.display = 'none';
-        logDebug(`ERRO: ${msg}`);
-      }
+    // Função assíncrona para buscar os dados da PI no n8n
+    async function buscarPI() {
+        const numeroPI = piInput.value.trim();
 
-      function showSuccess(msg) {
-        successMessage.textContent = msg;
-        successMessage.style.display = 'block';
-        errorMessage.style.display = 'none';
-        logDebug(`SUCESSO: ${msg}`);
-      }
-
-      function hideMessages() {
-        errorMessage.style.display = 'none';
-        successMessage.style.display = 'none';
-      }
-
-      // file UI
-      fileUpload.addEventListener('click', () => fileInput.click());
-      fileInput.addEventListener('change', (e) => {
-        for (const f of e.target.files) files.push(f);
-        updateFileList();
-      });
-
-      fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#3498db'; });
-      fileUpload.addEventListener('dragleave', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#ccc'; });
-      fileUpload.addEventListener('drop', (e) => {
-        e.preventDefault();
-        fileUpload.style.borderColor = '#ccc';
-        for (const f of e.dataTransfer.files) files.push(f);
-        updateFileList();
-      });
-
-      function updateFileList() {
-        fileList.innerHTML = '';
-        files.forEach((file, index) => {
-          const div = document.createElement('div');
-          div.className = 'file-item';
-          const fileName = document.createElement('span');
-          fileName.textContent = file.name;
-          div.appendChild(fileName);
-          const removeBtn = document.createElement('button');
-          removeBtn.type = 'button'; removeBtn.textContent = 'Remover'; removeBtn.className = 'remove-btn';
-          removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
-          div.appendChild(removeBtn);
-          fileList.appendChild(div);
-        });
-      }
-
-      // BUSCAR DADOS DA PI (JSON)
-      async function buscarDadosPI(npi) {
-        if (!npi) {
-          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-          veiculoSelect.selectedIndex = 0;
-          piStatus.textContent = '';
-          return;
+        if (!numeroPI) {
+            clearFormFields();
+            return;
         }
 
-        if (piFetchController) piFetchController.abort();
-        piFetchController = new AbortController();
-
-        piStatus.textContent = 'Buscando dados da PI...';
-        piStatus.style.color = '#3498db';
-        hideMessages();
-
-        const payload = { action: 'buscar_pi', n_pi: npi.toString().trim() };
-        logDebug(`Enviando busca PI: ${JSON.stringify(payload)}`);
-        logDebug(`URL utilizada: ${WEBHOOK_URL}`);
+        showMessage('Buscando dados da PI...', 'info');
+        clearFormFields();
 
         try {
-          const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload),
-            signal: piFetchController.signal
-          });
+            const response = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'buscar_pi', // Ação para o n8n saber o que fazer
+                    numero_pi: numeroPI
+                })
+            });
 
-          logDebug(`Response status: ${response.status} ${response.statusText}`);
-          try { logDebug(`Response headers: ${JSON.stringify([...response.headers.entries()])}`); } catch(e) {}
+            // O erro "Unexpected end of JSON input" acontece aqui se a resposta for vazia
+            const data = await response.json();
 
-          const contentType = (response.headers.get('content-type') || '').toLowerCase();
-          let data;
-          if (contentType.includes('application/json')) {
-            data = await response.json().catch(() => { throw new Error('Resposta JSON inválida do servidor'); });
-          } else {
-            const text = await response.text().catch(() => '');
-            logDebug(`Response body (raw): ${text}`);
-            try { data = text ? JSON.parse(text) : {}; } catch (e) {
-              if (!response.ok) throw new Error(`Erro ${response.status}`);
-              else throw new Error('Resposta inesperada do servidor (não JSON).');
-            }
-          }
-
-          logDebug(`Resposta parseada: ${JSON.stringify(data)}`);
-
-          if (!response.ok) {
-            const errMsg = (data && (data.error || data.message)) || `Erro ${response.status}: ${response.statusText}`;
-            piStatus.textContent = errMsg;
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-            return;
-          }
-
-          if (data && data.error) {
-            piStatus.textContent = data.error;
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-            return;
-          }
-
-          if (data && (data.success === true || data.cliente || data.CAMPAIGn)) {
-            piStatus.textContent = 'Dados da PI carregados com sucesso.';
-            piStatus.style.color = '#2ecc71';
-            clienteInput.value = data.cliente || data.CLIENTE || '';
-            campanhaInput.value = data.campanha || data.CAMPANHA || '';
-            produtoInput.value = data.produto || data.PRODUTO || '';
-            periodoInput.value = data.periodo || data.PERIODO || '';
-            if (veiculoSelect.selectedIndex === 0 && (data.veiculo || data.VEICULO)) veiculoSelect.value = data.veiculo || data.VEICULO;
-          } else {
-            piStatus.textContent = 'Resposta inesperada do servidor.';
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-            logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
-          }
-        } catch (error) {
-          logDebug(`Erro na busca PI: ${error}`);
-          if (error.name !== 'AbortError') {
-            const msg = (error.message || '').toLowerCase();
-            if (msg.includes('failed to fetch') || msg.includes('networkerror') || msg.includes('cors')) {
-              piStatus.textContent = 'Erro de CORS. Verifique o webhook (OPTIONS) no n8n ou o proxy.';
+            if (data.success) {
+                // Se o n8n retornou sucesso, preenchemos os campos
+                for (const key in fields) {
+                    if (data[key]) {
+                        fields[key].value = data[key];
+                    }
+                }
+                showMessage('PI encontrada. Preencha os demais campos.', 'success');
             } else {
-              piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+                // Se o n8n retornou erro, mostramos a mensagem
+                showMessage(data.error || 'Ocorreu um erro desconhecido.', 'error');
+                clearFormFields();
             }
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-          }
-        } finally {
-          piFetchController = null;
-        }
-      }
 
-      // debounce input
-      piInput.addEventListener('input', () => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-          const piValue = piInput.value.trim();
-          if (piValue) buscarDadosPI(piValue);
-          else {
-            piStatus.textContent = '';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-          }
-        }, 500);
-      });
-
-      // SUBMISSÃO (multipart/form-data)
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (files.length === 0) { showError('Por favor, insira pelo menos um arquivo de comprovante.'); return; }
-
-        const requiredFields = ['nome', 'telefone', 'email', 'pi', 'cliente', 'veiculo', 'campanha', 'produto', 'periodo'];
-        for (const field of requiredFields) {
-          const input = document.getElementById(field);
-          if (!input.value.trim()) {
-            showError(`Por favor, preencha o campo ${input.previousElementSibling.textContent.replace(' *', '')}.`);
-            input.focus();
-            return;
-          }
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        try {
-          const formData = new FormData();
-          formData.append('action', 'submissao');
-          formData.append('nome', document.getElementById('nome').value.trim());
-          formData.append('telefone', document.getElementById('telefone').value.trim());
-          formData.append('email', document.getElementById('email').value.trim());
-          formData.append('pi', document.getElementById('pi').value.trim());
-          formData.append('cliente', document.getElementById('cliente').value.trim());
-          formData.append('veiculo', document.getElementById('veiculo').value);
-          formData.append('campanha', document.getElementById('campanha').value.trim());
-          formData.append('produto', document.getElementById('produto').value.trim());
-          formData.append('periodo', document.getElementById('periodo').value.trim());
-          formData.append('observacoes', document.getElementById('observacoes').value.trim());
-
-          files.forEach((file, index) => formData.append(`comprovante_${index}`, file));
-          formData.append('total_arquivos', files.length.toString());
-
-          logDebug('Enviando FormData:');
-          for (let [k, v] of formData.entries()) {
-            if (v instanceof File) logDebug(`${k}: File(${v.name}, ${v.size}, ${v.type})`);
-            else logDebug(`${k}: ${v}`);
-          }
-
-          const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            mode: 'cors',
-            body: formData
-          });
-
-          logDebug(`Submit response status: ${response.status}`);
-          try { logDebug(`Submit response headers: ${JSON.stringify([...response.headers.entries()])}`); } catch (e) {}
-
-          const responseText = await response.text().catch(e => { logDebug(`Erro ao ler submit response text: ${e}`); return ''; });
-          logDebug(`Submit response body (raw): ${responseText}`);
-
-          let responseData = {};
-          try { responseData = JSON.parse(responseText || '{}'); } catch (e) { throw new Error(`Resposta inválida do servidor: ${responseText.substring(0,200)}`); }
-
-          if (!response.ok) {
-            throw new Error(responseData.message || responseData.error || `Erro ${response.status}: ${response.statusText}`);
-          }
-
-          if (responseData.success) {
-            successMessage.textContent = responseData.message || 'Formulário enviado com sucesso! Obrigado.';
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            logDebug('Formulário enviado com sucesso!');
-            form.reset();
-            files = [];
-            updateFileList();
-            piStatus.textContent = '';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-          } else {
-            throw new Error(responseData.message || 'Ocorreu um erro no servidor.');
-          }
         } catch (error) {
-          logDebug(`Erro no envio: ${error}`);
-          if ((error.message || '').toLowerCase().includes('failed to fetch') || (error.message || '').toLowerCase().includes('networkerror')) {
-            showError('Erro de conexão. Verifique sua internet e o webhook (OPTIONS) no n8n.');
-          } else {
-            showError('Erro ao enviar formulário: ' + error.message);
-          }
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Enviar';
+            console.error('Erro na requisição:', error);
+            // Isso trata tanto erros de rede quanto o erro de JSON
+            showMessage('Não foi possível comunicar com o servidor. Verifique sua conexão ou contate o suporte.', 'error');
+            clearFormFields();
         }
-      });
+    }
 
-      // inicial
-      debugPanel.style.display = 'none';
-      logDebug('Interface carregada. Ajuste WEBHOOK_URL no topo se necessário.');
-    })();
-  </script>
+    // Adiciona o "escutador" de evento. A busca é acionada quando o usuário clica fora do campo da PI.
+    piInput.addEventListener('blur', buscarPI);
+
+    // Lógica para o envio do formulário (pode ser implementada depois)
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+        alert('Lógica de envio do formulário com arquivos a ser implementada.');
+        // Aqui você implementaria a lógica para enviar o formulário completo com os arquivos para outra rota/ação do n8n.
+    });
+
+</script>
+
 </body>
 </html>
