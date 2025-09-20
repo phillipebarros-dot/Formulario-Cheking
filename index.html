@@ -216,7 +216,7 @@
       let files = [];
       let piFetchController = null;
 
-      // URL do webhook (a que funciona)
+      // URL de produção correta
       const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
       fileUpload.addEventListener('click', () => fileInput.click());
@@ -306,6 +306,7 @@
         };
         
         console.log('Enviando busca PI:', payload);
+        console.log('URL utilizada:', WEBHOOK_URL);
 
         try {
           const response = await fetch(WEBHOOK_URL, {
