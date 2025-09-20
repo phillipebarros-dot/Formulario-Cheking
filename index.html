@@ -22,6 +22,7 @@
     h1 {
       text-align: center;
       color: #2c3e50;
+      margin-bottom: 20px;
     }
     .attention-box {
       background-color: #fff8e1;
@@ -42,29 +43,37 @@
     }
     input[type="text"], input[type="email"], input[type="tel"], select, textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 5px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
       box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+      outline: none;
     }
     textarea {
       resize: vertical;
+      min-height: 100px;
     }
     .file-upload {
       margin-top: 10px;
       border: 2px dashed #ccc;
-      padding: 20px;
+      padding: 25px;
       text-align: center;
       cursor: pointer;
       border-radius: 4px;
       color: #666;
       user-select: none;
+      transition: all 0.3s;
     }
     .file-upload:hover {
       border-color: #3498db;
       color: #3498db;
+      background-color: #f8f9fa;
     }
     .file-upload span {
       font-weight: bold;
@@ -73,23 +82,24 @@
       cursor: pointer;
     }
     .file-list {
-      margin-top: 10px;
+      margin-top: 15px;
     }
     .file-item {
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       font-size: 14px;
       color: #333;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px;
+      padding: 10px;
       background-color: #f9f9f9;
       border-radius: 4px;
+      border-left: 3px solid #3498db;
     }
     button {
       margin-top: 25px;
       width: 100%;
-      padding: 15px;
+      padding: 16px;
       background-color: #2c3e50;
       color: white;
       font-size: 18px;
@@ -97,6 +107,7 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-weight: bold;
     }
     button:hover {
       background-color: #1a252f;
@@ -113,6 +124,7 @@
       margin-top: 20px;
       display: none;
       text-align: center;
+      font-weight: bold;
     }
     .error-message {
       background-color: #e74c3c;
@@ -122,6 +134,7 @@
       margin-top: 20px;
       display: none;
       text-align: center;
+      font-weight: bold;
     }
     .loading-message {
       color: #3498db;
@@ -133,10 +146,11 @@
       background-color: #e74c3c;
       color: white;
       border: none;
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 12px;
+      transition: background-color 0.3s;
     }
     .remove-btn:hover {
       background-color: #c0392b;
@@ -160,6 +174,37 @@
       margin-top: 10px;
       text-align: right;
     }
+    .section-title {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .status-loading {
+      background-color: #3498db;
+      animation: pulse 1.5s infinite;
+    }
+    .status-success {
+      background-color: #2ecc71;
+    }
+    .status-error {
+      background-color: #e74c3c;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -171,6 +216,8 @@
     </div>
 
     <form id="checkingForm" novalidate>
+      <div class="section-title">DADOS PESSOAIS</div>
+      
       <label for="nome">Nome *</label>
       <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
 
@@ -180,6 +227,8 @@
       <label for="email">E-mail *</label>
       <input type="email" id="email" name="email" required placeholder="seu@email.com" />
 
+      <div class="section-title">DADOS DA PI</div>
+      
       <label for="pi">Número da PI *</label>
       <input type="text" id="pi" name="pi" required placeholder="Ex: 24-001" aria-describedby="piStatus" autocomplete="off" />
       <div id="piStatus" class="loading-message" aria-live="polite" role="status"></div>
@@ -216,6 +265,8 @@
       <label for="periodo">Período *</label>
       <input type="text" id="periodo" name="periodo" required placeholder="Ex: 01/09/2025 a 30/09/2025" readonly />
 
+      <div class="section-title">OBSERVAÇÕES E ANEXOS</div>
+      
       <label for="observacoes">Observações</label>
       <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea>
 
@@ -226,7 +277,7 @@
       </div>
       <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
 
-      <button type="submit" id="submitBtn">Enviar</button>
+      <button type="submit" id="submitBtn">Enviar Checking</button>
     </form>
 
     <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
@@ -258,8 +309,8 @@
       let files = [];
       let piFetchController = null;
 
-      // URL de produção correta - usando POST
-      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+      // URL atualizada para webhook-test
+      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
 
       // Alternar visibilidade do painel de debug
       debugToggle.addEventListener('click', () => {
@@ -290,16 +341,19 @@
       fileUpload.addEventListener('dragover', (e) => {
         e.preventDefault();
         fileUpload.style.borderColor = '#3498db';
+        fileUpload.style.backgroundColor = '#f8f9fa';
       });
 
       fileUpload.addEventListener('dragleave', (e) => {
         e.preventDefault();
         fileUpload.style.borderColor = '#ccc';
+        fileUpload.style.backgroundColor = 'transparent';
       });
 
       fileUpload.addEventListener('drop', (e) => {
         e.preventDefault();
         fileUpload.style.borderColor = '#ccc';
+        fileUpload.style.backgroundColor = 'transparent';
         for (const file of e.dataTransfer.files) {
           files.push(file);
         }
@@ -308,13 +362,22 @@
 
       function updateFileList() {
         fileList.innerHTML = '';
+        if (files.length === 0) {
+          const emptyMsg = document.createElement('div');
+          emptyMsg.textContent = 'Nenhum arquivo selecionado';
+          emptyMsg.style.color = '#999';
+          emptyMsg.style.fontStyle = 'italic';
+          fileList.appendChild(emptyMsg);
+          return;
+        }
+        
         files.forEach((file, index) => {
           const div = document.createElement('div');
           div.className = 'file-item';
           
-          const fileName = document.createElement('span');
-          fileName.textContent = file.name;
-          div.appendChild(fileName);
+          const fileInfo = document.createElement('div');
+          fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;
+          div.appendChild(fileInfo);
           
           const removeBtn = document.createElement('button');
           removeBtn.type = 'button';
@@ -328,6 +391,14 @@
           
           fileList.appendChild(div);
         });
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
       }
 
       function showError(msg) {
@@ -344,12 +415,7 @@
 
       async function buscarDadosPI(npi) {
         if (!npi) {
-          clienteInput.value = '';
-          campanhaInput.value = '';
-          produtoInput.value = '';
-          periodoInput.value = '';
-          veiculoSelect.selectedIndex = 0;
-          piStatus.textContent = '';
+          clearPIFields();
           return;
         }
 
@@ -358,11 +424,10 @@
         }
         
         piFetchController = new AbortController();
-        piStatus.textContent = 'Buscando dados da PI...';
+        piStatus.innerHTML = '<span class="status-indicator status-loading"></span> Buscando dados da PI...';
         piStatus.style.color = '#3498db';
         hideMessages();
 
-        // Payload para debug
         const payload = { 
           action: 'buscar_pi', 
           n_pi: npi.toString().trim()
@@ -383,7 +448,6 @@
           });
 
           logDebug(`Response status: ${response.status}`);
-          logDebug(`Response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
           let responseText = '';
           try {
@@ -415,54 +479,30 @@
             throw new Error('Resposta inválida do servidor');
           }
 
-          // Log detalhado da resposta para debug
-          logDebug(`Estrutura completa da resposta: ${JSON.stringify(data)}`);
-          logDebug(`data.success: ${data.success}`);
-          logDebug(`data.error: ${data.error}`);
-          logDebug(`data.cliente: ${data.cliente}`);
-          logDebug(`data.campanha: ${data.campanha}`);
-          logDebug(`data.produto: ${data.produto}`);
-          logDebug(`data.periodo: ${data.periodo}`);
-          logDebug(`data.veiculo: ${data.veiculo}`);
-
           if (data.error) {
-            piStatus.textContent = data.error;
+            piStatus.innerHTML = `<span class="status-indicator status-error"></span> ${data.error}`;
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
+            clearPIFields();
           } else if (data.success === true) {
-            piStatus.textContent = 'Dados da PI carregados com sucesso.';
+            piStatus.innerHTML = '<span class="status-indicator status-success"></span> Dados da PI carregados com sucesso.';
             piStatus.style.color = '#2ecc71';
             
-            logDebug('Preenchendo campos:');
-            logDebug(`- Cliente: ${data.cliente}`);
             clienteInput.value = data.cliente || '';
-            logDebug(`- Campanha: ${data.campanha}`);  
             campanhaInput.value = data.campanha || '';
-            logDebug(`- Produto: ${data.produto}`);
             produtoInput.value = data.produto || '';
-            logDebug(`- Período: ${data.periodo}`);
             periodoInput.value = data.periodo || '';
             
             // Preencher o veículo apenas se não foi selecionado manualmente
             if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
-              logDebug(`- Veículo: ${data.veiculo}`);
               veiculoSelect.value = data.veiculo;
             }
             
             logDebug('Campos preenchidos com sucesso!');
           } else {
             logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
-            piStatus.textContent = 'Resposta inesperada do servidor.';
+            piStatus.innerHTML = '<span class="status-indicator status-error"></span> Resposta inesperada do servidor.';
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
+            clearPIFields();
           }
         } catch (error) {
           logDebug(`Erro na busca PI: ${error}`);
@@ -470,22 +510,24 @@
             if (error.message.includes('Failed to fetch') || 
                 error.message.includes('NetworkError') || 
                 error.message.includes('CORS')) {
-              piStatus.textContent = 'Erro de CORS. Configure os headers no webhook do n8n.';
-            } else if (error.message.includes('Invalid status code')) {
-              piStatus.textContent = 'Erro no n8n: Status code deve ser número, não string.';
+              piStatus.innerHTML = '<span class="status-indicator status-error"></span> Erro de conexão. Verifique sua internet.';
             } else {
-              piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+              piStatus.innerHTML = `<span class="status-indicator status-error"></span> ${error.message || 'Erro ao buscar dados da PI.'}`;
             }
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
+            clearPIFields();
           }
         } finally {
           piFetchController = null;
         }
+      }
+
+      function clearPIFields() {
+        clienteInput.value = '';
+        campanhaInput.value = '';
+        produtoInput.value = '';
+        periodoInput.value = '';
+        veiculoSelect.selectedIndex = 0;
       }
 
       let debounceTimeout;
@@ -497,11 +539,7 @@
             buscarDadosPI(piValue);
           } else {
             piStatus.textContent = '';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
+            clearPIFields();
           }
         }, 500);
       });
@@ -570,7 +608,6 @@
           });
 
           logDebug(`Submit response status: ${response.status}`);
-          logDebug(`Submit response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
           let responseText = '';
           try {
@@ -604,11 +641,7 @@
             files = [];
             updateFileList();
             piStatus.textContent = '';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
+            clearPIFields();
           } else {
             throw new Error(responseData.message || 'Ocorreu um erro no servidor.');
           }
@@ -622,9 +655,12 @@
         } finally {
           // Reabilitar botão de envio
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Enviar';
+          submitBtn.textContent = 'Enviar Checking';
         }
       });
+
+      // Inicializar a lista de arquivos
+      updateFileList();
     })();
   </script>
 </body>
