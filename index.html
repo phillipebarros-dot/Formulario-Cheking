@@ -351,6 +351,16 @@
             throw new Error('Resposta inválida do servidor');
           }
 
+          // Log detalhado da resposta para debug
+          console.log('Estrutura completa da resposta:', data);
+          console.log('data.success:', data.success);
+          console.log('data.error:', data.error);
+          console.log('data.cliente:', data.cliente);
+          console.log('data.campanha:', data.campanha);
+          console.log('data.produto:', data.produto);
+          console.log('data.periodo:', data.periodo);
+          console.log('data.veiculo:', data.veiculo);
+
           if (data.error) {
             piStatus.textContent = data.error;
             piStatus.style.color = '#e74c3c';
@@ -359,21 +369,30 @@
             produtoInput.value = '';
             periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
-          } else if (data.success) {
+          } else if (data.success === true) {
             piStatus.textContent = 'Dados da PI carregados com sucesso.';
             piStatus.style.color = '#2ecc71';
+            
+            console.log('Preenchendo campos:');
+            console.log('- Cliente:', data.cliente);
             clienteInput.value = data.cliente || '';
+            console.log('- Campanha:', data.campanha);  
             campanhaInput.value = data.campanha || '';
+            console.log('- Produto:', data.produto);
             produtoInput.value = data.produto || '';
+            console.log('- Período:', data.periodo);
             periodoInput.value = data.periodo || '';
             
             // Preencher o veículo apenas se não foi selecionado manualmente
             if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
+              console.log('- Veículo:', data.veiculo);
               veiculoSelect.value = data.veiculo;
             }
+            
+            console.log('Campos preenchidos com sucesso!');
           } else {
             console.log('Resposta sem success nem error:', data);
-            piStatus.textContent = 'Dados da PI não encontrados.';
+            piStatus.textContent = 'Resposta inesperada do servidor.';
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
             campanhaInput.value = '';
