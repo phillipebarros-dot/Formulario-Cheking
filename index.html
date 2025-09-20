@@ -299,6 +299,14 @@
         piStatus.style.color = '#3498db';
         hideMessages();
 
+        // Payload para debug
+        const payload = { 
+          action: 'buscar_pi', 
+          n_pi: npi.toString().trim()
+        };
+        
+        console.log('Enviando busca PI:', payload);
+
         try {
           const response = await fetch(WEBHOOK_URL, {
             method: 'POST',
@@ -306,25 +314,42 @@
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify({ 
-              action: 'buscar_pi', 
-              n_pi: npi.toString().trim()
-            }),
+            body: JSON.stringify(payload),
             signal: piFetchController.signal,
           });
 
+          console.log('Response status:', response.status);
+          console.log('Response headers:', [...response.headers.entries()]);
+
+          let responseText = '';
+          try {
+            responseText = await response.text();
+            console.log('Response body (raw):', responseText);
+          } catch (e) {
+            console.error('Erro ao ler response text:', e);
+          }
+
           if (!response.ok) {
-            let errorMsg = 'Erro de comunicação com o servidor.';
+            let errorMsg = `Erro ${response.status}: ${response.statusText}`;
             try {
-              const errorData = await response.json();
+              const errorData = JSON.parse(responseText);
               errorMsg = errorData.error || errorData.message || errorMsg;
+              console.log('Error data parsed:', errorData);
             } catch (e) {
-              // Se não conseguir fazer parse do JSON, usa mensagem padrão
+              console.log('Não foi possível parsear erro como JSON:', e);
+              errorMsg += responseText ? ` - ${responseText.substring(0, 200)}` : '';
             }
             throw new Error(errorMsg);
           }
 
-          const data = await response.json();
+          let data;
+          try {
+            data = JSON.parse(responseText);
+            console.log('Success data parsed:', data);
+          } catch (e) {
+            console.error('Erro ao parsear resposta como JSON:', e);
+            throw new Error('Resposta inválida do servidor');
+          }
 
           if (data.error) {
             piStatus.textContent = data.error;
@@ -347,6 +372,7 @@
               veiculoSelect.value = data.veiculo;
             }
           } else {
+            console.log('Resposta sem success nem error:', data);
             piStatus.textContent = 'Dados da PI não encontrados.';
             piStatus.style.color = '#e74c3c';
             clienteInput.value = '';
@@ -356,6 +382,7 @@
             veiculoSelect.selectedIndex = 0;
           }
         } catch (error) {
+          console.error('Erro na busca PI:', error);
           if (error.name !== 'AbortError') {
             if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
               piStatus.textContent = 'Erro de conexão. Verifique sua internet e tente novamente.';
@@ -440,20 +467,43 @@
           });
           formData.append('total_arquivos', files.length.toString());
 
+          // Debug do FormData
+          console.log('Enviando FormData com os seguintes campos:');
+          for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+              console.log(`${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+            } else {
+              console.log(`${key}: ${value}`);
+            }
+          }
+
           const response = await fetch(WEBHOOK_URL, {
             method: 'POST',
             body: formData,
           });
 
+          console.log('Submit response status:', response.status);
+          console.log('Submit response headers:', [...response.headers.entries()]);
+
+          let responseText = '';
+          try {
+            responseText = await response.text();
+            console.log('Submit response body (raw):', responseText);
+          } catch (e) {
+            console.error('Erro ao ler submit response text:', e);
+          }
+
           let responseData;
           try {
-            responseData = await response.json();
+            responseData = JSON.parse(responseText);
+            console.log('Submit response parsed:', responseData);
           } catch (e) {
-            throw new Error('Resposta inválida do servidor.');
+            console.error('Erro ao parsear submit response como JSON:', e);
+            throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 200)}`);
           }
 
           if (!response.ok) {
-            throw new Error(responseData.message || responseData.error || 'Erro no servidor.');
+            throw new Error(responseData.message || responseData.error || `Erro ${response.status}: ${response.statusText}`);
           }
 
           if (responseData.success) {
