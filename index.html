@@ -5,29 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checking OpusMúltipla</title>
   <style>
-    /* --- seu CSS original --- */
     body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin: 0; padding: 20px; }
-    .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #2c3e50; }
-    .attention-box { background-color: #fff8e1; border-left: 6px solid #f39c12; padding: 15px 20px; margin-bottom: 25px; font-weight: bold; color: #b35e00; font-size: 1rem; line-height: 1.4; border-radius: 4px; }
-    label { display: block; margin-top: 15px; font-weight: bold; color: #2c3e50; }
-    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
+    .container { max-width: 760px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.08); }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 8px; }
+    .attention-box { background-color: #fff8e1; border-left: 6px solid #f39c12; padding: 15px 20px; margin-bottom: 20px; font-weight: bold; color: #b35e00; font-size: 0.95rem; border-radius: 4px; }
+    label { display: block; margin-top: 12px; font-weight: bold; color: #2c3e50; }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; }
     textarea { resize: vertical; }
     .file-upload { margin-top: 10px; border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer; border-radius: 4px; color: #666; user-select: none; }
     .file-upload:hover { border-color: #3498db; color: #3498db; }
     .file-upload span { font-weight: bold; color: #3498db; text-decoration: underline; cursor: pointer; }
     .file-list { margin-top: 10px; }
     .file-item { margin-bottom: 5px; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; padding: 8px; background-color: #f9f9f9; border-radius: 4px; }
-    button { margin-top: 25px; width: 100%; padding: 15px; background-color: #2c3e50; color: white; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.3s ease; }
+    button { margin-top: 18px; width: 100%; padding: 14px; background-color: #2c3e50; color: white; font-size: 17px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease; }
     button:hover { background-color: #1a252f; }
     button:disabled { background-color: #95a5a6; cursor: not-allowed; }
-    .success-message { background-color: #2ecc71; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
-    .error-message { background-color: #e74c3c; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
-    .loading-message { color: #3498db; font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
-    .remove-btn { background-color: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .success-message { background-color: #2ecc71; color: white; padding: 12px; border-radius: 6px; margin-top: 14px; display: none; text-align: center; }
+    .error-message { background-color: #e74c3c; color: white; padding: 12px; border-radius: 6px; margin-top: 14px; display: none; text-align: center; }
+    .loading-message { color: #3498db; font-weight: bold; margin-top: 6px; font-size: 0.95rem; }
+    .remove-btn { background-color: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     .remove-btn:hover { background-color: #c0392b; }
-    .debug-panel { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; }
-    .debug-toggle { color: #3498db; cursor: pointer; font-size: 12px; margin-top: 10px; text-align: right; }
+    .debug-panel { margin-top: 18px; padding: 12px; background-color: #f8f9fa; border: 1px solid #e6e9ec; border-radius: 6px; font-family: monospace; font-size: 12px; max-height: 260px; overflow-y: auto; display: none; white-space: pre-wrap; }
+    .debug-toggle { color: #3498db; cursor: pointer; font-size: 13px; margin-top: 8px; text-align: right; user-select: none; }
+    .controls { display:flex; gap:10px; margin-top:10px; }
+    .controls button { width:auto; padding:8px 12px; font-size:13px; }
+    .small-muted { font-size:12px; color:#666; margin-top:6px; }
   </style>
 </head>
 <body>
@@ -35,7 +37,7 @@
     <h1>CHECKING OPUSMÚLTIPLA</h1>
     <div class="attention-box" role="alert" aria-live="assertive">
       ATENÇÃO<br />
-      Só aceitaremos checkings enviados por meio de arquivos; links não serão permitidos. O não envio dos relatórios conforme as especificações descritas aqui e nas PIs acarretará no não pagamento das veiculações, até que os relatórios sejam enviados conforme as orientações passadas na contratação da mídia (PI).
+      Só aceitaremos checkings enviados por meio de arquivos; links não serão permitidos. Leia as instruções na PI.
     </div>
 
     <form id="checkingForm" novalidate>
@@ -73,7 +75,7 @@
         <option value="TV">TV</option>
         <option value="IN">Internet</option>
       </select>
-      <small id="veiculoHelp" style="color:#666;">Este campo pode ser alterado manualmente.</small>
+      <small id="veiculoHelp" class="small-muted">Este campo pode ser alterado manualmente.</small>
 
       <label for="campanha">Campanha *</label>
       <input type="text" id="campanha" name="campanha" required placeholder="Nome da campanha" readonly />
@@ -94,18 +96,34 @@
       </div>
       <div class="file-list" id="fileList" aria-live="polite" role="region" aria-label="Lista de arquivos selecionados"></div>
 
-      <button type="submit" id="submitBtn">Enviar</button>
+      <div class="controls">
+        <button type="button" id="checkPreflightBtn">Testar Preflight (OPTIONS)</button>
+        <button type="submit" id="submitBtn">Enviar</button>
+      </div>
     </form>
 
     <div class="success-message" id="successMessage" role="alert" aria-live="assertive">Formulário enviado com sucesso! Obrigado.</div>
     <div class="error-message" id="errorMessage" role="alert" aria-live="assertive"></div>
-    
+
     <div class="debug-toggle" id="debugToggle">Mostrar detalhes de debug</div>
     <div class="debug-panel" id="debugPanel"></div>
   </div>
 
   <script>
     (function () {
+      // ========== CONFIG ==========
+      // Coloque aqui a URL do webhook exatamente como no n8n (ex.: https://n8n.grupoom.com.br/webhook-test/CheckingForm)
+      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
+
+      // Observação importante:
+      // No n8n: o nodo RespondToWebhook / Responder Preflight deve ter:
+      //   Access-Control-Allow-Origin: *
+      //   Access-Control-Allow-Methods: GET, POST, OPTIONS
+      //   Access-Control-Allow-Headers: Content-Type, Accept, X-Requested-With
+      //   Access-Control-Max-Age: 86400
+      // E responseCode numérico (204 para OPTIONS, 200 para POST).
+      // ============================
+
       const form = document.getElementById('checkingForm');
       const fileUpload = document.getElementById('fileUpload');
       const fileInput = document.getElementById('comprovantes');
@@ -122,35 +140,36 @@
       const submitBtn = document.getElementById('submitBtn');
       const debugToggle = document.getElementById('debugToggle');
       const debugPanel = document.getElementById('debugPanel');
+      const checkPreflightBtn = document.getElementById('checkPreflightBtn');
 
       let files = [];
       let piFetchController = null;
 
-      // URL do webhook (ajuste se necessário)
-      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-
+      // Debug panel
       debugToggle.addEventListener('click', () => {
-        if (debugPanel.style.display === 'none') {
-          debugPanel.style.display = 'block';
-          debugToggle.textContent = 'Ocultar detalhes de debug';
-        } else {
+        if (debugPanel.style.display === 'block') {
           debugPanel.style.display = 'none';
           debugToggle.textContent = 'Mostrar detalhes de debug';
+        } else {
+          debugPanel.style.display = 'block';
+          debugToggle.textContent = 'Ocultar detalhes de debug';
         }
       });
 
       function logDebug(message) {
         const timestamp = new Date().toLocaleTimeString();
-        debugPanel.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+        debugPanel.style.display = 'block';
+        debugToggle.textContent = 'Ocultar detalhes de debug';
+        debugPanel.innerText += `[${timestamp}] ${message}\n`;
         debugPanel.scrollTop = debugPanel.scrollHeight;
       }
 
+      // File UI
       fileUpload.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (e) => {
-        for (const file of e.target.files) files.push(file);
+        for (const f of e.target.files) files.push(f);
         updateFileList();
       });
-
       fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#3498db'; });
       fileUpload.addEventListener('dragleave', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#ccc'; });
       fileUpload.addEventListener('drop', (e) => {
@@ -183,11 +202,21 @@
         logDebug(`ERRO: ${msg}`);
       }
 
+      function showSuccess(msg) {
+        successMessage.textContent = msg;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+        logDebug(`SUCESSO: ${msg}`);
+      }
+
       function hideMessages() {
         errorMessage.style.display = 'none';
         successMessage.style.display = 'none';
       }
 
+      // ============================
+      // BUSCAR DADOS DA PI (JSON)
+      // ============================
       async function buscarDadosPI(npi) {
         if (!npi) {
           clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
@@ -204,7 +233,7 @@
         hideMessages();
 
         const payload = { action: 'buscar_pi', n_pi: npi.toString().trim() };
-        logDebug(`Enviando busca PI: ${JSON.stringify(payload)}`);
+        logDebug(`Enviando busca PI (JSON): ${JSON.stringify(payload)}`);
         logDebug(`URL utilizada: ${WEBHOOK_URL}`);
 
         try {
@@ -219,51 +248,53 @@
             signal: piFetchController.signal
           });
 
-          logDebug(`Response status: ${response.status}`);
-          logDebug(`Response headers: ${JSON.stringify([...response.headers.entries()])}`);
-
-          const responseText = await response.text().catch(e => { logDebug(`Erro ao ler response text: ${e}`); return ''; });
-          logDebug(`Response body (raw): ${responseText}`);
-
-          if (!response.ok) {
-            let errorMsg = `Erro ${response.status}: ${response.statusText}`;
-            try {
-              const errJson = JSON.parse(responseText);
-              errorMsg = errJson.error || errJson.message || errorMsg;
-              logDebug(`Parsed error JSON: ${JSON.stringify(errJson)}`);
-            } catch (e) { /* ignore */ }
-            throw new Error(errorMsg);
+          logDebug(`Response status: ${response.status} ${response.statusText}`);
+          // Print response headers (array)
+          try {
+            const headersArr = [...response.headers.entries()];
+            logDebug(`Response headers: ${JSON.stringify(headersArr)}`);
+          } catch (e) {
+            logDebug(`Erro ao ler headers: ${e}`);
           }
 
-          let data;
-          try { data = JSON.parse(responseText); } catch (e) { throw new Error('Resposta inválida do servidor'); }
-
-          logDebug(`Resposta parseada: ${JSON.stringify(data)}`);
-
-          if (data.error) {
-            piStatus.textContent = data.error;
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-          } else if (data.success === true) {
-            piStatus.textContent = 'Dados da PI carregados com sucesso.';
-            piStatus.style.color = '#2ecc71';
-            clienteInput.value = data.cliente || '';
-            campanhaInput.value = data.campanha || '';
-            produtoInput.value = data.produto || '';
-            periodoInput.value = data.periodo || '';
-            if (veiculoSelect.selectedIndex === 0 && data.veiculo) veiculoSelect.value = data.veiculo;
+          // Parse body if JSON, otherwise raw text
+          const contentType = response.headers.get('content-type') || '';
+          let dataText = '';
+          if (contentType.includes('application/json')) {
+            try {
+              const data = await response.json();
+              dataText = JSON.stringify(data);
+              logDebug(`Response JSON: ${dataText}`);
+              handlePIResponse(response.status, data);
+            } catch (e) {
+              logDebug(`Erro parseando JSON: ${e}`);
+              throw new Error('Resposta JSON inválida do servidor');
+            }
           } else {
-            piStatus.textContent = 'Resposta inesperada do servidor.';
-            piStatus.style.color = '#e74c3c';
-            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
-            veiculoSelect.selectedIndex = 0;
-            logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
+            // fallback: raw text
+            dataText = await response.text().catch(() => '');
+            logDebug(`Response body (raw): ${dataText}`);
+            // Try to parse if possible
+            try {
+              const parsed = dataText ? JSON.parse(dataText) : {};
+              handlePIResponse(response.status, parsed);
+            } catch (e) {
+              // Not JSON
+              if (!response.ok) {
+                throw new Error(`Erro ${response.status}: ${response.statusText}`);
+              }
+              // response ok but non-JSON
+              throw new Error('Resposta inesperada do servidor (não JSON).');
+            }
           }
         } catch (error) {
           logDebug(`Erro na busca PI: ${error}`);
-          if (error.name !== 'AbortError') {
-            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.message.includes('CORS')) {
+          if (error.name === 'AbortError') {
+            // ignore
+          } else {
+            // Detect possible CORS / network
+            const msg = (error.message || '').toLowerCase();
+            if (msg.includes('failed to fetch') || msg.includes('networkerror') || msg.includes('cors')) {
               piStatus.textContent = 'Erro de CORS. Verifique o webhook (OPTIONS) no n8n ou o proxy.';
             } else {
               piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
@@ -277,6 +308,45 @@
         }
       }
 
+      function handlePIResponse(status, data) {
+        if (!status || status >= 400) {
+          const err = (data && (data.error || data.message)) || `Erro ${status}`;
+          piStatus.textContent = err;
+          piStatus.style.color = '#e74c3c';
+          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
+          veiculoSelect.selectedIndex = 0;
+          return;
+        }
+
+        if (data && data.error) {
+          piStatus.textContent = data.error;
+          piStatus.style.color = '#e74c3c';
+          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
+          veiculoSelect.selectedIndex = 0;
+          return;
+        }
+
+        // Caso esperado: success true ou campos diretos
+        if (data && (data.success === true || data.cliente || data.campanha || data.produto || data.periodo)) {
+          piStatus.textContent = 'Dados da PI carregados com sucesso.';
+          piStatus.style.color = '#2ecc71';
+          clienteInput.value = data.cliente || data.CLIENTE || '';
+          campanhaInput.value = data.campanha || data.CAMPANHA || '';
+          produtoInput.value = data.produto || data.PRODUTO || '';
+          periodoInput.value = data.periodo || data.PERIODO || '';
+          if (veiculoSelect.selectedIndex === 0 && (data.veiculo || data.VEICULO)) {
+            veiculoSelect.value = data.veiculo || data.VEICULO;
+          }
+        } else {
+          piStatus.textContent = 'Resposta inesperada do servidor.';
+          piStatus.style.color = '#e74c3c';
+          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
+          veiculoSelect.selectedIndex = 0;
+          logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
+        }
+      }
+
+      // debounce input
       let debounceTimeout;
       piInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
@@ -288,11 +358,16 @@
             clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           }
-        }, 500);
+        }, 450);
       });
 
+      // ============================
+      // SUBMISSÃO (multipart/form-data)
+      // ============================
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
+        hideMessages();
+
         if (files.length === 0) { showError('Por favor, insira pelo menos um arquivo de comprovante.'); return; }
 
         const requiredFields = ['nome', 'telefone', 'email', 'pi', 'cliente', 'veiculo', 'campanha', 'produto', 'periodo'];
@@ -322,12 +397,13 @@
           formData.append('periodo', document.getElementById('periodo').value.trim());
           formData.append('observacoes', document.getElementById('observacoes').value.trim());
 
+          // anexos: nomeamos como comprovante_0, comprovante_1, ... (compatível com seu n8n)
           files.forEach((file, index) => formData.append(`comprovante_${index}`, file));
           formData.append('total_arquivos', files.length.toString());
 
-          logDebug('Enviando FormData:');
+          logDebug('Enviando FormData: (lista resumida)');
           for (let [k, v] of formData.entries()) {
-            if (v instanceof File) logDebug(`${k}: File(${v.name}, ${v.size}, ${v.type})`);
+            if (v instanceof File) logDebug(`${k}: File(${v.name}, ${v.size})`);
             else logDebug(`${k}: ${v}`);
           }
 
@@ -335,26 +411,30 @@
             method: 'POST',
             mode: 'cors',
             body: formData
+            // IMPORTANT: do NOT set Content-Type when sending FormData — browser sets the boundary
           });
 
-          logDebug(`Submit response status: ${response.status}`);
-          logDebug(`Submit response headers: ${JSON.stringify([...response.headers.entries()])}`);
+          logDebug(`Submit response status: ${response.status} ${response.statusText}`);
+          try { logDebug(`Submit headers: ${JSON.stringify([...response.headers.entries()])}`); } catch(e){}
 
-          const responseText = await response.text().catch(e => { logDebug(`Erro ao ler submit response text: ${e}`); return ''; });
-          logDebug(`Submit response body (raw): ${responseText}`);
-
+          // Try parse JSON if returned
           let responseData = {};
-          try { responseData = JSON.parse(responseText || '{}'); } catch (e) { throw new Error(`Resposta inválida do servidor: ${responseText.substring(0,200)}`); }
+          const ct = response.headers.get('content-type') || '';
+          if (ct.includes('application/json')) {
+            responseData = await response.json().catch(() => ({}));
+            logDebug(`Submit response JSON: ${JSON.stringify(responseData)}`);
+          } else {
+            const text = await response.text().catch(()=>'');
+            logDebug(`Submit response text: ${text}`);
+            try { responseData = text ? JSON.parse(text) : {}; } catch(e) { /* ignore */ }
+          }
 
           if (!response.ok) {
             throw new Error(responseData.message || responseData.error || `Erro ${response.status}: ${response.statusText}`);
           }
 
-          if (responseData.success) {
-            successMessage.textContent = responseData.message || 'Formulário enviado com sucesso! Obrigado.';
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            logDebug('Formulário enviado com sucesso!');
+          if (responseData && responseData.success) {
+            showSuccess(responseData.message || 'Formulário enviado com sucesso! Obrigado.');
             form.reset();
             files = [];
             updateFileList();
@@ -362,20 +442,60 @@
             clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           } else {
-            throw new Error(responseData.message || 'Ocorreu um erro no servidor.');
+            throw new Error(responseData.message || responseData.error || 'Ocorreu um erro no servidor.');
           }
         } catch (error) {
           logDebug(`Erro no envio: ${error}`);
-          if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            showError('Erro de conexão. Verifique sua internet e o webhook (OPTIONS) no n8n.');
+          const msg = (error && error.message) ? error.message : 'Erro ao enviar formulário.';
+          if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('cors')) {
+            showError('Erro de conexão/CORS. Verifique o webhook (OPTIONS) no n8n e os headers CORS.');
           } else {
-            showError('Erro ao enviar formulário: ' + error.message);
+            showError('Erro ao enviar formulário: ' + msg);
           }
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Enviar';
         }
       });
+
+      // ============================
+      // Preflight manual test (opcional)
+      // ============================
+      checkPreflightBtn.addEventListener('click', async () => {
+        logDebug('Executando teste preflight (OPTIONS) — pode falhar por CORS se o servidor não aceitar.');
+        try {
+          const resp = await fetch(WEBHOOK_URL, {
+            method: 'OPTIONS',
+            mode: 'cors'
+          });
+          logDebug(`Preflight status: ${resp.status} ${resp.statusText}`);
+          try {
+            const hdrs = [...resp.headers.entries()];
+            logDebug(`Preflight headers: ${JSON.stringify(hdrs)}`);
+          } catch (e) {
+            logDebug(`Erro ao ler headers do preflight: ${e}`);
+          }
+          if (resp.ok) logDebug('Preflight OK (respondeu).');
+          else logDebug('Preflight respondeu com erro; verifique RespondToWebhook/OPTIONS no n8n ou proxy.');
+        } catch (e) {
+          logDebug('Preflight falhou: possível CORS ou bloqueio pelo proxy. ' + e);
+        }
+      });
+
+      // Small UX: press Enter in PI input to trigger immediate search
+      piInput.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          const v = piInput.value.trim();
+          if (v) buscarDadosPI(v);
+        }
+      });
+
+      // Init debug panel collapsed
+      debugPanel.style.display = 'none';
+
+      // Helpful initial debug note
+      logDebug('Interface carregada. Verifique WEBHOOK_URL e headers CORS no n8n se houver problemas.');
     })();
   </script>
 </body>
