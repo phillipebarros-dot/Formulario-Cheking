@@ -216,15 +216,8 @@
       let files = [];
       let piFetchController = null;
 
-      // Configuração da URL do webhook
-      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-      
-      // URLs alternativas para teste
-      const WEBHOOK_URLS = [
-        'https://n8n.grupoom.com.br/webhook-test/CheckingForm',
-        'https://n8n.grupoom.com.br/webhook/CheckingForm',
-        'https://n8n.grupoom.com.br/webhooks/CheckingForm'
-      ];
+      // URL do webhook (a que funciona)
+      const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
       fileUpload.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (e) => {
@@ -314,121 +307,102 @@
         
         console.log('Enviando busca PI:', payload);
 
-        // Tentar múltiplas URLs se necessário
-        for (let urlIndex = 0; urlIndex < WEBHOOK_URLS.length; urlIndex++) {
-          const currentUrl = WEBHOOK_URLS[urlIndex];
-          console.log(`Tentando URL ${urlIndex + 1}: ${currentUrl}`);
-          
+        try {
+          const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            signal: piFetchController.signal,
+          });
+
+          console.log('Response status:', response.status);
+          console.log('Response headers:', [...response.headers.entries()]);
+
+          let responseText = '';
           try {
-            const response = await fetch(currentUrl, {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify(payload),
-              signal: piFetchController.signal,
-            });
-
-            console.log(`URL ${urlIndex + 1} - Response status:`, response.status);
-            console.log(`URL ${urlIndex + 1} - Response headers:`, [...response.headers.entries()]);
-
-            let responseText = '';
-            try {
-              responseText = await response.text();
-              console.log(`URL ${urlIndex + 1} - Response body (raw):`, responseText);
-            } catch (e) {
-              console.error(`URL ${urlIndex + 1} - Erro ao ler response text:`, e);
-            }
-
-            if (response.status === 404) {
-              console.log(`URL ${urlIndex + 1} - 404, tentando próxima URL...`);
-              continue; // Tenta próxima URL
-            }
-
-            if (!response.ok) {
-              let errorMsg = `Erro ${response.status}: ${response.statusText}`;
-              try {
-                const errorData = JSON.parse(responseText);
-                errorMsg = errorData.error || errorData.message || errorMsg;
-                console.log(`URL ${urlIndex + 1} - Error data parsed:`, errorData);
-              } catch (e) {
-                console.log(`URL ${urlIndex + 1} - Não foi possível parsear erro como JSON:`, e);
-                errorMsg += responseText ? ` - ${responseText.substring(0, 200)}` : '';
-              }
-              throw new Error(errorMsg);
-            }
-
-            let data;
-            try {
-              data = JSON.parse(responseText);
-              console.log(`URL ${urlIndex + 1} - Success data parsed:`, data);
-            } catch (e) {
-              console.error(`URL ${urlIndex + 1} - Erro ao parsear resposta como JSON:`, e);
-              throw new Error('Resposta inválida do servidor');
-            }
-
-            // Se chegou até aqui, a requisição foi bem-sucedida
-            if (data.error) {
-              piStatus.textContent = data.error;
-              piStatus.style.color = '#e74c3c';
-              clienteInput.value = '';
-              campanhaInput.value = '';
-              produtoInput.value = '';
-              periodoInput.value = '';
-              veiculoSelect.selectedIndex = 0;
-            } else if (data.success) {
-              piStatus.textContent = 'Dados da PI carregados com sucesso.';
-              piStatus.style.color = '#2ecc71';
-              clienteInput.value = data.cliente || '';
-              campanhaInput.value = data.campanha || '';
-              produtoInput.value = data.produto || '';
-              periodoInput.value = data.periodo || '';
-              
-              // Preencher o veículo apenas se não foi selecionado manualmente
-              if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
-                veiculoSelect.value = data.veiculo;
-              }
-            } else {
-              console.log('Resposta sem success nem error:', data);
-              piStatus.textContent = 'Dados da PI não encontrados.';
-              piStatus.style.color = '#e74c3c';
-              clienteInput.value = '';
-              campanhaInput.value = '';
-              produtoInput.value = '';
-              periodoInput.value = '';
-              veiculoSelect.selectedIndex = 0;
-            }
-            return; // Sai da função se bem-sucedido
-            
-          } catch (error) {
-            console.error(`URL ${urlIndex + 1} - Erro:`, error);
-            
-            if (error.name === 'AbortError') {
-              return; // Requisição foi cancelada
-            }
-            
-            // Se é o último URL e ainda deu erro, mostra o erro
-            if (urlIndex === WEBHOOK_URLS.length - 1) {
-              if (error.message.includes('Failed to fetch') || 
-                  error.message.includes('NetworkError') || 
-                  error.message.includes('CORS')) {
-                piStatus.textContent = 'Erro de conexão ou CORS. Webhook pode estar inativo ou com configuração incorreta.';
-              } else {
-                piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
-              }
-              piStatus.style.color = '#e74c3c';
-              clienteInput.value = '';
-              campanhaInput.value = '';
-              produtoInput.value = '';
-              periodoInput.value = '';
-              veiculoSelect.selectedIndex = 0;
-            }
-            // Continue para próxima URL se não for o último
+            responseText = await response.text();
+            console.log('Response body (raw):', responseText);
+          } catch (e) {
+            console.error('Erro ao ler response text:', e);
           }
+
+          if (!response.ok) {
+            let errorMsg = `Erro ${response.status}: ${response.statusText}`;
+            try {
+              const errorData = JSON.parse(responseText);
+              errorMsg = errorData.error || errorData.message || errorMsg;
+              console.log('Error data parsed:', errorData);
+            } catch (e) {
+              console.log('Não foi possível parsear erro como JSON:', e);
+              errorMsg += responseText ? ` - ${responseText.substring(0, 200)}` : '';
+            }
+            throw new Error(errorMsg);
+          }
+
+          let data;
+          try {
+            data = JSON.parse(responseText);
+            console.log('Success data parsed:', data);
+          } catch (e) {
+            console.error('Erro ao parsear resposta como JSON:', e);
+            throw new Error('Resposta inválida do servidor');
+          }
+
+          if (data.error) {
+            piStatus.textContent = data.error;
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            veiculoSelect.selectedIndex = 0;
+          } else if (data.success) {
+            piStatus.textContent = 'Dados da PI carregados com sucesso.';
+            piStatus.style.color = '#2ecc71';
+            clienteInput.value = data.cliente || '';
+            campanhaInput.value = data.campanha || '';
+            produtoInput.value = data.produto || '';
+            periodoInput.value = data.periodo || '';
+            
+            // Preencher o veículo apenas se não foi selecionado manualmente
+            if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
+              veiculoSelect.value = data.veiculo;
+            }
+          } else {
+            console.log('Resposta sem success nem error:', data);
+            piStatus.textContent = 'Dados da PI não encontrados.';
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            veiculoSelect.selectedIndex = 0;
+          }
+        } catch (error) {
+          console.error('Erro na busca PI:', error);
+          if (error.name !== 'AbortError') {
+            if (error.message.includes('Failed to fetch') || 
+                error.message.includes('NetworkError') || 
+                error.message.includes('CORS')) {
+              piStatus.textContent = 'Erro de CORS. Configure os headers no webhook do n8n.';
+            } else if (error.message.includes('Invalid status code')) {
+              piStatus.textContent = 'Erro no n8n: Status code deve ser número, não string.';
+            } else {
+              piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
+            }
+            piStatus.style.color = '#e74c3c';
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            veiculoSelect.selectedIndex = 0;
+          }
+        } finally {
+          piFetchController = null;
         }
-        
-        piFetchController = null;
       }
 
       let debounceTimeout;
