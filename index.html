@@ -5,161 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checking OpusMúltipla</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f7fa;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
-    .attention-box {
-      background-color: #fff8e1;
-      border-left: 6px solid #f39c12;
-      padding: 15px 20px;
-      margin-bottom: 25px;
-      font-weight: bold;
-      color: #b35e00;
-      font-size: 1rem;
-      line-height: 1.4;
-      border-radius: 4px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    textarea {
-      resize: vertical;
-    }
-    .file-upload {
-      margin-top: 10px;
-      border: 2px dashed #ccc;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 4px;
-      color: #666;
-      user-select: none;
-    }
-    .file-upload:hover {
-      border-color: #3498db;
-      color: #3498db;
-    }
-    .file-upload span {
-      font-weight: bold;
-      color: #3498db;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .file-list {
-      margin-top: 10px;
-    }
-    .file-item {
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px;
-      background-color: #f9f9f9;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 15px;
-      background-color: #2c3e50;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #1a252f;
-    }
-    button:disabled {
-      background-color: #95a5a6;
-      cursor: not-allowed;
-    }
-    .success-message {
-      background-color: #2ecc71;
-      color: white;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 20px;
-      display: none;
-      text-align: center;
-    }
-    .error-message {
-      background-color: #e74c3c;
-      color: white;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 20px;
-      display: none;
-      text-align: center;
-    }
-    .loading-message {
-      color: #3498db;
-      font-weight: bold;
-      margin-top: 5px;
-      font-size: 0.9rem;
-    }
-    .remove-btn {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .remove-btn:hover {
-      background-color: #c0392b;
-    }
-    .debug-panel {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 12px;
-      max-height: 200px;
-      overflow-y: auto;
-      display: none;
-    }
-    .debug-toggle {
-      color: #3498db;
-      cursor: pointer;
-      font-size: 12px;
-      margin-top: 10px;
-      text-align: right;
-    }
+    /* --- seu CSS original --- */
+    body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin: 0; padding: 20px; }
+    .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #2c3e50; }
+    .attention-box { background-color: #fff8e1; border-left: 6px solid #f39c12; padding: 15px 20px; margin-bottom: 25px; font-weight: bold; color: #b35e00; font-size: 1rem; line-height: 1.4; border-radius: 4px; }
+    label { display: block; margin-top: 15px; font-weight: bold; color: #2c3e50; }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
+    textarea { resize: vertical; }
+    .file-upload { margin-top: 10px; border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer; border-radius: 4px; color: #666; user-select: none; }
+    .file-upload:hover { border-color: #3498db; color: #3498db; }
+    .file-upload span { font-weight: bold; color: #3498db; text-decoration: underline; cursor: pointer; }
+    .file-list { margin-top: 10px; }
+    .file-item { margin-bottom: 5px; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; padding: 8px; background-color: #f9f9f9; border-radius: 4px; }
+    button { margin-top: 25px; width: 100%; padding: 15px; background-color: #2c3e50; color: white; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.3s ease; }
+    button:hover { background-color: #1a252f; }
+    button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+    .success-message { background-color: #2ecc71; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
+    .error-message { background-color: #e74c3c; color: white; padding: 15px; border-radius: 6px; margin-top: 20px; display: none; text-align: center; }
+    .loading-message { color: #3498db; font-weight: bold; margin-top: 5px; font-size: 0.9rem; }
+    .remove-btn { background-color: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .remove-btn:hover { background-color: #c0392b; }
+    .debug-panel { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; }
+    .debug-toggle { color: #3498db; cursor: pointer; font-size: 12px; margin-top: 10px; text-align: right; }
   </style>
 </head>
 <body>
@@ -258,10 +126,9 @@
       let files = [];
       let piFetchController = null;
 
-      // URL de produção correta - usando webhook-test
+      // URL do webhook (ajuste se necessário)
       const WEBHOOK_URL = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
 
-      // Alternar visibilidade do painel de debug
       debugToggle.addEventListener('click', () => {
         if (debugPanel.style.display === 'none') {
           debugPanel.style.display = 'block';
@@ -280,29 +147,16 @@
 
       fileUpload.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', (e) => {
-        for (const file of e.target.files) {
-          files.push(file);
-        }
+        for (const file of e.target.files) files.push(file);
         updateFileList();
       });
 
-      // Drag and drop functionality
-      fileUpload.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        fileUpload.style.borderColor = '#3498db';
-      });
-
-      fileUpload.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        fileUpload.style.borderColor = '#ccc';
-      });
-
+      fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#3498db'; });
+      fileUpload.addEventListener('dragleave', (e) => { e.preventDefault(); fileUpload.style.borderColor = '#ccc'; });
       fileUpload.addEventListener('drop', (e) => {
         e.preventDefault();
         fileUpload.style.borderColor = '#ccc';
-        for (const file of e.dataTransfer.files) {
-          files.push(file);
-        }
+        for (const f of e.dataTransfer.files) files.push(f);
         updateFileList();
       });
 
@@ -311,21 +165,13 @@
         files.forEach((file, index) => {
           const div = document.createElement('div');
           div.className = 'file-item';
-          
           const fileName = document.createElement('span');
           fileName.textContent = file.name;
           div.appendChild(fileName);
-          
           const removeBtn = document.createElement('button');
-          removeBtn.type = 'button';
-          removeBtn.textContent = 'Remover';
-          removeBtn.className = 'remove-btn';
-          removeBtn.onclick = () => {
-            files.splice(index, 1);
-            updateFileList();
-          };
+          removeBtn.type = 'button'; removeBtn.textContent = 'Remover'; removeBtn.className = 'remove-btn';
+          removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
           div.appendChild(removeBtn);
-          
           fileList.appendChild(div);
         });
       }
@@ -344,143 +190,86 @@
 
       async function buscarDadosPI(npi) {
         if (!npi) {
-          clienteInput.value = '';
-          campanhaInput.value = '';
-          produtoInput.value = '';
-          periodoInput.value = '';
+          clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
           veiculoSelect.selectedIndex = 0;
           piStatus.textContent = '';
           return;
         }
 
-        if (piFetchController) {
-          piFetchController.abort();
-        }
-        
+        if (piFetchController) piFetchController.abort();
         piFetchController = new AbortController();
+
         piStatus.textContent = 'Buscando dados da PI...';
         piStatus.style.color = '#3498db';
         hideMessages();
 
-        // Payload para debug
-        const payload = { 
-          action: 'buscar_pi', 
-          n_pi: npi.toString().trim()
-        };
-        
+        const payload = { action: 'buscar_pi', n_pi: npi.toString().trim() };
         logDebug(`Enviando busca PI: ${JSON.stringify(payload)}`);
         logDebug(`URL utilizada: ${WEBHOOK_URL}`);
 
         try {
           const response = await fetch(WEBHOOK_URL, {
             method: 'POST',
-            headers: { 
+            mode: 'cors',
+            headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
             body: JSON.stringify(payload),
-            signal: piFetchController.signal,
+            signal: piFetchController.signal
           });
 
           logDebug(`Response status: ${response.status}`);
           logDebug(`Response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
-          let responseText = '';
-          try {
-            responseText = await response.text();
-            logDebug(`Response body (raw): ${responseText}`);
-          } catch (e) {
-            logDebug(`Erro ao ler response text: ${e}`);
-          }
+          const responseText = await response.text().catch(e => { logDebug(`Erro ao ler response text: ${e}`); return ''; });
+          logDebug(`Response body (raw): ${responseText}`);
 
           if (!response.ok) {
             let errorMsg = `Erro ${response.status}: ${response.statusText}`;
             try {
-              const errorData = JSON.parse(responseText);
-              errorMsg = errorData.error || errorData.message || errorMsg;
-              logDebug(`Error data parsed: ${JSON.stringify(errorData)}`);
-            } catch (e) {
-              logDebug(`Não foi possível parsear erro como JSON: ${e}`);
-              errorMsg += responseText ? ` - ${responseText.substring(0, 200)}` : '';
-            }
+              const errJson = JSON.parse(responseText);
+              errorMsg = errJson.error || errJson.message || errorMsg;
+              logDebug(`Parsed error JSON: ${JSON.stringify(errJson)}`);
+            } catch (e) { /* ignore */ }
             throw new Error(errorMsg);
           }
 
           let data;
-          try {
-            data = JSON.parse(responseText);
-            logDebug(`Success data parsed: ${JSON.stringify(data)}`);
-          } catch (e) {
-            logDebug(`Erro ao parsear resposta como JSON: ${e}`);
-            throw new Error('Resposta inválida do servidor');
-          }
+          try { data = JSON.parse(responseText); } catch (e) { throw new Error('Resposta inválida do servidor'); }
 
-          // Log detalhado da resposta para debug
-          logDebug(`Estrutura completa da resposta: ${JSON.stringify(data)}`);
-          logDebug(`data.success: ${data.success}`);
-          logDebug(`data.error: ${data.error}`);
-          logDebug(`data.cliente: ${data.cliente}`);
-          logDebug(`data.campanha: ${data.campanha}`);
-          logDebug(`data.produto: ${data.produto}`);
-          logDebug(`data.periodo: ${data.periodo}`);
-          logDebug(`data.veiculo: ${data.veiculo}`);
+          logDebug(`Resposta parseada: ${JSON.stringify(data)}`);
 
           if (data.error) {
             piStatus.textContent = data.error;
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           } else if (data.success === true) {
             piStatus.textContent = 'Dados da PI carregados com sucesso.';
             piStatus.style.color = '#2ecc71';
-            
-            logDebug('Preenchendo campos:');
-            logDebug(`- Cliente: ${data.cliente}`);
             clienteInput.value = data.cliente || '';
-            logDebug(`- Campanha: ${data.campanha}`);  
             campanhaInput.value = data.campanha || '';
-            logDebug(`- Produto: ${data.produto}`);
             produtoInput.value = data.produto || '';
-            logDebug(`- Período: ${data.periodo}`);
             periodoInput.value = data.periodo || '';
-            
-            // Preencher o veículo apenas se não foi selecionado manualmente
-            if (veiculoSelect.selectedIndex === 0 && data.veiculo) {
-              logDebug(`- Veículo: ${data.veiculo}`);
-              veiculoSelect.value = data.veiculo;
-            }
-            
-            logDebug('Campos preenchidos com sucesso!');
+            if (veiculoSelect.selectedIndex === 0 && data.veiculo) veiculoSelect.value = data.veiculo;
           } else {
-            logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
             piStatus.textContent = 'Resposta inesperada do servidor.';
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
+            logDebug(`Resposta sem success nem error: ${JSON.stringify(data)}`);
           }
         } catch (error) {
           logDebug(`Erro na busca PI: ${error}`);
           if (error.name !== 'AbortError') {
-            if (error.message.includes('Failed to fetch') || 
-                error.message.includes('NetworkError') || 
-                error.message.includes('CORS')) {
-              piStatus.textContent = 'Erro de CORS. Configure os headers no webhook do n8n.';
-            } else if (error.message.includes('Invalid status code')) {
-              piStatus.textContent = 'Erro no n8n: Status code deve ser número, não string.';
+            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.message.includes('CORS')) {
+              piStatus.textContent = 'Erro de CORS. Verifique o webhook (OPTIONS) no n8n ou o proxy.';
             } else {
               piStatus.textContent = error.message || 'Erro ao buscar dados da PI.';
             }
             piStatus.style.color = '#e74c3c';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           }
         } finally {
@@ -493,14 +282,10 @@
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
           const piValue = piInput.value.trim();
-          if (piValue) {
-            buscarDadosPI(piValue);
-          } else {
+          if (piValue) buscarDadosPI(piValue);
+          else {
             piStatus.textContent = '';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           }
         }, 500);
@@ -508,14 +293,8 @@
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
+        if (files.length === 0) { showError('Por favor, insira pelo menos um arquivo de comprovante.'); return; }
 
-        // Validação de arquivos
-        if (files.length === 0) {
-          showError('Por favor, insira pelo menos um arquivo de comprovante.');
-          return;
-        }
-
-        // Validação básica dos campos obrigatórios
         const requiredFields = ['nome', 'telefone', 'email', 'pi', 'cliente', 'veiculo', 'campanha', 'produto', 'periodo'];
         for (const field of requiredFields) {
           const input = document.getElementById(field);
@@ -526,17 +305,12 @@
           }
         }
 
-        // Desabilitar botão de envio
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando...';
 
         try {
           const formData = new FormData();
-          
-          // Adicionar action primeiro
           formData.append('action', 'submissao');
-          
-          // Adicionar todos os campos do formulário
           formData.append('nome', document.getElementById('nome').value.trim());
           formData.append('telefone', document.getElementById('telefone').value.trim());
           formData.append('email', document.getElementById('email').value.trim());
@@ -547,47 +321,30 @@
           formData.append('produto', document.getElementById('produto').value.trim());
           formData.append('periodo', document.getElementById('periodo').value.trim());
           formData.append('observacoes', document.getElementById('observacoes').value.trim());
-          
-          // Adicionar arquivos
-          files.forEach((file, index) => {
-            formData.append(`comprovante_${index}`, file);
-          });
+
+          files.forEach((file, index) => formData.append(`comprovante_${index}`, file));
           formData.append('total_arquivos', files.length.toString());
 
-          // Debug do FormData
-          logDebug('Enviando FormData com os seguintes campos:');
-          for (let [key, value] of formData.entries()) {
-            if (value instanceof File) {
-              logDebug(`${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
-            } else {
-              logDebug(`${key}: ${value}`);
-            }
+          logDebug('Enviando FormData:');
+          for (let [k, v] of formData.entries()) {
+            if (v instanceof File) logDebug(`${k}: File(${v.name}, ${v.size}, ${v.type})`);
+            else logDebug(`${k}: ${v}`);
           }
 
           const response = await fetch(WEBHOOK_URL, {
             method: 'POST',
-            body: formData,
+            mode: 'cors',
+            body: formData
           });
 
           logDebug(`Submit response status: ${response.status}`);
           logDebug(`Submit response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
-          let responseText = '';
-          try {
-            responseText = await response.text();
-            logDebug(`Submit response body (raw): ${responseText}`);
-          } catch (e) {
-            logDebug(`Erro ao ler submit response text: ${e}`);
-          }
+          const responseText = await response.text().catch(e => { logDebug(`Erro ao ler submit response text: ${e}`); return ''; });
+          logDebug(`Submit response body (raw): ${responseText}`);
 
-          let responseData;
-          try {
-            responseData = JSON.parse(responseText);
-            logDebug(`Submit response parsed: ${JSON.stringify(responseData)}`);
-          } catch (e) {
-            logDebug(`Erro ao parsear submit response como JSON: ${e}`);
-            throw new Error(`Resposta inválida do servidor: ${responseText.substring(0, 200)}`);
-          }
+          let responseData = {};
+          try { responseData = JSON.parse(responseText || '{}'); } catch (e) { throw new Error(`Resposta inválida do servidor: ${responseText.substring(0,200)}`); }
 
           if (!response.ok) {
             throw new Error(responseData.message || responseData.error || `Erro ${response.status}: ${response.statusText}`);
@@ -598,16 +355,11 @@
             successMessage.style.display = 'block';
             errorMessage.style.display = 'none';
             logDebug('Formulário enviado com sucesso!');
-            
-            // Limpar formulário
             form.reset();
             files = [];
             updateFileList();
             piStatus.textContent = '';
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
+            clienteInput.value = campanhaInput.value = produtoInput.value = periodoInput.value = '';
             veiculoSelect.selectedIndex = 0;
           } else {
             throw new Error(responseData.message || 'Ocorreu um erro no servidor.');
@@ -615,12 +367,11 @@
         } catch (error) {
           logDebug(`Erro no envio: ${error}`);
           if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            showError('Erro de conexão. Verifique sua internet e tente novamente.');
+            showError('Erro de conexão. Verifique sua internet e o webhook (OPTIONS) no n8n.');
           } else {
             showError('Erro ao enviar formulário: ' + error.message);
           }
         } finally {
-          // Reabilitar botão de envio
           submitBtn.disabled = false;
           submitBtn.textContent = 'Enviar';
         }
