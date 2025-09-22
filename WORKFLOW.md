@@ -1,6 +1,3 @@
-
-
-```markdown
 # Análise Técnica Detalhada do Workflow n8n
 
 Este documento oferece uma análise técnica detalhada, nó por nó, do workflow de automação do formulário de checking. O objetivo é servir como um manual para manutenção, depuração e futuras evoluções do processo.
