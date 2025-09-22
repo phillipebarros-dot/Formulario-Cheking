@@ -126,6 +126,7 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
+        /* --- ESTILOS DO RODAPÉ COM LINKS REAIS --- */
         .footer-wrapper { 
             width: 100%; 
             display: flex; 
@@ -134,7 +135,7 @@
             margin-top: auto; 
         }
         .footer-gradient-bar { 
-            order: -1; 
+            order: -1; /* Joga a barra para o topo do footer */
             width: 100%; 
             height: 8px; 
             background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
@@ -168,7 +169,6 @@
             letter-spacing: 2.5px;
             margin-top: 0.2rem;
         }
-
         .agency-logos ul {
             display: flex;
             flex-wrap: wrap;
@@ -414,7 +414,7 @@
         fileUpload.addEventListener('click', () => fileInput.click());
         fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
         fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.target.files); });
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         let debounceTimeout;
