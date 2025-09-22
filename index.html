@@ -8,98 +8,84 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Variáveis CSS para fácil manutenção */
         :root {
-            --cor-primaria: #0033a0; /* Azul inspirado no Grupo OM */
-            --cor-texto: #1a202c;
-            --cor-texto-secundario: #4a5568;
-            --cor-fundo: #f7fafc;
-            --cor-borda: #e2e8f0;
-            --cor-sucesso: #2d8a5b;
-            --cor-erro: #c53030;
-            --cor-bloqueado-fundo: #edf2f7;
+            --cor-primaria: #0033a0; /* Azul principal OM */
+            --cor-secundaria: #1a202c; /* Textos escuros */
+            --cor-texto-claro: #4a5568; /* Textos secundários */
+            --cor-fundo-claro: #f7fafc; /* Fundo geral */
+            --cor-fundo-secao: #ffffff; /* Fundo do container do formulário */
+            --cor-borda: #e2e8f0; /* Bordas de inputs e elementos */
+            --cor-borda-foco: #0033a0; /* Borda ao focar */
+            --cor-sombra: rgba(0, 0, 0, 0.05); /* Sombra suave */
+            --cor-sucesso: #2d8a5b; /* Mensagens de sucesso */
+            --cor-erro: #c53030; /* Mensagens de erro */
+            --cor-desabilitado: #edf2f7; /* Background de campos desabilitados */
+
+            /* Cores para o gradiente de rodapé */
+            --gradient-start: #d90429; /* Vermelho */
+            --gradient-mid1: #fca311;  /* Laranja */
+            --gradient-mid2: #90be6d;  /* Verde claro */
+            --gradient-mid3: #43aa8b;  /* Verde água */
+            --gradient-mid4: #0033a0;  /* Azul */
+            --gradient-end: #5a189a;   /* Roxo */
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        /* Reset básico */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto);
+            background-color: var(--cor-fundo-claro);
+            color: var(--cor-secundaria);
             display: flex;
+            flex-direction: column; /* Para organizar o header, formulário e footer */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 2rem 1rem;
+            padding: 2rem 1rem 0; /* Espaço em cima e laterais, 0 embaixo para o footer */
+            line-height: 1.6;
         }
 
+        /* Container principal do formulário */
         .container {
             max-width: 750px;
             width: 100%;
-            background: white;
+            background: var(--cor-fundo-secao);
             padding: 2.5rem 3rem;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px var(--cor-sombra);
             border: 1px solid var(--cor-borda);
+            margin-bottom: 2rem; /* Espaço entre o formulário e o footer */
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--cor-texto);
-        }
+        /* Cabeçalho do formulário */
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        .header h1 { font-size: 1.75rem; font-weight: 700; color: var(--cor-secundaria); }
         
-        /* NOVO: Este código cria a linha colorida */
+        /* Barra colorida no cabeçalho */
         .header h1::after {
             content: '';
             display: block;
             width: 80px;
-            height: 4px;
-            background-color: var(--cor-primaria);
-            border-radius: 2px;
+            height: 5px;
+            border-radius: 3px;
             margin: 0.75rem auto 0;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
         }
         
-        .header p {
-            font-size: 1rem;
-            color: var(--cor-texto-secundario);
-            margin-top: 0.5rem;
-        }
+        .header p { font-size: 1rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+        /* Layout em grid para os campos */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .full-width { grid-column: 1 / -1; }
 
-        .full-width {
-            grid-column: 1 / -1;
-        }
+        /* Estilos de Labels */
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
 
-        label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select,
-        textarea {
+        /* Estilos de Inputs, Selects e Textareas */
+        input[type="text"], input[type="email"], select, textarea {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--cor-borda);
@@ -107,85 +93,39 @@
             font-size: 1rem;
             font-family: 'Inter', sans-serif;
             transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: var(--cor-fundo-secao); /* Garante fundo branco */
+            color: var(--cor-secundaria);
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--cor-primaria);
+            border-color: var(--cor-borda-foco);
             box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
         }
 
+        /* Campos desabilitados/readonly */
         input[readonly], .campo-bloqueado {
-            background-color: var(--cor-bloqueado-fundo);
+            background-color: var(--cor-desabilitado);
             cursor: not-allowed;
             pointer-events: none;
+            color: var(--cor-texto-claro);
         }
+        select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        textarea { resize: vertical; min-height: 100px; }
         
-        select.campo-bloqueado {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
+        /* Status da PI */
+        .pi-group { position: relative; }
+        #piStatus { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; min-height: 1.2em; }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .pi-group {
-            position: relative;
-        }
-        
-        #piStatus {
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-top: 0.5rem;
-            min-height: 1.2em;
-        }
+        /* Área de upload de arquivos */
+        .file-upload { margin-top: 0.5rem; border: 2px dashed var(--cor-borda); padding: 2rem; text-align: center; cursor: pointer; border-radius: 8px; transition: border-color 0.2s, background-color 0.2s; }
+        .file-upload:hover { border-color: var(--cor-borda-foco); background-color: #f7faff; }
+        .file-upload span { font-weight: 600; color: var(--cor-borda-foco); }
+        .file-list { margin-top: 1rem; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; background-color: #f7f7f7; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .remove-btn { background: none; border: none; color: var(--cor-erro); cursor: pointer; font-weight: 600; }
 
-        .file-upload {
-            margin-top: 0.5rem;
-            border: 2px dashed var(--cor-borda);
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: border-color 0.2s, background-color 0.2s;
-        }
-        
-        .file-upload:hover {
-            border-color: var(--cor-primaria);
-            background-color: #f7faff;
-        }
-        
-        .file-upload span {
-            font-weight: 600;
-            color: var(--cor-primaria);
-        }
-        
-        .file-list {
-            margin-top: 1rem;
-        }
-        
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #f7f7f7;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .remove-btn {
-            background: none;
-            border: none;
-            color: var(--cor-erro);
-            cursor: pointer;
-            font-weight: 600;
-        }
-
+        /* Botão de Enviar */
         button[type="submit"] {
             width: 100%;
             padding: 1rem;
@@ -198,34 +138,80 @@
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
         }
+        button[type="submit"]:hover { background-color: #00226e; }
+        button[type="submit"]:active { transform: scale(0.99); }
         
-        button[type="submit"]:hover {
-            background-color: #00226e;
-        }
-
-        button[type="submit"]:active {
-            transform: scale(0.99);
-        }
-        
-        .message-box {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1.5rem;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-        
+        /* Mensagens de sucesso/erro */
+        .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
+        /* Footer */
+        .footer-wrapper {
+            background-color: #333333; /* Fundo cinza escuro para o footer */
+            color: white;
+            width: 100%;
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-content {
+            max-width: 1100px; /* Largura máxima para o conteúdo do rodapé */
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+            gap: 2rem; /* Espaço entre as colunas */
+            padding: 0 2rem 2rem; /* Padding interno */
+        }
+
+        .footer-column {
+            flex: 1; /* Distribui o espaço igualmente */
+            min-width: 180px; /* Largura mínima para evitar quebra excessiva */
+            margin-bottom: 1rem; /* Espaço entre colunas em telas menores */
+        }
+
+        .footer-column h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white; /* Garante que os títulos sejam brancos */
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column ul li a {
+            color: #ccc; /* Cor dos links */
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--cor-primaria); /* Cor ao passar o mouse */
+            text-decoration: underline;
+        }
+
+        .footer-gradient-bar {
+            width: 100%;
+            height: 8px; /* Espessura da barra colorida */
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+        }
+
+        /* Responsividade */
         @media (max-width: 768px) {
-            .container {
-                padding: 2rem 1.5rem;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+            .container { padding: 2rem 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .footer-content { flex-direction: column; align-items: flex-start; padding: 0 1.5rem 1.5rem; }
+            .footer-column { min-width: unset; width: 100%; }
         }
     </style>
 </head>
@@ -238,14 +224,8 @@
 
         <form id="checkingForm" novalidate>
             <div class="form-grid">
-                <div class="form-group">
-                    <label for="nome">Seu Nome *</label>
-                    <input type="text" id="nome" name="nome" required placeholder="Nome completo" />
-                </div>
-                <div class="form-group">
-                    <label for="email">Seu E-mail *</label>
-                    <input type="email" id="email" name="email" required placeholder="seu@email.com" />
-                </div>
+                <div class="form-group"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required placeholder="Nome completo" /></div>
+                <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required placeholder="seu@email.com" /></div>
 
                 <div class="form-group full-width pi-group">
                     <label for="pi">Número da PI *</label>
@@ -253,25 +233,18 @@
                     <div id="piStatus" aria-live="polite"></div>
                 </div>
                 
+                <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly /></div>
+                <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly /></div>
+                <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly /></div>
+                <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly /></div>
+                
                 <div class="form-group">
-                    <label for="cliente">Cliente</label>
-                    <input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly />
-                </div>
-                <div class="form-group">
-                    <label for="campanha">Campanha</label>
-                    <input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly />
-                </div>
-                <div class="form-group">
-                    <label for="produto">Produto</label>
-                    <input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly />
-                </div>
-                <div class="form-group">
-                    <label for="periodo">Período</label>
-                    <input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly />
-                </div>
-                <div class="form-group full-width">
                     <label for="veiculo">Veículo</label>
-                    <select id="veiculo" name="veiculo" class="campo-bloqueado">
+                    <input type="text" id="veiculo" name="veiculo" placeholder="Aguardando PI..." readonly />
+                </div>
+                <div class="form-group">
+                    <label for="meio">Meio</label>
+                    <select id="meio" name="meio" class="campo-bloqueado">
                         <option value="">Aguardando PI...</option>
                         <option value="DO">DOOH - Digital Out of Home</option>
                         <option value="ME">Mídia Exterior - MUB estático</option>
@@ -290,23 +263,14 @@
                     </select>
                 </div>
                 
-                <div class="form-group full-width">
-                    <label for="observacoes">Observações</label>
-                    <textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea>
-                </div>
-                
+                <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
                 <div class="form-group full-width">
                     <label for="comprovantes">Comprovantes (arquivos) *</label>
-                    <div class="file-upload" id="fileUpload" role="button" aria-label="Área para upload de arquivos">
-                        Arraste e solte ou <span>clique para selecionar</span>
-                        <input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required />
-                    </div>
+                    <div class="file-upload" id="fileUpload" role="button"><p>Arraste e solte ou <span>clique para selecionar</span></p><input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required /></div>
                     <div class="file-list" id="fileList" aria-live="polite"></div>
                 </div>
 
-                <div class="form-group full-width">
-                    <button type="submit">Enviar Checking</button>
-                </div>
+                <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
             </div>
         </form>
 
@@ -314,28 +278,147 @@
         <div class="message-box" id="errorMessage" role="alert"></div>
     </div>
 
+    <footer class="footer-wrapper">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>OpusMúltipla</h3>
+                <ul>
+                    <li><a href="https://grupoom.com.br/opus-multipla/report360/" target="_blank">Report360</a></li>
+                    <li><a href="https://grupoom.com.br/opus-multipla/videos/" target="_blank">Vídeos</a></li>
+                    <li><a href="https://grupoom.com.br/opus-multipla/noticias/" target="_blank">Notícias</a></li>
+                    <li><a href="https://grupoom.com.br/contato-de-imprensa/" target="_blank">Contato de Imprensa</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Brainbox</h3>
+                <ul>
+                    <li><a href="https://grupoom.com.br/brainbox/branding/" target="_blank">Branding</a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/campanhas/" target="_blank">Campanhas</a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/design/" target="_blank">Design</a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/digital/" target="_blank">Digital</a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/marketing/" target="_blank">Marketing</a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/motion/" target="_blank">Motion</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>HouseCricket</h3>
+                <ul>
+                    <li><a href="https://grupoom.com.br/housecricket/o-instituto/" target="_blank">O Instituto</a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/cursos/" target="_blank">Cursos</a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/pesquisas/" target="_blank">Pesquisas</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Grupo OM</h3>
+                <ul>
+                    <li><a href="https://grupoom.com.br/grupo-om/empresas/" target="_blank">Empresas</a></li>
+                    <li><a href="https://grupoom.com.br/grupo-om/clientes/" target="_blank">Clientes</a></li>
+                    <li><a href="https://grupoom.com.br/grupo-om/historia/" target="_blank">História</a></li>
+                    <li><a href="https://grupoom.com.br/grupo-om/premios/" target="_blank">Prêmios</a></li>
+                    <li><a href="https://grupoom.com.br/opus-multipla/report360/" target="_blank">Report 360</a></li>
+                    <li><a href="https://grupoom.com.br/contato/" target="_blank">Onde estamos</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Informações</h3>
+                <ul>
+                    <li><a href="https://grupoom.com.br/compliance/canal-de-etica/" target="_blank">Canal de Ética</a></li>
+                    <li><a href="https://grupoom.com.br/contato/" target="_blank">Onde estamos</a></li>
+                    <li><a href="https://grupoom.com.br/contato-de-imprensa/" target="_blank">Contato de Imprensa</a></li>
+                    <li><a href="https://grupoom.com.br/politica-de-privacidade/" target="_blank">Política de Privacidade</a></li>
+                    <li><a href="https://grupoom.com.br/politica-de-cookies/" target="_blank">Política de Cookies</a></li>
+                    <li><a href="https://grupoom.com.br/trabalhe-conosco/" target="_blank">Trabalhe conosco</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-gradient-bar"></div>
+    </footer>
+
 <script>
-    // SEU SCRIPT JAVASCRIPT CONTINUA O MESMO DA VERSÃO ANTERIOR
     (function () {
         const form = document.getElementById('checkingForm');
-        const fileUpload = document.getElementById('fileUpload');
-        const fileInput = document.getElementById('comprovantes');
-        const fileList = document.getElementById('fileList');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
         const clienteInput = document.getElementById('cliente');
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
-        const veiculoSelect = document.getElementById('veiculo');
+        
+        // Novos campos para VEICULO (texto) e MEIO (select)
+        const veiculoInput = document.getElementById('veiculo'); 
+        const meioSelect = document.getElementById('meio');       
+        
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
 
         let files = [];
         let piFetchController = null;
-
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm'; 
+
+        function resetPIFields() {
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            veiculoInput.value = ''; 
+            meioSelect.value = '';   
+        }
+
+        async function buscarDadosPI(npi) {
+            if (!npi) {
+                resetPIFields();
+                piStatus.textContent = '';
+                return;
+            }
+            if (piFetchController) piFetchController.abort();
+            
+            piFetchController = new AbortController();
+            piStatus.textContent = 'Buscando dados da PI...';
+            piStatus.style.color = 'var(--cor-texto-claro)';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+                    signal: piFetchController.signal,
+                });
+
+                if (!response.ok) throw new Error(`Erro de rede: ${response.statusText}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    piStatus.textContent = 'Dados carregados com sucesso.';
+                    piStatus.style.color = var(--cor-sucesso);
+                    clienteInput.value = data.cliente || '';
+                    campanhaInput.value = data.campanha || '';
+                    produtoInput.value = data.produto || '';
+                    periodoInput.value = data.periodo || '';
+                    
+                    // Preenche os campos Veículo e Meio
+                    veiculoInput.value = data.veiculo || ''; 
+                    meioSelect.value = data.meio || '';       
+                    
+                } else {
+                    piStatus.textContent = data.error || 'PI não encontrada.';
+                    piStatus.style.color = var(--cor-erro);
+                    resetPIFields();
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    piStatus.textContent = 'Falha na comunicação ao buscar PI.';
+                    piStatus.style.color = var(--cor-erro);
+                    resetPIFields();
+                }
+            }
+        }
+        
+        // Script de upload de arquivos (mantido do código anterior)
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('comprovantes');
+        const fileList = document.getElementById('fileList');
 
         function updateFileList() {
             fileList.innerHTML = '';
@@ -347,127 +430,37 @@
                 removeBtn.type = 'button';
                 removeBtn.className = 'remove-btn';
                 removeBtn.textContent = 'Remover';
-                removeBtn.onclick = () => {
-                    files.splice(index, 1);
-                    updateFileList();
-                };
+                removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
                 div.appendChild(removeBtn);
                 fileList.appendChild(div);
             });
         }
-
-        fileUpload.addEventListener('click', () => fileInput.click());
-        fileUpload.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileUpload.style.borderColor = 'var(--cor-primaria)';
-        });
-        fileUpload.addEventListener('dragleave', () => {
-            fileUpload.style.borderColor = 'var(--cor-borda)';
-        });
-        fileUpload.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileUpload.style.borderColor = 'var(--cor-borda)';
-            handleFiles(e.dataTransfer.files);
-        });
-        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
         
         function handleFiles(newFiles) {
-            for (const file of newFiles) {
-                files.push(file);
-            }
+            for (const file of newFiles) { files.push(file); }
             updateFileList();
         }
-
-        function showMessage(element, message) {
-            element.textContent = message;
-            element.style.display = 'block';
-        }
-
-        function clearMessages() {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-        }
         
-        function resetPIFields() {
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoSelect.value = '';
-        }
-
-        async function buscarDadosPI(npi) {
-            if (!npi) {
-                resetPIFields();
-                piStatus.textContent = '';
-                return;
-            }
-            if (piFetchController) {
-                piFetchController.abort();
-            }
-            piFetchController = new AbortController();
-            piStatus.textContent = 'Buscando dados da PI...';
-            piStatus.style.color = 'var(--cor-texto-secundario)';
-            clearMessages();
-
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
-                    signal: piFetchController.signal,
-                });
-
-                if (!response.ok) {
-                   throw new Error(`Erro de rede: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-
-                if (data.success) {
-                    piStatus.textContent = 'Dados carregados com sucesso.';
-                    piStatus.style.color = 'var(--cor-sucesso)';
-                    clienteInput.value = data.cliente || '';
-                    campanhaInput.value = data.campanha || '';
-                    produtoInput.value = data.produto || '';
-                    periodoInput.value = data.periodo || '';
-                    if (data.veiculo) {
-                        veiculoSelect.value = data.veiculo;
-                    }
-                } else {
-                    piStatus.textContent = data.error || 'PI não encontrada.';
-                    piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
-                }
-
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    piStatus.textContent = 'Falha na comunicação ao buscar PI.';
-                    piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
-                }
-            }
-        }
+        fileUpload.addEventListener('click', () => fileInput.click());
+        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = var(--cor-borda-foco); });
+        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = var(--cor-borda); });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = var(--cor-borda); handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => {
-                buscarDadosPI(piInput.value.trim());
-            }, 500);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
         });
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            clearMessages();
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
 
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
-            if (files.length === 0) {
-                showMessage(errorMessage, 'É necessário anexar pelo menos um comprovante.');
+            if (!form.checkValidity() || files.length === 0) {
+                errorMessage.textContent = 'Por favor, preencha todos os campos obrigatórios e anexe ao menos um comprovante.';
+                errorMessage.style.display = 'block';
                 return;
             }
 
@@ -476,35 +469,24 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            files.forEach(file => {
-                formData.append('comprovantes', file);
-            });
+            files.forEach(file => formData.append('comprovantes', file));
             formData.append('action', 'submissao');
 
             try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    body: formData,
-                });
-
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Ocorreu um erro no servidor.');
-                }
+                if (!response.ok) throw new Error(result.message || 'Ocorreu um erro no servidor.');
                 
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                successMessage.textContent = result.message || 'Checking enviado com sucesso!';
+                successMessage.style.display = 'block';
                 form.reset();
                 files = [];
                 updateFileList();
                 piStatus.textContent = '';
                 resetPIFields();
-
             } catch (error) {
-                const errorMsg = error.message.includes('Failed to fetch') 
-                    ? 'Falha na comunicação com o servidor. Verifique sua conexão.' 
-                    : error.message;
-                showMessage(errorMessage, errorMsg);
+                errorMessage.textContent = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
+                errorMessage.style.display = 'block';
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
