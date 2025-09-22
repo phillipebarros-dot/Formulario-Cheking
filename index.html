@@ -197,8 +197,8 @@
     </footer>
 
 <script>
+    // NENHUMA MUDANÇA É NECESSÁRIA NO SCRIPT.
     (function () {
-        // --- INÍCIO DA CONFIGURAÇÃO ---
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -206,80 +206,31 @@
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
-        const veiculoInput = document.getElementById('veiculo');
-        const meioSelect = document.getElementById('meio');
+        const veiculoInput = document.getElementById('veiculo'); 
+        const meioSelect = document.getElementById('meio');       
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
-        // SCRIPT CORRIGIDO: Variáveis para upload de arquivos
         const fileUpload = document.getElementById('fileUpload');
         const fileInput = document.getElementById('comprovantes');
         const fileList = document.getElementById('fileList');
 
         let files = [];
         let piFetchController = null;
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
-        // --- FIM DA CONFIGURAÇÃO ---
-
-        // --- FUNÇÕES AUXILIARES ---
-        function showMessage(element, message) {
-            element.textContent = message;
-            element.style.display = 'block';
-        }
-
-        function clearMessages() {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-        }
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm'; 
 
         function resetPIFields() {
-            clienteInput.value = '';
-            campanhaInput.value = '';
-            produtoInput.value = '';
-            periodoInput.value = '';
-            veiculoInput.value = '';
-            meioSelect.value = '';
+            clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
         }
 
-        function updateFileList() {
-            fileList.innerHTML = '';
-            files.forEach((file, index) => {
-                const div = document.createElement('div');
-                div.className = 'file-item';
-                div.textContent = file.name;
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.textContent = 'Remover';
-                removeBtn.onclick = () => {
-                    files.splice(index, 1);
-                    updateFileList();
-                };
-                div.appendChild(removeBtn);
-                fileList.appendChild(div);
-            });
-        }
-        
-        function handleFiles(newFiles) {
-            for (const file of newFiles) { files.push(file); }
-            updateFileList();
-        }
-
-        // --- LÓGICA PRINCIPAL ---
-
-        // Função para buscar dados da PI no n8n
         async function buscarDadosPI(npi) {
-            if (!npi) {
-                resetPIFields();
-                piStatus.textContent = '';
-                return;
-            }
+            if (!npi) { resetPIFields(); piStatus.textContent = ''; return; }
             if (piFetchController) piFetchController.abort();
             
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando dados da PI...';
             piStatus.style.color = 'var(--cor-texto-claro)';
-            clearMessages();
+            errorMessage.style.display = 'none';
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -290,7 +241,6 @@
                 });
 
                 if (!response.ok) throw new Error(`Erro de rede: ${response.statusText}`);
-                
                 const data = await response.json();
 
                 if (data.success) {
@@ -300,8 +250,8 @@
                     campanhaInput.value = data.campanha || '';
                     produtoInput.value = data.produto || '';
                     periodoInput.value = data.periodo || '';
-                    veiculoInput.value = data.veiculo || '';
-                    meioSelect.value = data.meio || '';
+                    veiculoInput.value = data.veiculo || ''; 
+                    meioSelect.value = data.meio || '';       
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada.';
                     piStatus.style.color = 'var(--cor-erro)';
@@ -315,18 +265,15 @@
                 }
             }
         }
-
-        // Event listener para o envio do formulário
+        
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            clearMessages();
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
 
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Por favor, preencha todos os campos obrigatórios (*).');
-                return;
-            }
-            if (files.length === 0) {
-                showMessage(errorMessage, 'É necessário anexar pelo menos um comprovante.');
+            if (!form.checkValidity() || files.length === 0) {
+                errorMessage.textContent = 'Por favor, preencha todos os campos obrigatórios e anexe ao menos um comprovante.';
+                errorMessage.style.display = 'block';
                 return;
             }
 
@@ -341,25 +288,45 @@
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
-
                 if (!response.ok) throw new Error(result.message || 'Ocorreu um erro no servidor.');
                 
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                successMessage.textContent = result.message || 'Checking enviado com sucesso!';
+                successMessage.style.display = 'block';
                 form.reset();
                 files = [];
                 updateFileList();
                 piStatus.textContent = '';
                 resetPIFields();
             } catch (error) {
-                const errorMsg = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
-                showMessage(errorMessage, errorMsg);
+                errorMessage.textContent = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
+                errorMessage.style.display = 'block';
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
             }
         });
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            files.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.textContent = file.name;
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = 'Remover';
+                removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
+                div.appendChild(removeBtn);
+                fileList.appendChild(div);
+            });
+        }
         
-        // --- EVENT LISTENERS ADICIONAIS ---
+        function handleFiles(newFiles) {
+            for (const file of newFiles) { files.push(file); }
+            updateFileList();
+        }
+        
         fileUpload.addEventListener('click', () => fileInput.click());
         fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
         fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
