@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checking OpusMúltipla</title>
-    <link rel="icon" type="image/png" href="favicon.png"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
@@ -76,7 +77,7 @@
             margin-bottom: 2rem;
         }
         .header img.logo-opusmultipla {
-            max-width: 350px; /* Logo OpusMúltipla maior */
+            max-width: 450px; /* Logo OpusMúltipla maior */
             width: 100%;
             height: auto;
             margin-bottom: 0.5rem;
@@ -125,51 +126,25 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ COM MAPA DE IMAGEM --- */
+        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
-        .footer-content {
-            background-color: #333; /* Fundo cinza escuro para o rodapé */
+        .footer-logos {
+            background-color: #585858; /* Fundo cinza escuro */
             width: 100%;
             padding: 3rem 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem; /* Espaçamento entre os blocos do rodapé */
-            position: relative; /* Para posicionar o favicon */
+            text-align: center;
         }
-
-        .footer-main-logo img {
-            max-width: 250px; /* Tamanho do logo GRUPO OM */
-            height: auto;
-            display: block;
-            margin-bottom: 1.5rem; /* Espaço entre o logo principal e a assinatura */
-        }
-
-        .footer-agency-signature img {
-            max-width: 100%;
-            width: 700px; /* Tamanho da imagem da assinatura das agências */
-            height: auto;
-            display: block;
-            opacity: 0.8; /* Um pouco de transparência para harmonizar */
-            transition: opacity 0.3s ease;
-        }
-        .footer-agency-signature img:hover {
-            opacity: 1; /* Retorna a opacidade total no hover */
-        }
-        
-        /* Favicon no canto direito */
-        .footer-favicon {
-            position: absolute;
-            right: 2rem; /* Distância da direita */
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .footer-favicon img {
-            width: 70px; /* Tamanho do favicon */
+        .footer-logos img {
+            max-width: 90%;
+            width: 800px; /* Tamanho da imagem da assinatura */
             height: auto;
         }
-
-        .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
+        .footer-gradient-bar { 
+            order: -1; /* Coloca a barra de gradiente no topo do footer */
+            width: 100%; 
+            height: 8px; 
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+        }
         
         @media (max-width: 1100px) {
             .main-content { padding: 0; }
@@ -178,19 +153,6 @@
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.5rem; }
-            .footer-content {
-                flex-direction: column;
-                align-items: center;
-                gap: 1.5rem;
-            }
-            .footer-favicon {
-                position: static; /* Volta para a posição normal em telas pequenas */
-                transform: none;
-                margin-top: 1.5rem; /* Espaçamento quando não está absoluto */
-            }
-            .footer-main-logo img { max-width: 200px; }
-            .footer-agency-signature img { width: 95%; max-width: 500px; } /* Ajuste para telas menores */
-            .footer-favicon img { width: 50px; }
         }
     </style>
 </head>
@@ -240,24 +202,8 @@
     
     <footer class="footer-wrapper">
         <div class="footer-gradient-bar"></div>
-        <div class="footer-content">
-            <div class="footer-main-logo">
-                <img src="Marca Grupo OM Branca V02.png" alt="Grupo OM Comunicação Integrada">
-            </div>
-            <div class="footer-agency-signature">
-                <img src="Assinatura Conjunta Com Slogan V01.png" alt="Assinatura de logos das agências do Grupo OM" usemap="#footer-map">
-                <map name="footer-map">
-                    <area shape="rect" coords="40,225,280,320" href="https://grupoom.com.br/opus-multipla/" target="_blank" alt="OpusMúltipla">
-                    <area shape="rect" coords="295,225,525,320" href="https://grupoom.com.br/brainbox/" target="_blank" alt="Brainbox">
-                    <area shape="rect" coords="555,225,825,320" href="https://grupoom.com.br/housecricket/" target="_blank" alt="HouseCricket">
-                    <area shape="rect" coords="845,225,1035,320" href="https://grupoom.com.br/senso/" target="_blank" alt="Senso">
-                    <area shape="rect" coords="1065,225,1370,320" href="https://grupoom.com.br/tailormedia/" target="_blank" alt="Tailor Media">
-                    <area shape="rect" coords="1405,225,1575,320" href="https://grupoom.com.br/dom/" target="_blank" alt="D'Om">
-                </map>
-            </div>
-            <div class="footer-favicon">
-                <img src="Simbolo Grupo OM Circular.png" alt="Símbolo Grupo OM">
-            </div>
+        <div class="footer-logos">
+            <img src="Assinatura Conjunta Com Slogan V01.png" alt="Assinatura de logos do Grupo OM">
         </div>
     </footer>
 
