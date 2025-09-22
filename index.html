@@ -36,7 +36,7 @@
             color: var(--cor-secundaria);
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Empurra o footer para baixo */
+            justify-content: space-between;
             align-items: center;
             min-height: 100vh;
             line-height: 1.6;
@@ -49,8 +49,9 @@
             padding: 2rem 1rem;
         }
 
+        /* AJUSTE: Aumentado o tamanho do formulário */
         .container {
-            max-width: 750px;
+            max-width: 900px;
             width: 100%;
             background: var(--cor-fundo-secao);
             padding: 2.5rem 3rem;
@@ -60,27 +61,22 @@
         }
 
         .header { text-align: center; margin-bottom: 2.5rem; }
-        .header h1 { font-size: 1.75rem; font-weight: 700; color: var(--cor-secundaria); }
-        .header h1::after {
-            content: '';
-            display: block;
-            width: 80px;
+        
+        /* AJUSTE: Diminuído o tamanho do título */
+        .header h1 { font-size: 1.5rem; font-weight: 700; color: var(--cor-secundaria); }
+        .header p { font-size: 1rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
+        
+        /* AJUSTE: Barra colorida agora é um elemento próprio */
+        .header-gradient-bar {
+            width: 150px; /* Largura aumentada */
             height: 5px;
             border-radius: 3px;
-            margin: 0.75rem auto 0;
+            margin: 1rem auto 0; /* Espaçamento e centralização */
             background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
         }
-        .header p { font-size: 1rem; color: var(--cor-texto-claro); margin-top: 1.5rem; }
         
-        /* Caixa de Atenção Atualizada */
         .attention-box {
-            background-color: #fff8e1;
-            border-left: 5px solid #f39c12;
-            padding: 1.5rem;
-            margin-bottom: 2.5rem;
-            color: #7b4c00;
-            font-size: 0.9rem;
-            border-radius: 8px;
+            background-color: #fff8e1; border-left: 5px solid #f39c12; padding: 1.5rem; margin-bottom: 2.5rem; color: #7b4c00; font-size: 0.9rem; border-radius: 8px;
         }
         .attention-box p { margin-bottom: 1rem; font-weight: 500;}
         .attention-box ul { list-style-position: inside; padding-left: 0.5rem; }
@@ -114,16 +110,17 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* Novo Footer */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos { background-color: #585858; width: 100%; padding: 2.5rem 2rem; text-align: center; }
         .footer-logos img { max-width: 100%; height: auto; max-height: 45px; }
         .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
         
+        @media (max-width: 900px) {
+            .main-content { padding: 0; }
+            .container { border-radius: 0; border-left: none; border-right: none; }
+        }
         @media (max-width: 768px) {
-            body { padding: 0; }
-            .main-content { padding: 1rem; }
-            .container { padding: 2rem 1.5rem; border-radius: 0; border: none; }
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -133,6 +130,7 @@
             <div class="header">
                 <h1>CHECKING OPUSMÚLTIPLA</h1>
                 <p>Envio de comprovantes de veiculação</p>
+                <div class="header-gradient-bar"></div>
             </div>
 
             <div class="attention-box" role="alert">
@@ -204,8 +202,7 @@
     </footer>
 
 <script>
-    // O SCRIPT JAVASCRIPT CONTINUA O MESMO DA VERSÃO ANTERIOR
-    // ELE JÁ ESTÁ PREPARADO PARA TODAS AS FUNCIONALIDADES
+    // O SCRIPT JAVASCRIPT NÃO PRECISA DE ALTERAÇÕES
     (function () {
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
