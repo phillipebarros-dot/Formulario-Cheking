@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checking OpusMúltipla</title>
-    <link rel="icon" type="image/png" href="assets/Simbolo Grupo OM Circular.png">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
@@ -126,27 +126,57 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
+        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ COM ASSINATURA --- */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos {
-            background-color: var(--cor-fundo-secao); /* Fundo branco */
-            border-top: 1px solid var(--cor-borda); /* Linha de separação */
+            background-color: #585858;
             width: 100%;
-            padding: 2.5rem 2rem;
+            padding: 3rem 2rem;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            gap: 2rem; /* Espaço entre o símbolo e a assinatura */
+            gap: 2.5rem;
+        }
+        .main-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        .main-logo-grupo { font-size: 2.5rem; font-weight: 800; }
+        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
+
+        .agency-logos ul {
+            display: flex;
             flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2.5rem;
+            list-style: none;
         }
-        .footer-logos .logo-circular {
-            height: 70px; /* Tamanho do símbolo */
-            width: auto;
+        .agency-logos li a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: opacity 0.2s;
         }
-        .footer-logos .logo-assinatura {
-            max-width: 100%;
-            width: 600px; /* Tamanho da assinatura */
-            height: auto;
+        .agency-logos li a:hover { opacity: 0.7; }
+        .agency-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .agency-tagline {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #ccc;
         }
         .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
         
@@ -157,7 +187,7 @@
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.5rem; }
-            .footer-logos { flex-direction: column; }
+            .agency-logos ul { gap: 2rem 1.5rem; }
         }
     </style>
 </head>
@@ -165,12 +195,12 @@
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="assets/Opus Tagline_01.png" alt="Logo OpusMúltipla - ideias que transformam" class="logo-opusmultipla">
+                <img src="assets/logo-opus.png" alt="Logo OpusMúltipla - ideias que transformam" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
 
             <div class="attention-box" role="alert">
-                <img src="assets/ChatGPT_Image_28_de_ago._de_2025_17_48_50.jpg" alt="Comunicado sobre relatórios de veiculação de mídia">
+                <img src="assets/comunicado.jpg" alt="Comunicado sobre relatórios de veiculação de mídia">
             </div>
 
             <form id="checkingForm" novalidate>
@@ -207,14 +237,26 @@
     
     <footer class="footer-wrapper">
         <div class="footer-logos">
-            <img src="assets/Simbolo Grupo OM Circular.png" alt="Símbolo Grupo OM" class="logo-circular">
-            <img src="assets/Assinatura Conjunta Com Slogan V01.png" alt="Assinatura de logos do Grupo OM" class="logo-assinatura">
+            <div class="main-logo">
+                <span class="main-logo-grupo">GRUPO OM</span>
+                <span class="main-logo-tagline">COMUNICAÇÃO<br>INTEGRADA</span>
+            </div>
+            <nav class="agency-logos">
+                <ul>
+                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
+                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
+                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
+                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
+                </ul>
+            </nav>
         </div>
         <div class="footer-gradient-bar"></div>
     </footer>
 
 <script>
-    // NENHUMA MUDANÇA É NECESSÁRIA NO SCRIPT.
+    // O SCRIPT JAVASCRIPT NÃO PRECISA DE MUDANÇAS.
     (function () {
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -347,7 +389,7 @@
         fileUpload.addEventListener('click', () => fileInput.click());
         fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
         fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.target.files); });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         let debounceTimeout;
