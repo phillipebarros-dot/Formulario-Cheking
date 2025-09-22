@@ -1,3 +1,9 @@
+
+---
+
+### Conteúdo Atualizado para `WORKFLOW.md`
+
+```markdown
 # Análise Técnica Detalhada do Workflow n8n
 
 Este documento oferece uma análise técnica detalhada, nó por nó, do workflow de automação do formulário de checking. O objetivo é servir como um manual para manutenção, depuração e futuras evoluções do processo.
@@ -39,15 +45,31 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
 
 ### Rota de Busca (Fluxo Rápido de Consulta)
 
-*Esta seção permanece a mesma da documentação anterior, pois está correta.*
-
 #### 4a. Buscar PI (dados)
 * **Tipo de Nó:** `Google Sheets`
 * **Objetivo:** Consultar a planilha para buscar os dados da PI solicitada.
 
 #### 5a. Montar Resposta PI
 * **Tipo de Nó:** `Function`
-* **Objetivo:** Formatar a resposta (JSON) de sucesso ou erro para o formulário.
+* **Objetivo:** Formatar a resposta (JSON) que será enviada de volta ao formulário.
+* **Código JavaScript:**
+    ```javascript
+    const piData = $json;
+    if (!piData || Object.keys(piData).length <= 1) {
+      return [{ json: { error: 'PI não encontrada ou inativa.' } }];
+    }
+    return [{
+      json: {
+        success: true,
+        cliente: piData.CLIENTE || '',
+        campanha: piData.CAMPANHA || '',
+        produto: piData.PRODUTO || '',
+        periodo: piData.PERIODO || '',
+        veiculo: piData.VEICULO || '',
+        meio: piData.MEIO || ''
+      }
+    }];
+    ```
 
 #### 6a. Responder Dados PI
 * **Tipo de Nó:** `Respond to Webhook`
@@ -57,27 +79,23 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
 
 ### Rota de Envio Completo (Fluxo Principal)
 
-*Esta seção foi completamente reescrita para refletir o workflow real.*
-
 #### 4b. Buscar PI (submissao)
 * **Tipo de Nó:** `Google Sheets`
 * **Objetivo:** Revalidar a existência da PI no momento do envio final.
 
 #### 5b. Verificar PI Existe
 * **Tipo de Nó:** `IF`
-* **Objetivo:** Primeiro ponto de verificação. Garante que o fluxo só continue se a PI for encontrada na planilha.
-* **Configuração Chave:**
-    * **Condição:** Verifica se o número de resultados da busca anterior é igual a `0`.
-    * **Saída `true` (PI não existe):** Leva para o nó `Responder Erro PI`.
-    * **Saída `false` (PI existe):** Continua para `Validar Status PI`.
+* **Objetivo:** Primeiro ponto de verificação. Garante que o fluxo só continue se a PI for encontrada.
+* **Saída `true` (PI não existe):** Leva para `Responder Erro PI`.
+* **Saída `false` (PI existe):** Continua para `Validar Status PI`.
 
 #### 6b. Responder Erro PI
 * **Tipo de Nó:** `Respond to Webhook`
-* **Objetivo:** Enviar uma mensagem de erro ao usuário e **encerrar o workflow** caso a PI não seja encontrada.
+* **Objetivo:** Enviar uma mensagem de erro ao usuário e encerrar o workflow caso a PI não seja encontrada.
 
 #### 7b. Validar Status PI
 * **Tipo de Nó:** `Function`
-* **Objetivo:** Segundo ponto de verificação. Garante que o checking só seja aceito para PIs com status "ativa".
+* **Objetivo:** Garantir que o checking só seja aceito para PIs com status "ativa".
 * **Código JavaScript:**
     ```javascript
     const piData = $json;
@@ -87,65 +105,48 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
     return $json;
     ```
 
-#### 8b. IF Veículo é ME?
-* **Tipo de Nó:** `IF`
-* **Objetivo:** Inicia a validação da quantidade de anexos. Primeiro, verifica se o veículo é do tipo "ME".
-* **Configuração Chave:**
-    * **Condição:** Verifica se `$json.dados.body.meio == 'ME'`.
-    * **Saída `true`:** Leva para `Validar Anexos ME`.
-    * **Saída `false`:** Continua a verificação em `IF Veículo é DO?`.
+#### 8b. Cadeia de Validação de Anexos (`IF Veículo é ME?`, `IF Veículo é DO?`, etc.)
+* **Tipo de Nós:** `IF`, `Function`
+* **Objetivo:** Verificar se a quantidade de arquivos enviados atende ao mínimo exigido para cada tipo de "Meio".
+* **Lógica:** Uma sequência de nós `IF` verifica o valor de `$json.dados.body.meio`. Se for um tipo que exige validação, o fluxo é direcionado para um nó `Function` específico que conta os anexos e dispara um erro (`throw new Error`) se a contagem for insuficiente. Se não for um tipo especial, o fluxo pula esta etapa.
 
-#### 9b. Validar Anexos ME
-* **Tipo de Nó:** `Function`
-* **Objetivo:** Garante o número mínimo de anexos para o veículo "ME".
-* **Código JavaScript (Exemplo):**
-    ```javascript
-    const anexos = $json.dados.binary.comprovantes;
-    if (!anexos || anexos.length < 2) { // Exemplo: mínimo de 2 anexos
-      throw new Error('Para ME, mínimo de 2 anexos são necessários.');
-    }
-    return $json;
-    ```
-    *Após a validação, o fluxo segue para `Criar Pasta PI`.*
-
-#### 10b. IF Veículo é DO?
-* **Tipo de Nó:** `IF`
-* **Objetivo:** Segunda parte da validação de anexos. Verifica se o veículo é do tipo "DO".
-* **Configuração Chave:**
-    * **Condição:** Verifica se `$json.dados.body.meio == 'DO'`.
-    * **Saída `true`:** Leva para `Validar Anexos DO`.
-    * **Saída `false`:** Se não for nem "ME" nem "DO", o fluxo pula a validação de anexos e vai direto para `Criar Pasta PI`.
-
-#### 11b. Validar Anexos DO
-* **Tipo de Nó:** `Function`
-* **Objetivo:** Garante o número mínimo de anexos para o veículo "DO".
-* **Código JavaScript (Exemplo):**
-    ```javascript
-    const anexos = $json.dados.binary.comprovantes;
-    if (!anexos || anexos.length < 3) { // Exemplo: mínimo de 3 anexos
-      throw new Error('Para DO, mínimo de 3 anexos são necessários.');
-    }
-    return $json;
-    ```
-    *Após a validação, o fluxo segue para `Criar Pasta PI`.*
-
-#### 12b. Criar Pasta PI
+#### 9b. Criar Pasta PI
 * **Tipo de Nó:** `Google Drive`
-* **Objetivo:** Ponto de convergência. Cria uma pasta única para os comprovantes, independente da rota de validação anterior.
+* **Objetivo:** Ponto de convergência. Cria uma pasta única para os comprovantes.
 * **Configuração Chave:** `Operation: Create Folder`, `Name: PI_{{$json.dados.body.n_pi}}`.
 
-#### 13b. Upload Arquivos
+#### 10b. Upload Arquivos
 * **Tipo de Nó:** `Google Drive`
 * **Objetivo:** Salvar os arquivos do formulário na pasta criada.
 
-#### 14b. Registrar Log
+#### 11b. Registrar Log
 * **Tipo de Nó:** `Google Sheets`
 * **Objetivo:** Criar a trilha de auditoria na planilha `Log_Checkings`.
 
-#### 15b. Enviar Notificação
+#### 12b. Enviar Notificação
 * **Tipo de Nó:** `Send Email`
 * **Objetivo:** Enviar o e-mail de confirmação para a equipe.
 
-#### 16b. Responder Sucesso
+#### 13b. Responder Sucesso
 * **Tipo de Nó:** `Respond to Webhook`
 * **Objetivo:** Enviar a mensagem final de sucesso para o formulário e encerrar o workflow.
+
+---
+
+### 🧪 Testando o Fluxo de Envio com Segurança
+
+Para testar o workflow sem criar pastas, registrar logs ou enviar e-mails reais, utilize uma das seguintes estratégias:
+
+#### Método 1: Desativar Nós (Simples e Rápido)
+1.  Na interface do n8n, clique com o **botão direito** nos nós de produção (`Criar Pasta PI`, `Upload Arquivos`, `Registrar Log`, `Enviar Notificação`).
+2.  Selecione **"Deactivate" (Desativar)**. Os nós ficarão cinza.
+3.  Execute o workflow a partir do formulário. O fluxo de dados irá parar nos nós desativados.
+4.  Clique em um nó desativado e inspecione sua aba **"Input"** para verificar se os dados que chegaram até ali estão corretos.
+5.  Lembre-se de reativar os nós ("Activate") quando terminar os testes.
+
+#### Método 2: Usar um "PI de Teste" com um Nó IF (Avançado)
+1.  Defina um número de PI que será usado apenas para testes (ex: `TESTE-999`).
+2.  No workflow, adicione um nó `IF` antes do `Criar Pasta PI`.
+3.  Configure a condição para verificar se a PI é a de teste: `{{$json.dados.body.n_pi}}` `Equals` `TESTE-999`.
+4.  Conecte a saída **`false`** (envio real) ao restante do fluxo (`Criar Pasta PI`).
+5.  Deixe a saída **`true`** (é um teste) desconectada. Isso fará com que qualquer execução com a PI de teste pare nesse ponto de forma segura.
