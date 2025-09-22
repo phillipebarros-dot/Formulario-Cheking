@@ -73,7 +73,7 @@
 
         .header { text-align: center; margin-bottom: 2.5rem; }
         .header h1 {
-            font-family: 'Poppins', sans-serif; /* Fonte ajustada */
+            font-family: 'Poppins', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--cor-secundaria);
@@ -117,7 +117,6 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos {
             background-color: #585858;
@@ -156,7 +155,7 @@
         }
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name {
-            font-family: 'Poppins', sans-serif; /* Fonte específica */
+            font-family: 'Poppins', sans-serif;
             font-weight: 700;
             font-size: 1.2rem;
             letter-spacing: 1px;
@@ -223,7 +222,27 @@
                     <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly /></div>
                     <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly /></div>
                     <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" placeholder="Aguardando PI..." readonly /></div>
-                    <div class="form-group"><label for="meio">Meio</label><select id="meio" name="meio" class="campo-bloqueado"><option value="">Aguardando PI...</option><option value="DO">DOOH</option><option value="ME">MUB estático</option></select></div>
+                    <div class="form-group">
+                        <label for="meio">Meio</label>
+                        <select id="meio" name="meio" class="campo-bloqueado">
+                            <option value="">Aguardando PI...</option>
+                            <option value="DO">DOOH - Digital Out of Home</option>
+                            <option value="ME">Mídia Exterior - MUB estático</option>
+                            <option value="MO">Mídia Exterior - Metrô estático</option>
+                            <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
+                            <option value="OD">Mídia Exterior - Outdoor</option>
+                            <option value="FL">Mídia Exterior - Fronts</option>
+                            <option value="MI">Mídia Interna estática</option>
+                            <option value="RD">Rádio</option>
+                            <option value="RF">Rádio Frequência</option>
+                            <option value="CI">Cinema</option>
+                            <option value="JO">Mídia Impressa - Jornal</option>
+                            <option value="RV">Mídia Impressa - Revista</option>
+                            <option value="AT">Projetos Especiais - Ativação</option>
+                            <option value="TV">TV</option>
+                            <option value="IN">Internet</option>
+                        </select>
+                    </div>
                     <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
                     <div class="form-group full-width">
                         <label for="comprovantes">Comprovantes *</label>
@@ -259,7 +278,6 @@
     </footer>
 
 <script>
-    // O JAVASCRIPT NÃO PRECISA DE MUDANÇAS.
     (function () {
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
