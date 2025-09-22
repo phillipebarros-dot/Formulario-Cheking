@@ -42,9 +42,6 @@ Para que todos encontrem facilmente esta nova documentação, vamos adicionar um
     Para uma análise técnica detalhada de cada nó do workflow, **[consulte a documentação completa aqui](./WORKFLOW.md)**.
     ```
 
------
-
-### **Conteúdo para o Arquivo `WORKFLOW.md` (Copie tudo abaixo)**
 
 ````markdown
 # Análise Técnica Detalhada do Workflow n8n
