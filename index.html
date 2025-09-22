@@ -126,12 +126,27 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
+        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos {
-            background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; justify-content: center; align-items: center;
+            background-color: var(--cor-fundo-secao); /* Fundo branco */
+            border-top: 1px solid var(--cor-borda); /* Linha de separação */
+            width: 100%;
+            padding: 2.5rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem; /* Espaço entre o símbolo e a assinatura */
+            flex-wrap: wrap;
         }
-        .footer-logos img {
-            max-width: 100%; width: 250px; height: auto;
+        .footer-logos .logo-circular {
+            height: 70px; /* Tamanho do símbolo */
+            width: auto;
+        }
+        .footer-logos .logo-assinatura {
+            max-width: 100%;
+            width: 600px; /* Tamanho da assinatura */
+            height: auto;
         }
         .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
         
@@ -142,6 +157,7 @@
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.5rem; }
+            .footer-logos { flex-direction: column; }
         }
     </style>
 </head>
@@ -191,7 +207,8 @@
     
     <footer class="footer-wrapper">
         <div class="footer-logos">
-            <img src="assets/Marca Grupo OM Branca V02.png" alt="Logo Grupo OM">
+            <img src="assets/Simbolo Grupo OM Circular.png" alt="Símbolo Grupo OM" class="logo-circular">
+            <img src="assets/Assinatura Conjunta Com Slogan V01.png" alt="Assinatura de logos do Grupo OM" class="logo-assinatura">
         </div>
         <div class="footer-gradient-bar"></div>
     </footer>
@@ -330,7 +347,7 @@
         fileUpload.addEventListener('click', () => fileInput.click());
         fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
         fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.target.files); });
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         let debounceTimeout;
