@@ -1,7 +1,4 @@
 
----
-
-### Conteúdo Atualizado para `WORKFLOW.md`
 
 ```markdown
 # Análise Técnica Detalhada do Workflow n8n
