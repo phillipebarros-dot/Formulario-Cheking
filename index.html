@@ -21,12 +21,6 @@
             --cor-sucesso: #2d8a5b;
             --cor-erro: #c53030;
             --cor-desabilitado: #edf2f7;
-            --gradient-start: #d90429;
-            --gradient-mid1: #fca311;
-            --gradient-mid2: #90be6d;
-            --gradient-mid3: #43aa8b;
-            --gradient-mid4: #0033a0;
-            --gradient-end: #5a189a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,7 +63,7 @@
             left: 0;
             width: 100%;
             height: 8px;
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
         }
 
         .header {
@@ -92,11 +86,8 @@
             line-height: 1.2;
         }
         
-        .attention-box {
-            background-color: transparent; border: none; padding: 0; margin-bottom: 2.5rem; border-radius: 8px; overflow: hidden;
-        }
         .attention-box img {
-            max-width: 100%; height: auto; display: block;
+            max-width: 100%; height: auto; display: block; margin-bottom: 2.5rem; border-radius: 8px;
         }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -105,16 +96,12 @@
         label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
 
         input, select, textarea {
-            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; background-color: var(--cor-fundo-secao); color: var(--cor-secundaria);
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s;
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
-        input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; color: var(--cor-texto-claro); }
+        input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-        textarea { resize: vertical; min-height: 100px; }
-        .pi-group { position: relative; }
-        #piStatus { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; min-height: 1.2em; }
         
-        /* Estilos para a nova área de upload */
         .upload-container {
             border: 2px dashed var(--cor-borda);
             padding: 1.5rem;
@@ -130,11 +117,9 @@
         input[type="file"] {
             font-size: 0.9rem;
         }
-        .file-list { margin-top: 0.5rem; font-size: 0.8rem; color: var(--cor-texto-claro); }
-
-        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; margin-top: 1rem; }
+        
+        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
         button[type="submit"]:hover { background-color: #00226e; }
-        button[type="submit"]:active { transform: scale(0.99); }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
@@ -143,103 +128,85 @@
             width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; 
         }
         .footer-gradient-bar { 
-            order: -1; width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+            order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
         }
         .footer-content {
             background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
         }
         .main-logo-block {
-            display: flex; flex-direction: column; align-items: center; color: white; font-family: 'Poppins', sans-serif; text-align: center;
+            display: flex; flex-direction: column; align-items: center; color: white; text-align: center;
         }
-        .main-logo-grupo { font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
+        .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
         .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
         .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
         .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
-        
-        @media (max-width: 1100px) { .main-content { padding: 0; } .container { border-radius: 0; border-left: none; border-right: none; } }
-        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .header h1 { font-size: 1.5rem; } .main-logo-grupo { font-size: 2rem; } .main-logo-tagline { font-size: 0.7rem; } .agency-logos ul { gap: 2rem 1.5rem; } .agency-name { font-size: 1rem; } .agency-tagline { font-size: 0.5rem; } }
     </style>
 </head>
 <body>
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="logo-opus.png" alt="Logo OpusMúltipla - ideias que transformam" class="logo-opusmultipla">
+                <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
 
             <div class="attention-box">
-                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação de mídia">
+                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
             </div>
 
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
-                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required placeholder="Nome completo" /></div>
-                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required placeholder="seu@email.com" /></div>
-                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required placeholder="(XX) XXXXX-XXXX" /></div>
-                    <div class="form-group full-width pi-group"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required placeholder="Digite a PI para carregar os dados" autocomplete="off" /><div id="piStatus" aria-live="polite"></div></div>
-                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly /></div>
-                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly /></div>
-                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly /></div>
-                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly /></div>
-                    <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" placeholder="Aguardando PI..." readonly /></div>
+                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
+                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
+                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required><div id="piStatus"></div></div>
+                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
+                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
+                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
+                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" readonly></div>
+                    <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" readonly></div>
                     <div class="form-group">
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="AT">Ativacao</option>
-                            <option value="BD">Busdoor</option>
-                            <option value="CI">Cinema</option>
-                            <option value="DO">Digital Out of Home</option>
-                            <option value="FL">Frontlight</option>
-                            <option value="IN">Internet</option>
-                            <option value="JO">Jornal</option>
-                            <option value="MO">Metro</option>
-                            <option value="ME">Midia Externa</option>
-                            <option value="MI">Midia Interna</option>
-                            <option value="OD">Outdoor</option>
-                            <option value="TP">Patrocinios</option>
-                            <option value="RD">Radio</option>
-                            <option value="RF">Rádio Frequência</option>
-                            <option value="RV">Revista</option>
-                            <option value="TV">TV</option>
+                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RF">Rádio Frequência</option><option value="RV">Revista</option><option value="TV">TV</option>
                         </select>
                     </div>
-                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
+                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
                         <div id="upload-area-dinamica" class="upload-container">
-                            <p id="upload-placeholder" style="color: var(--cor-texto-claro);">Preencha o número da PI para ver os campos de anexo.</p>
+                            <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label for="relatorio_fotografico">Relatório Fotográfico *</label>
-                                <input type="file" name="relatorio_fotografico" multiple required>
+                                <input type="file" name="relatorio_fotografico" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label for="relatorio_exibicoes">Relatório de Exibições Automatizado *</label>
-                                <input type="file" name="relatorio_exibicoes" multiple required>
+                                <label for="relatorio_exibicoes">Relatório de Exibições *</label>
+                                <input type="file" name="relatorio_exibicoes" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label for="video_diurno">Vídeo Diurno *</label>
-                                <input type="file" name="video_diurno" multiple required>
+                                <input type="file" name="video_diurno" multiple>
                             </div>
 
                             <div class="upload-group" data-meio="ME MO" style="display: none;">
-                                <label for="relatorio_enderecos">Relatório com Endereços *</label>
-                                <input type="file" name="relatorio_enderecos" multiple required>
+                                <label for="relatorio_enderecos">Relatório com Endereços/Pontos *</label>
+                                <input type="file" name="relatorio_enderecos" multiple>
                             </div>
                             <div class="upload-group" data-meio="ME MO" style="display: none;">
-                                <label for="fotos_diurnas_noturnas">Fotos Diurnas/Noturnas *</label>
-                                <input type="file" name="fotos_diurnas_noturnas" multiple required>
+                                <label for="fotos_pontos">Fotos dos Pontos *</label>
+                                <input type="file" name="fotos_pontos" multiple>
                             </div>
 
-                            <div class="upload-group" data-meio="BD OD FL MI RD TP CI JO RV AT TV IN" style="display: none;">
-                                <label for="comprovante_geral">Relatório/Comprovante Geral *</label>
-                                <input type="file" name="comprovante_geral" multiple required>
+                            <div class="upload-group" data-meio="BD OD FL MI RD TP CI JO RV AT TV IN RF" style="display: none;">
+                                <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
+                                <input type="file" name="comprovante_geral" multiple>
                             </div>
                         </div>
                     </div>
@@ -247,8 +214,8 @@
                     <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
                 </div>
             </form>
-            <div class="message-box" id="successMessage" role="alert"></div>
-            <div class="message-box" id="errorMessage" role="alert"></div>
+            <div class="message-box" id="successMessage"></div>
+            <div class="message-box" id="errorMessage"></div>
         </div>
     </div>
     
@@ -274,7 +241,6 @@
 
 <script>
     (function () {
-        // --- CONFIGURAÇÃO E SELETORES ---
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -292,80 +258,40 @@
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
         let piFetchController = null;
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm'; 
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm'; // Atualize se a URL de produção for diferente
 
-        // --- FUNÇÕES AUXILIARES ---
-        function showMessage(element, message) {
-            element.textContent = message;
-            element.style.display = 'block';
-        }
-        function clearMessages() {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-        }
+        function showMessage(element, message) { element.textContent = message; element.style.display = 'block'; }
+        function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
         function resetPIFields() {
             clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
-            atualizarCamposDeAnexo(''); // Esconde os campos de anexo
+            atualizarCamposDeAnexo('');
         }
 
-        // --- LÓGICA DE UPLOAD DINÂMICO ---
         function atualizarCamposDeAnexo(meio) {
             let algumCampoVisivel = false;
-            
-            // Esconde todos os grupos de upload
             allUploadGroups.forEach(group => {
-                group.style.display = 'none';
-                group.querySelector('input[type="file"]').required = false; // Desativa a obrigatoriedade
+                const meiosDoGrupo = group.dataset.meio.split(' ');
+                if (meio && meiosDoGrupo.includes(meio)) {
+                    group.style.display = 'block';
+                    group.querySelector('input[type="file"]').required = true;
+                    algumCampoVisivel = true;
+                } else {
+                    group.style.display = 'none';
+                    group.querySelector('input[type="file"]').required = false;
+                }
             });
-
-            if (meio) {
-                // Mapeamento de Meios para quantidade de campos
-                const meioMap = {
-                    'DO': ['DO'],
-                    'ME_MO': ['ME', 'MO'],
-                    'OUTROS': ['BD', 'OD', 'FL', 'MI', 'RD', 'TP', 'CI', 'JO', 'RV', 'AT', 'TV', 'IN', 'RF']
-                };
-
-                // Encontra qual grupo de meios o 'meio' atual pertence
-                let grupoEncontrado = null;
-                for (const grupo in meioMap) {
-                    if (meioMap[grupo].includes(meio)) {
-                        grupoEncontrado = grupo;
-                        break;
-                    }
-                }
-                
-                // Mostra os campos correspondentes
-                if(grupoEncontrado) {
-                    const selector = (grupoEncontrado === 'OUTROS') 
-                        ? '[data-meio~="BD"]' 
-                        : `[data-meio~="${meioMap[grupoEncontrado][0]}"]`;
-                    
-                    const groupsToShow = uploadArea.querySelectorAll(selector);
-
-                    groupsToShow.forEach(group => {
-                        group.style.display = 'block';
-                        group.querySelector('input[type="file"]').required = true; // Ativa a obrigatoriedade
-                        algumCampoVisivel = true;
-                    });
-                }
-            }
-
-            // Mostra ou esconde o placeholder
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
         }
 
-
-        // --- LÓGICA PRINCIPAL ---
         async function buscarDadosPI(npi) {
-            if (!npi) { resetPIFields(); piStatus.textContent = ''; return; }
+            if (!npi) { resetPIFields(); return; }
             if (piFetchController) piFetchController.abort();
             
             piFetchController = new AbortController();
-            piStatus.textContent = 'Buscando dados da PI...';
+            piStatus.textContent = 'Buscando...';
             piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
-            atualizarCamposDeAnexo(''); // Limpa campos de anexo durante a busca
+            atualizarCamposDeAnexo('');
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -374,23 +300,16 @@
                     body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
-
-                if (!response.ok) throw new Error(`Erro de rede: ${response.statusText}`);
+                if (!response.ok) throw new Error('Erro de rede');
                 const data = await response.json();
-
                 if (data.success) {
-                    piStatus.textContent = 'Dados carregados com sucesso.';
+                    piStatus.textContent = 'Dados carregados.';
                     piStatus.style.color = 'var(--cor-sucesso)';
-                    clienteInput.value = data.cliente || '';
-                    campanhaInput.value = data.campanha || '';
-                    produtoInput.value = data.produto || '';
-                    periodoInput.value = data.periodo || '';
-                    veiculoInput.value = data.veiculo || ''; 
-                    meioSelect.value = data.meio || '';
-                    
-                    // ATUALIZA OS CAMPOS DE ANEXO COM BASE NO MEIO RETORNADO
+                    Object.keys(data).forEach(key => {
+                        const input = document.getElementById(key);
+                        if(input) input.value = data[key] || '';
+                    });
                     atualizarCamposDeAnexo(data.meio);
-
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada.';
                     piStatus.style.color = 'var(--cor-erro)';
@@ -398,7 +317,7 @@
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    piStatus.textContent = 'Falha na comunicação ao buscar PI.';
+                    piStatus.textContent = 'Falha na comunicação.';
                     piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
                 }
@@ -413,13 +332,13 @@
             const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
             
             camposAnexoVisiveis.forEach(input => {
-                if (input.files.length === 0) {
+                if (input.required && input.files.length === 0) {
                     camposAnexoObrigatoriosPreenchidos = false;
                 }
             });
 
             if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
-                showMessage(errorMessage, 'Por favor, preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante.');
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante.');
                 return;
             }
 
@@ -433,14 +352,13 @@
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.message || 'Ocorreu um erro no servidor.');
+                if (!response.ok) throw new Error(result.message || 'Erro no servidor.');
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 resetPIFields();
-
             } catch (error) {
-                showMessage(errorMessage, error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message);
+                showMessage(errorMessage, error.message.includes('fetch') ? 'Falha na comunicação com o servidor.' : error.message);
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
