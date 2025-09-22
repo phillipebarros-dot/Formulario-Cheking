@@ -119,54 +119,25 @@
 
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos {
-            background-color: #585858;
-            width: 100%;
-            padding: 3rem 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2.5rem;
+            background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
         }
         .main-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            color: white;
-            font-family: 'Poppins', sans-serif;
+            display: flex; align-items: center; gap: 0.8rem; color: white; font-family: 'Poppins', sans-serif;
         }
         .main-logo-grupo { font-size: 2.5rem; font-weight: 800; }
         .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
-
         .agency-logos ul {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 2.5rem;
-            list-style: none;
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none;
         }
         .agency-logos li a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: white;
-            transition: opacity 0.2s;
+            display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s;
         }
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase;
         }
         .agency-tagline {
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: #ccc;
+            font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc;
         }
         .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
         
@@ -226,21 +197,7 @@
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="DO">DOOH - Digital Out of Home</option>
-                            <option value="ME">Mídia Exterior - MUB estático</option>
-                            <option value="MO">Mídia Exterior - Metrô estático</option>
-                            <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
-                            <option value="OD">Mídia Exterior - Outdoor</option>
-                            <option value="FL">Mídia Exterior - Fronts</option>
-                            <option value="MI">Mídia Interna estática</option>
-                            <option value="RD">Rádio</option>
-                            <option value="RF">Rádio Frequência</option>
-                            <option value="CI">Cinema</option>
-                            <option value="JO">Mídia Impressa - Jornal</option>
-                            <option value="RV">Mídia Impressa - Revista</option>
-                            <option value="AT">Projetos Especiais - Ativação</option>
-                            <option value="TV">TV</option>
-                            <option value="IN">Internet</option>
+                            <option value="DO">DOOH - Digital Out of Home</option><option value="ME">Mídia Exterior - MUB estático</option><option value="MO">Mídia Exterior - Metrô estático</option><option value="BD">Mídia Exterior - Busdoor/Taxidoor</option><option value="OD">Mídia Exterior - Outdoor</option><option value="FL">Mídia Exterior - Fronts</option><option value="MI">Mídia Interna estática</option><option value="RD">Rádio</option><option value="RF">Rádio Frequência</option><option value="CI">Cinema</option><option value="JO">Mídia Impressa - Jornal</option><option value="RV">Mídia Impressa - Revista</option><option value="AT">Projetos Especiais - Ativação</option><option value="TV">TV</option><option value="IN">Internet</option>
                         </select>
                     </div>
                     <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
@@ -279,6 +236,7 @@
 
 <script>
     (function () {
+        // --- INÍCIO DA CONFIGURAÇÃO ---
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -286,28 +244,79 @@
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
-        const veiculoInput = document.getElementById('veiculo'); 
-        const meioSelect = document.getElementById('meio');       
+        const veiculoInput = document.getElementById('veiculo');
+        const meioSelect = document.getElementById('meio');
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('comprovantes');
+        const fileList = document.getElementById('fileList');
 
         let files = [];
         let piFetchController = null;
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm'; 
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm';
+        // --- FIM DA CONFIGURAÇÃO ---
 
-        function resetPIFields() {
-            clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
+        // --- FUNÇÕES AUXILIARES ---
+        function showMessage(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
         }
 
+        function clearMessages() {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+
+        function resetPIFields() {
+            clienteInput.value = '';
+            campanhaInput.value = '';
+            produtoInput.value = '';
+            periodoInput.value = '';
+            veiculoInput.value = '';
+            meioSelect.value = '';
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            files.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.textContent = file.name;
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = 'Remover';
+                removeBtn.onclick = () => {
+                    files.splice(index, 1);
+                    updateFileList();
+                };
+                div.appendChild(removeBtn);
+                fileList.appendChild(div);
+            });
+        }
+        
+        function handleFiles(newFiles) {
+            for (const file of newFiles) { files.push(file); }
+            updateFileList();
+        }
+
+        // --- LÓGICA PRINCIPAL ---
+
+        // Função para buscar dados da PI no n8n
         async function buscarDadosPI(npi) {
-            if (!npi) { resetPIFields(); piStatus.textContent = ''; return; }
+            if (!npi) {
+                resetPIFields();
+                piStatus.textContent = '';
+                return;
+            }
             if (piFetchController) piFetchController.abort();
             
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando dados da PI...';
             piStatus.style.color = 'var(--cor-texto-claro)';
-            errorMessage.style.display = 'none';
+            clearMessages();
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -318,6 +327,7 @@
                 });
 
                 if (!response.ok) throw new Error(`Erro de rede: ${response.statusText}`);
+                
                 const data = await response.json();
 
                 if (data.success) {
@@ -327,8 +337,8 @@
                     campanhaInput.value = data.campanha || '';
                     produtoInput.value = data.produto || '';
                     periodoInput.value = data.periodo || '';
-                    veiculoInput.value = data.veiculo || ''; 
-                    meioSelect.value = data.meio || '';       
+                    veiculoInput.value = data.veiculo || '';
+                    meioSelect.value = data.meio || '';
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada.';
                     piStatus.style.color = 'var(--cor-erro)';
@@ -342,52 +352,19 @@
                 }
             }
         }
-        
-        const fileUpload = document.getElementById('fileUpload');
-        const fileInput = document.getElementById('comprovantes');
-        const fileList = document.getElementById('fileList');
 
-        function updateFileList() {
-            fileList.innerHTML = '';
-            files.forEach((file, index) => {
-                const div = document.createElement('div');
-                div.className = 'file-item';
-                div.textContent = file.name;
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.textContent = 'Remover';
-                removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
-                div.appendChild(removeBtn);
-                fileList.appendChild(div);
-            });
-        }
-        
-        function handleFiles(newFiles) {
-            for (const file of newFiles) { files.push(file); }
-            updateFileList();
-        }
-        
-        fileUpload.addEventListener('click', () => fileInput.click());
-        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
-        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
-        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
-        let debounceTimeout;
-        piInput.addEventListener('input', () => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
-        });
-
+        // Event listener para o envio do formulário
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+            clearMessages();
 
-            if (!form.checkValidity() || files.length === 0) {
-                errorMessage.textContent = 'Por favor, preencha todos os campos obrigatórios e anexe ao menos um comprovante.';
-                errorMessage.style.display = 'block';
+            // Validação client-side antes do envio
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Por favor, preencha todos os campos obrigatórios (*).');
+                return;
+            }
+            if (files.length === 0) {
+                showMessage(errorMessage, 'É necessário anexar pelo menos um comprovante.');
                 return;
             }
 
@@ -402,23 +379,37 @@
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
+
                 if (!response.ok) throw new Error(result.message || 'Ocorreu um erro no servidor.');
                 
-                successMessage.textContent = result.message || 'Checking enviado com sucesso!';
-                successMessage.style.display = 'block';
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 files = [];
                 updateFileList();
                 piStatus.textContent = '';
                 resetPIFields();
             } catch (error) {
-                errorMessage.textContent = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
-                errorMessage.style.display = 'block';
+                const errorMsg = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
+                showMessage(errorMessage, errorMsg);
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
             }
         });
+        
+        // --- EVENT LISTENERS ADICIONAIS ---
+        fileUpload.addEventListener('click', () => fileInput.click());
+        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
+        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        let debounceTimeout;
+        piInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
+        });
+
     })();
 </script>
 </body>
