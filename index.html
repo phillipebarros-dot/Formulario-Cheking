@@ -126,9 +126,20 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
-        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
-        .footer-logos {
+        .footer-wrapper { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-top: auto; 
+        }
+        .footer-gradient-bar { 
+            order: -1; 
+            width: 100%; 
+            height: 8px; 
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+        }
+        .footer-content {
             background-color: #585858;
             width: 100%;
             padding: 3rem 2rem;
@@ -137,15 +148,26 @@
             align-items: center;
             gap: 2.5rem;
         }
-        .main-logo {
+        .main-logo-block {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.8rem;
             color: white;
             font-family: 'Poppins', sans-serif;
+            text-align: center;
         }
-        .main-logo-grupo { font-size: 2.5rem; font-weight: 800; }
-        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
+        .main-logo-grupo { 
+            font-size: 2.8rem;
+            font-weight: 800; 
+            letter-spacing: 2px;
+        }
+        .main-logo-tagline { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 0.9rem;
+            font-weight: 500; 
+            letter-spacing: 2.5px;
+            margin-top: 0.2rem;
+        }
 
         .agency-logos ul {
             display: flex;
@@ -178,12 +200,6 @@
             text-transform: uppercase;
             color: #ccc;
         }
-        .footer-gradient-bar { 
-            order: -1;
-            width: 100%; 
-            height: 8px; 
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
-        }
         
         @media (max-width: 1100px) {
             .main-content { padding: 0; }
@@ -192,7 +208,11 @@
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.5rem; }
+            .main-logo-grupo { font-size: 2rem; }
+            .main-logo-tagline { font-size: 0.7rem; }
             .agency-logos ul { gap: 2rem 1.5rem; }
+            .agency-name { font-size: 1rem; }
+            .agency-tagline { font-size: 0.5rem; }
         }
     </style>
 </head>
@@ -242,10 +262,10 @@
     
     <footer class="footer-wrapper">
         <div class="footer-gradient-bar"></div>
-        <div class="footer-logos">
-            <div class="main-logo">
+        <div class="footer-content">
+            <div class="main-logo-block">
                 <span class="main-logo-grupo">GRUPO OM</span>
-                <span class="main-logo-tagline">COMUNICAÇÃO<br>INTEGRADA</span>
+                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
             </div>
             <nav class="agency-logos">
                 <ul>
