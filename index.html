@@ -6,7 +6,7 @@
     <title>Checking OpusMúltipla</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --cor-primaria: #0033a0;
@@ -73,6 +73,7 @@
 
         .header { text-align: center; margin-bottom: 2.5rem; }
         .header h1 {
+            font-family: 'Poppins', sans-serif; /* Fonte ajustada */
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--cor-secundaria);
@@ -83,7 +84,8 @@
         .attention-box {
             background-color: #fff8e1; border-left: 5px solid #f39c12; padding: 1.5rem; margin-bottom: 2.5rem; color: #7b4c00; font-size: 0.9rem; border-radius: 8px;
         }
-        .attention-box p { margin-bottom: 1rem; font-weight: 500;}
+        .attention-box .titulo-atencao { margin-bottom: 1.5rem; font-weight: 700; font-size: 1rem; }
+        .attention-box .subtitulo-atencao { margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 600; }
         .attention-box ul { list-style-position: inside; padding-left: 0.5rem; }
         .attention-box li { margin-bottom: 0.5rem; }
         .attention-box strong { font-weight: 700; color: #c53030; }
@@ -93,7 +95,7 @@
         .full-width { grid-column: 1 / -1; }
         label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
 
-        input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+        input, select, textarea {
             width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; background-color: var(--cor-fundo-secao); color: var(--cor-secundaria);
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
@@ -115,7 +117,7 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* --- NOVOS ESTILOS PARA O RODAPÉ DE LOGOS --- */
+        /* --- ESTILOS ATUALIZADOS PARA O RODAPÉ --- */
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-logos {
             background-color: #585858;
@@ -131,9 +133,10 @@
             align-items: center;
             gap: 0.8rem;
             color: white;
+            font-family: 'Poppins', sans-serif;
         }
         .main-logo-grupo { font-size: 2.5rem; font-weight: 800; }
-        .main-logo-tagline { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
+        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.5px; line-height: 1.2; }
 
         .agency-logos ul {
             display: flex;
@@ -153,9 +156,11 @@
         }
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name {
+            font-family: 'Poppins', sans-serif; /* Fonte específica */
             font-weight: 700;
             font-size: 1.2rem;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .agency-tagline {
             font-size: 0.6rem;
@@ -183,19 +188,35 @@
                 <h1>CHECKING OPUSMÚLTIPLA</h1>
                 <p>Envio de comprovantes de veiculação</p>
             </div>
+
             <div class="attention-box" role="alert">
-                <p>SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.</p>
+                <p class="titulo-atencao">SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.</p>
                 <ul>
                     <li><strong>DOOH - Painel de Led:</strong> Relatório fotográfico de todos os pontos + relatório de exibições automatizado + vídeo diurno.</li>
+                    <li><strong>DOOH - Monitores:</strong> Relatório fotográfico amostral + relatório de exibições automatizado + vídeo diurno.</li>
                     <li><strong>Mídia Exterior - MUB estático:</strong> Relatório com o endereço dos pontos + fotos diurnas (amostrais).</li>
+                    <li><strong>Mídia Exterior - Metrô estático:</strong> Relatório com a listagem das estações, linhas e carros + fotos ou vídeos (amostrais).</li>
+                    <li><strong>Mídia Exterior - Busdoor/Taxidoor:</strong> Relatório fotográfico de todos os ônibus/carros.</li>
+                    <li><strong>Mídia Exterior - Outdoor, Fronts e demais formatos estáticos:</strong> Relatório fotográfico com endereço de todos os pontos. Pontos ILUMINADOS: obrigatório foto NOTURNA.</li>
+                    <li><strong>Mídia Interna estática:</strong> Relatório fotográfico de todos os pontos e relação de locais.</li>
                 </ul>
+                <p class="subtitulo-atencao">OUTROS MEIOS:</p>
+                <ul>
+                    <li><strong>Rádio:</strong> Relatório de veiculação automatizado. No caso de ações ao vivo, enviar gravação da ação ou relatório especificando ações e horários.</li>
+                    <li><strong>Cinema:</strong> Relatório de exibição citando complexo, número de salas, praça.</li>
+                    <li><strong>Mídia Impressa:</strong> Material físico (preferencialmente) + pdf/foto do título com o material veiculado.</li>
+                    <li><strong>Projetos Especiais:</strong> Relatório fotográfico ou vídeos + detalhamento das ações após o término da veiculação.</li>
+                    <li><strong>TV:</strong> Relatório de veiculação automatizado.</li>
+                    <li><strong>Internet:</strong> Relatório de veiculação + prints das peças - acompanhamento periódico junto à equipe de mídia para otimizações.</li>
+                </ul>
+                <p><strong>O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CFME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).</strong></p>
             </div>
+
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
                     <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required placeholder="Nome completo" /></div>
                     <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required placeholder="seu@email.com" /></div>
                     <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required placeholder="(XX) XXXXX-XXXX" /></div>
-
                     <div class="form-group full-width pi-group"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required placeholder="Digite a PI para carregar os dados" autocomplete="off" /><div id="piStatus" aria-live="polite"></div></div>
                     <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly /></div>
                     <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly /></div>
@@ -225,12 +246,12 @@
             </div>
             <nav class="agency-logos">
                 <ul>
-                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OPUSMÚLTIPLA</span><span class="agency-tagline">IDEIAS QUE TRANSFORMAM</span></a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">BRAINBOX</span><span class="agency-tagline">DESIGN FOR BUSINESS</span></a></li>
-                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HOUSECRICKET</span><span class="agency-tagline">DIGITAL DIRECT</span></a></li>
-                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">senso</span><span class="agency-tagline">PERFORMANCE</span></a></li>
-                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">TAILORMEDIA</span><span class="agency-tagline">INTELIGÊNCIA DE MÍDIA</span></a></li>
-                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'OM</span><span class="agency-tagline">SOLUÇÕES IMPROVÁVEIS</span></a></li>
+                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
+                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
+                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
+                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
                 </ul>
             </nav>
         </div>
@@ -238,7 +259,7 @@
     </footer>
 
 <script>
-    // O SCRIPT JAVASCRIPT NÃO PRECISA DE MUDANÇAS.
+    // O JAVASCRIPT NÃO PRECISA DE MUDANÇAS.
     (function () {
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
