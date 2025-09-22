@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checking OpusMúltipla</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/phillipebarros-dot/Formulario-Cheking/main/favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
@@ -113,13 +113,26 @@
         textarea { resize: vertical; min-height: 100px; }
         .pi-group { position: relative; }
         #piStatus { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; min-height: 1.2em; }
-        .file-upload { margin-top: 0.5rem; border: 2px dashed var(--cor-borda); padding: 2rem; text-align: center; cursor: pointer; border-radius: 8px; transition: border-color 0.2s, background-color 0.2s; }
-        .file-upload:hover { border-color: var(--cor-borda-foco); background-color: #f7faff; }
-        .file-upload span { font-weight: 600; color: var(--cor-borda-foco); }
-        .file-list { margin-top: 1rem; }
-        .file-item { display: flex; justify-content: space-between; align-items: center; background-color: #f7f7f7; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .remove-btn { background: none; border: none; color: var(--cor-erro); cursor: pointer; font-weight: 600; }
-        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
+        
+        /* Estilos para a nova área de upload */
+        .upload-container {
+            border: 2px dashed var(--cor-borda);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        .upload-group {
+            margin-bottom: 1rem;
+        }
+        .upload-group:last-child {
+            margin-bottom: 0;
+        }
+        input[type="file"] {
+            font-size: 0.9rem;
+        }
+        .file-list { margin-top: 0.5rem; font-size: 0.8rem; color: var(--cor-texto-claro); }
+
+        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; margin-top: 1rem; }
         button[type="submit"]:hover { background-color: #00226e; }
         button[type="submit"]:active { transform: scale(0.99); }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
@@ -127,50 +140,39 @@
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
         .footer-wrapper { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            margin-top: auto; 
-        }
-        .footer-content {
-            background-color: var(--cor-fundo-secao);
-            border-top: 1px solid var(--cor-borda);
-            width: 100%;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-        .footer-content img {
-            max-width: 100%;
-            width: 800px;
-            height: auto;
+            width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; 
         }
         .footer-gradient-bar { 
-            width: 100%; 
-            height: 8px; 
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
+            order: -1; width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
         }
+        .footer-content {
+            background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
+        }
+        .main-logo-block {
+            display: flex; flex-direction: column; align-items: center; color: white; font-family: 'Poppins', sans-serif; text-align: center;
+        }
+        .main-logo-grupo { font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
+        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
+        .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
+        .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
+        .agency-logos li a:hover { opacity: 0.7; }
+        .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         
-        @media (max-width: 1100px) {
-            .main-content { padding: 0; }
-            .container { border-radius: 0; border-left: none; border-right: none; }
-        }
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .header h1 { font-size: 1.5rem; }
-        }
+        @media (max-width: 1100px) { .main-content { padding: 0; } .container { border-radius: 0; border-left: none; border-right: none; } }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .header h1 { font-size: 1.5rem; } .main-logo-grupo { font-size: 2rem; } .main-logo-tagline { font-size: 0.7rem; } .agency-logos ul { gap: 2rem 1.5rem; } .agency-name { font-size: 1rem; } .agency-tagline { font-size: 0.5rem; } }
     </style>
 </head>
 <body>
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="https://raw.githubusercontent.com/phillipebarros-dot/Formulario-Cheking/main/logo-opus.png" alt="Logo OpusMúltipla - ideias que transformam" class="logo-opusmultipla">
+                <img src="logo-opus.png" alt="Logo OpusMúltipla - ideias que transformam" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
 
-            <div class="attention-box" role="alert">
-                <img src="https://raw.githubusercontent.com/phillipebarros-dot/Formulario-Cheking/main/comunicado.jpg" alt="Comunicado sobre relatórios de veiculação de mídia">
+            <div class="attention-box">
+                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação de mídia">
             </div>
 
             <form id="checkingForm" novalidate>
@@ -188,15 +190,60 @@
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="DO">DOOH - Digital Out of Home</option><option value="ME">Mídia Exterior - MUB estático</option><option value="MO">Mídia Exterior - Metrô estático</option><option value="BD">Mídia Exterior - Busdoor/Taxidoor</option><option value="OD">Mídia Exterior - Outdoor</option><option value="FL">Mídia Exterior - Fronts</option><option value="MI">Mídia Interna estática</option><option value="RD">Rádio</option><option value="RF">Rádio Frequência</option><option value="CI">Cinema</option><option value="JO">Mídia Impressa - Jornal</option><option value="RV">Mídia Impressa - Revista</option><option value="AT">Projetos Especiais - Ativação</option><option value="TV">TV</option><option value="IN">Internet</option>
+                            <option value="AT">Ativacao</option>
+                            <option value="BD">Busdoor</option>
+                            <option value="CI">Cinema</option>
+                            <option value="DO">Digital Out of Home</option>
+                            <option value="FL">Frontlight</option>
+                            <option value="IN">Internet</option>
+                            <option value="JO">Jornal</option>
+                            <option value="MO">Metro</option>
+                            <option value="ME">Midia Externa</option>
+                            <option value="MI">Midia Interna</option>
+                            <option value="OD">Outdoor</option>
+                            <option value="TP">Patrocinios</option>
+                            <option value="RD">Radio</option>
+                            <option value="RF">Rádio Frequência</option>
+                            <option value="RV">Revista</option>
+                            <option value="TV">TV</option>
                         </select>
                     </div>
                     <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
+                    
                     <div class="form-group full-width">
-                        <label for="comprovantes">Comprovantes *</label>
-                        <div class="file-upload" id="fileUpload" role="button"><p>Arraste e solte ou <span>clique para selecionar</span></p><input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required /></div>
-                        <div class="file-list" id="fileList" aria-live="polite"></div>
+                        <label>Comprovantes *</label>
+                        <div id="upload-area-dinamica" class="upload-container">
+                            <p id="upload-placeholder" style="color: var(--cor-texto-claro);">Preencha o número da PI para ver os campos de anexo.</p>
+                            
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_fotografico">Relatório Fotográfico *</label>
+                                <input type="file" name="relatorio_fotografico" multiple required>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_exibicoes">Relatório de Exibições Automatizado *</label>
+                                <input type="file" name="relatorio_exibicoes" multiple required>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="video_diurno">Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno" multiple required>
+                            </div>
+
+                            <div class="upload-group" data-meio="ME MO" style="display: none;">
+                                <label for="relatorio_enderecos">Relatório com Endereços *</label>
+                                <input type="file" name="relatorio_enderecos" multiple required>
+                            </div>
+                            <div class="upload-group" data-meio="ME MO" style="display: none;">
+                                <label for="fotos_diurnas_noturnas">Fotos Diurnas/Noturnas *</label>
+                                <input type="file" name="fotos_diurnas_noturnas" multiple required>
+                            </div>
+
+                            <div class="upload-group" data-meio="BD OD FL MI RD TP CI JO RV AT TV IN" style="display: none;">
+                                <label for="comprovante_geral">Relatório/Comprovante Geral *</label>
+                                <input type="file" name="comprovante_geral" multiple required>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
                 </div>
             </form>
@@ -206,24 +253,28 @@
     </div>
     
     <footer class="footer-wrapper">
-        <div class="footer-content">
-            <img src="https://raw.githubusercontent.com/phillipebarros-dot/Formulario-Cheking/main/Assinatura%20Conjunta%20Com%20Slogan%20V01.png" alt="Assinatura de logos do Grupo OM" usemap="#footer-map">
-            
-            <map name="footer-map">
-                <area shape="rect" coords="45,230,285,320" href="https://grupoom.com.br/opus-multipla/" target="_blank" alt="OpusMúltipla">
-                <area shape="rect" coords="300,230,530,320" href="https://grupoom.com.br/brainbox/" target="_blank" alt="Brainbox">
-                <area shape="rect" coords="560,230,830,320" href="https://grupoom.com.br/housecricket/" target="_blank" alt="HouseCricket">
-                <area shape="rect" coords="850,230,1040,320" href="https://grupoom.com.br/senso/" target="_blank" alt="Senso">
-                <area shape="rect" coords="1070,230,1375,320" href="https://grupoom.com.br/tailormedia/" target="_blank" alt="Tailor Media">
-                <area shape="rect" coords="1410,230,1580,320" href="https://grupoom.com.br/dom/" target="_blank" alt="D'Om">
-            </map>
-        </div>
         <div class="footer-gradient-bar"></div>
+        <div class="footer-content">
+            <div class="main-logo-block">
+                <span class="main-logo-grupo">GRUPO OM</span>
+                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
+            </div>
+            <nav class="agency-logos">
+                <ul>
+                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
+                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
+                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
+                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
+                </ul>
+            </nav>
+        </div>
     </footer>
 
 <script>
-    // NENHUMA MUDANÇA É NECESSÁRIA NO SCRIPT.
     (function () {
+        // --- CONFIGURAÇÃO E SELETORES ---
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -236,18 +287,76 @@
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
-        const fileUpload = document.getElementById('fileUpload');
-        const fileInput = document.getElementById('comprovantes');
-        const fileList = document.getElementById('fileList');
+        const uploadArea = document.getElementById('upload-area-dinamica');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
-        let files = [];
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook-test/CheckingForm'; 
 
+        // --- FUNÇÕES AUXILIARES ---
+        function showMessage(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+        function clearMessages() {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
         function resetPIFields() {
             clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
+            atualizarCamposDeAnexo(''); // Esconde os campos de anexo
         }
 
+        // --- LÓGICA DE UPLOAD DINÂMICO ---
+        function atualizarCamposDeAnexo(meio) {
+            let algumCampoVisivel = false;
+            
+            // Esconde todos os grupos de upload
+            allUploadGroups.forEach(group => {
+                group.style.display = 'none';
+                group.querySelector('input[type="file"]').required = false; // Desativa a obrigatoriedade
+            });
+
+            if (meio) {
+                // Mapeamento de Meios para quantidade de campos
+                const meioMap = {
+                    'DO': ['DO'],
+                    'ME_MO': ['ME', 'MO'],
+                    'OUTROS': ['BD', 'OD', 'FL', 'MI', 'RD', 'TP', 'CI', 'JO', 'RV', 'AT', 'TV', 'IN', 'RF']
+                };
+
+                // Encontra qual grupo de meios o 'meio' atual pertence
+                let grupoEncontrado = null;
+                for (const grupo in meioMap) {
+                    if (meioMap[grupo].includes(meio)) {
+                        grupoEncontrado = grupo;
+                        break;
+                    }
+                }
+                
+                // Mostra os campos correspondentes
+                if(grupoEncontrado) {
+                    const selector = (grupoEncontrado === 'OUTROS') 
+                        ? '[data-meio~="BD"]' 
+                        : `[data-meio~="${meioMap[grupoEncontrado][0]}"]`;
+                    
+                    const groupsToShow = uploadArea.querySelectorAll(selector);
+
+                    groupsToShow.forEach(group => {
+                        group.style.display = 'block';
+                        group.querySelector('input[type="file"]').required = true; // Ativa a obrigatoriedade
+                        algumCampoVisivel = true;
+                    });
+                }
+            }
+
+            // Mostra ou esconde o placeholder
+            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
+        }
+
+
+        // --- LÓGICA PRINCIPAL ---
         async function buscarDadosPI(npi) {
             if (!npi) { resetPIFields(); piStatus.textContent = ''; return; }
             if (piFetchController) piFetchController.abort();
@@ -255,7 +364,8 @@
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando dados da PI...';
             piStatus.style.color = 'var(--cor-texto-claro)';
-            errorMessage.style.display = 'none';
+            clearMessages();
+            atualizarCamposDeAnexo(''); // Limpa campos de anexo durante a busca
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -276,7 +386,11 @@
                     produtoInput.value = data.produto || '';
                     periodoInput.value = data.periodo || '';
                     veiculoInput.value = data.veiculo || ''; 
-                    meioSelect.value = data.meio || '';       
+                    meioSelect.value = data.meio || '';
+                    
+                    // ATUALIZA OS CAMPOS DE ANEXO COM BASE NO MEIO RETORNADO
+                    atualizarCamposDeAnexo(data.meio);
+
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada.';
                     piStatus.style.color = 'var(--cor-erro)';
@@ -293,12 +407,19 @@
         
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+            clearMessages();
 
-            if (!form.checkValidity() || files.length === 0) {
-                errorMessage.textContent = 'Por favor, preencha todos os campos obrigatórios e anexe ao menos um comprovante.';
-                errorMessage.style.display = 'block';
+            let camposAnexoObrigatoriosPreenchidos = true;
+            const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            
+            camposAnexoVisiveis.forEach(input => {
+                if (input.files.length === 0) {
+                    camposAnexoObrigatoriosPreenchidos = false;
+                }
+            });
+
+            if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
+                showMessage(errorMessage, 'Por favor, preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante.');
                 return;
             }
 
@@ -307,7 +428,6 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            files.forEach(file => formData.append('comprovantes', file));
             formData.append('action', 'submissao');
 
             try {
@@ -315,49 +435,18 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Ocorreu um erro no servidor.');
                 
-                successMessage.textContent = result.message || 'Checking enviado com sucesso!';
-                successMessage.style.display = 'block';
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
-                files = [];
-                updateFileList();
-                piStatus.textContent = '';
                 resetPIFields();
+
             } catch (error) {
-                errorMessage.textContent = error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message;
-                errorMessage.style.display = 'block';
+                showMessage(errorMessage, error.message.includes('Failed to fetch') ? 'Falha na comunicação com o servidor.' : error.message);
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
             }
         });
-
-        function updateFileList() {
-            fileList.innerHTML = '';
-            files.forEach((file, index) => {
-                const div = document.createElement('div');
-                div.className = 'file-item';
-                div.textContent = file.name;
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.textContent = 'Remover';
-                removeBtn.onclick = () => { files.splice(index, 1); updateFileList(); };
-                div.appendChild(removeBtn);
-                fileList.appendChild(div);
-            });
-        }
         
-        function handleFiles(newFiles) {
-            for (const file of newFiles) { files.push(file); }
-            updateFileList();
-        }
-        
-        fileUpload.addEventListener('click', () => fileInput.click());
-        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
-        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
-        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
