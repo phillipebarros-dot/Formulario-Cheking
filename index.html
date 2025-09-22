@@ -51,15 +51,21 @@
             margin-bottom: 2.5rem;
         }
 
-        .header img {
-            max-width: 200px;
-            margin-bottom: 1rem;
-        }
-
         .header h1 {
             font-size: 1.75rem;
             font-weight: 700;
             color: var(--cor-texto);
+        }
+        
+        /* NOVO: Este código cria a linha colorida */
+        .header h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--cor-primaria);
+            border-radius: 2px;
+            margin: 0.75rem auto 0;
         }
         
         .header p {
@@ -226,7 +232,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://grupoom.com.br/wp-content/uploads/2023/11/logo-grupo-om.png" alt="Logo Grupo OM">
             <h1>Checking Center</h1>
             <p>Envio de comprovantes de veiculação</p>
         </div>
@@ -310,6 +315,7 @@
     </div>
 
 <script>
+    // SEU SCRIPT JAVASCRIPT CONTINUA O MESMO DA VERSÃO ANTERIOR
     (function () {
         const form = document.getElementById('checkingForm');
         const fileUpload = document.getElementById('fileUpload');
@@ -470,11 +476,10 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            // O FormData já pega o n_pi do input com name="n_pi". Adicionamos os arquivos.
             files.forEach(file => {
                 formData.append('comprovantes', file);
             });
-            formData.append('action', 'submissao'); // Garante que a ação correta seja enviada
+            formData.append('action', 'submissao');
 
             try {
                 const response = await fetch(webhookUrl, {
