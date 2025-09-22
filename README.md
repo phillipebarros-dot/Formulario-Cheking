@@ -61,3 +61,22 @@ N8N_CORS_ALLOWED_METHODS=GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS
 
 # Permite os cabeçalhos que o navegador envia durante a comunicação.
 N8N_CORS_ALLOWED_HEADERS=Origin,X-Requested-With,Content-Type,Accept,Authorization,X-N8N-API-KEY
+Importante: Lembre-se de reiniciar sua instância do n8n após adicionar ou alterar essas variáveis.
+
+Testando o Workflow com Segurança
+É crucial poder testar o fluxo de envio sem criar pastas e enviar e-mails reais a cada teste. Existem duas abordagens recomendadas:
+
+Desativar Nós no n8n: Para testes rápidos, desative temporariamente os nós de produção (Criar Pasta, Upload Arquivos, Enviar Notificação).
+
+Usar uma "Chave de Teste": Para testes recorrentes, use um número de PI de teste (ex: TESTE-999) e adicione um nó IF no workflow para interromper a execução antes das etapas de produção.
+
+Para mais detalhes sobre os testes, consulte o arquivo WORKFLOW.md.
+
+Domínio Personalizado
+Para usar um domínio da empresa (ex: checking.grupoom.com.br):
+
+DNS: Crie um registro CNAME apontando o subdomínio para phillipebarros-dot.github.io..
+
+GitHub: Adicione o domínio personalizado nas configurações do repositório no GitHub Pages.
+
+CORS: Lembre-se de atualizar a variável N8N_CORS_ALLOWED_ORIGINS com o novo domínio
