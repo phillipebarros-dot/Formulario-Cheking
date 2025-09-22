@@ -3,35 +3,31 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checking Center - Grupo OM</title>
+    <title>Checking OpusMúltipla</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Variáveis CSS para fácil manutenção */
         :root {
-            --cor-primaria: #0033a0; /* Azul principal OM */
-            --cor-secundaria: #1a202c; /* Textos escuros */
-            --cor-texto-claro: #4a5568; /* Textos secundários */
-            --cor-fundo-claro: #f7fafc; /* Fundo geral */
-            --cor-fundo-secao: #ffffff; /* Fundo do container do formulário */
-            --cor-borda: #e2e8f0; /* Bordas de inputs e elementos */
-            --cor-borda-foco: #0033a0; /* Borda ao focar */
-            --cor-sombra: rgba(0, 0, 0, 0.05); /* Sombra suave */
-            --cor-sucesso: #2d8a5b; /* Mensagens de sucesso */
-            --cor-erro: #c53030; /* Mensagens de erro */
-            --cor-desabilitado: #edf2f7; /* Background de campos desabilitados */
-
-            /* Cores para o gradiente de rodapé */
-            --gradient-start: #d90429; /* Vermelho */
-            --gradient-mid1: #fca311;  /* Laranja */
-            --gradient-mid2: #90be6d;  /* Verde claro */
-            --gradient-mid3: #43aa8b;  /* Verde água */
-            --gradient-mid4: #0033a0;  /* Azul */
-            --gradient-end: #5a189a;   /* Roxo */
+            --cor-primaria: #0033a0;
+            --cor-secundaria: #1a202c;
+            --cor-texto-claro: #4a5568;
+            --cor-fundo-claro: #f7fafc;
+            --cor-fundo-secao: #ffffff;
+            --cor-borda: #e2e8f0;
+            --cor-borda-foco: #0033a0;
+            --cor-sombra: rgba(0, 0, 0, 0.05);
+            --cor-sucesso: #2d8a5b;
+            --cor-erro: #c53030;
+            --cor-desabilitado: #edf2f7;
+            --gradient-start: #d90429;
+            --gradient-mid1: #fca311;
+            --gradient-mid2: #90be6d;
+            --gradient-mid3: #43aa8b;
+            --gradient-mid4: #0033a0;
+            --gradient-end: #5a189a;
         }
 
-        /* Reset básico */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -39,15 +35,20 @@
             background-color: var(--cor-fundo-claro);
             color: var(--cor-secundaria);
             display: flex;
-            flex-direction: column; /* Para organizar o header, formulário e footer */
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between; /* Empurra o footer para baixo */
             align-items: center;
             min-height: 100vh;
-            padding: 2rem 1rem 0; /* Espaço em cima e laterais, 0 embaixo para o footer */
             line-height: 1.6;
         }
 
-        /* Container principal do formulário */
+        .main-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
         .container {
             max-width: 750px;
             width: 100%;
@@ -56,14 +57,10 @@
             border-radius: 12px;
             box-shadow: 0 10px 25px var(--cor-sombra);
             border: 1px solid var(--cor-borda);
-            margin-bottom: 2rem; /* Espaço entre o formulário e o footer */
         }
 
-        /* Cabeçalho do formulário */
         .header { text-align: center; margin-bottom: 2.5rem; }
         .header h1 { font-size: 1.75rem; font-weight: 700; color: var(--cor-secundaria); }
-        
-        /* Barra colorida no cabeçalho */
         .header h1::after {
             content: '';
             display: block;
@@ -73,268 +70,142 @@
             margin: 0.75rem auto 0;
             background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
         }
+        .header p { font-size: 1rem; color: var(--cor-texto-claro); margin-top: 1.5rem; }
         
-        .header p { font-size: 1rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
+        /* Caixa de Atenção Atualizada */
+        .attention-box {
+            background-color: #fff8e1;
+            border-left: 5px solid #f39c12;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            color: #7b4c00;
+            font-size: 0.9rem;
+            border-radius: 8px;
+        }
+        .attention-box p { margin-bottom: 1rem; font-weight: 500;}
+        .attention-box ul { list-style-position: inside; padding-left: 0.5rem; }
+        .attention-box li { margin-bottom: 0.5rem; }
+        .attention-box strong { font-weight: 700; color: #c53030; }
 
-        /* Layout em grid para os campos */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
-
-        /* Estilos de Labels */
         label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
 
-        /* Estilos de Inputs, Selects e Textareas */
         input[type="text"], input[type="email"], select, textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--cor-borda);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: var(--cor-fundo-secao); /* Garante fundo branco */
-            color: var(--cor-secundaria);
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; background-color: var(--cor-fundo-secao); color: var(--cor-secundaria);
         }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--cor-borda-foco);
-            box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
-        }
-
-        /* Campos desabilitados/readonly */
-        input[readonly], .campo-bloqueado {
-            background-color: var(--cor-desabilitado);
-            cursor: not-allowed;
-            pointer-events: none;
-            color: var(--cor-texto-claro);
-        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
+        input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; color: var(--cor-texto-claro); }
         select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         textarea { resize: vertical; min-height: 100px; }
-        
-        /* Status da PI */
         .pi-group { position: relative; }
         #piStatus { font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; min-height: 1.2em; }
-
-        /* Área de upload de arquivos */
         .file-upload { margin-top: 0.5rem; border: 2px dashed var(--cor-borda); padding: 2rem; text-align: center; cursor: pointer; border-radius: 8px; transition: border-color 0.2s, background-color 0.2s; }
         .file-upload:hover { border-color: var(--cor-borda-foco); background-color: #f7faff; }
         .file-upload span { font-weight: 600; color: var(--cor-borda-foco); }
         .file-list { margin-top: 1rem; }
         .file-item { display: flex; justify-content: space-between; align-items: center; background-color: #f7f7f7; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .remove-btn { background: none; border: none; color: var(--cor-erro); cursor: pointer; font-weight: 600; }
-
-        /* Botão de Enviar */
-        button[type="submit"] {
-            width: 100%;
-            padding: 1rem;
-            background-color: var(--cor-primaria);
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-        }
+        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
         button[type="submit"]:hover { background-color: #00226e; }
         button[type="submit"]:active { transform: scale(0.99); }
-        
-        /* Mensagens de sucesso/erro */
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
 
-        /* Footer */
-        .footer-wrapper {
-            background-color: #333333; /* Fundo cinza escuro para o footer */
-            color: white;
-            width: 100%;
-            padding-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .footer-content {
-            max-width: 1100px; /* Largura máxima para o conteúdo do rodapé */
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
-            gap: 2rem; /* Espaço entre as colunas */
-            padding: 0 2rem 2rem; /* Padding interno */
-        }
-
-        .footer-column {
-            flex: 1; /* Distribui o espaço igualmente */
-            min-width: 180px; /* Largura mínima para evitar quebra excessiva */
-            margin-bottom: 1rem; /* Espaço entre colunas em telas menores */
-        }
-
-        .footer-column h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: white; /* Garante que os títulos sejam brancos */
-        }
-
-        .footer-column ul {
-            list-style: none;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-column ul li a {
-            color: #ccc; /* Cor dos links */
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .footer-column ul li a:hover {
-            color: var(--cor-primaria); /* Cor ao passar o mouse */
-            text-decoration: underline;
-        }
-
-        .footer-gradient-bar {
-            width: 100%;
-            height: 8px; /* Espessura da barra colorida */
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end));
-        }
-
-        /* Responsividade */
+        /* Novo Footer */
+        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
+        .footer-logos { background-color: #585858; width: 100%; padding: 2.5rem 2rem; text-align: center; }
+        .footer-logos img { max-width: 100%; height: auto; max-height: 45px; }
+        .footer-gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, var(--gradient-start), var(--gradient-mid1), var(--gradient-mid2), var(--gradient-mid3), var(--gradient-mid4), var(--gradient-end)); }
+        
         @media (max-width: 768px) {
-            .container { padding: 2rem 1.5rem; }
-            .form-grid { grid-template-columns: 1fr; }
-            .footer-content { flex-direction: column; align-items: flex-start; padding: 0 1.5rem 1.5rem; }
-            .footer-column { min-width: unset; width: 100%; }
+            body { padding: 0; }
+            .main-content { padding: 1rem; }
+            .container { padding: 2rem 1.5rem; border-radius: 0; border: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Checking Center</h1>
-            <p>Envio de comprovantes de veiculação</p>
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>CHECKING OPUSMÚLTIPLA</h1>
+                <p>Envio de comprovantes de veiculação</p>
+            </div>
+
+            <div class="attention-box" role="alert">
+                <p>SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.</p>
+                <ul>
+                    <li><strong>DOOH - Painel de Led:</strong> Relatório fotográfico de todos os pontos + relatório de exibições automatizado + vídeo diurno.</li>
+                    <li><strong>DOOH - Monitores:</strong> Relatório fotográfico amostral + relatório de exibições automatizado + vídeo diurno.</li>
+                    <li><strong>Mídia Exterior - MUB estático:</strong> Relatório com o endereço dos pontos + fotos diurnas (amostrais).</li>
+                    <li><strong>Mídia Exterior - Metrô estático:</strong> Relatório com a listagem das estações, linhas e carros + fotos ou vídeos (amostrais).</li>
+                    <li><strong>Mídia Exterior - Busdoor/Taxidoor:</strong> Relatório fotográfico de todos os ônibus/carros.</li>
+                    <li><strong>Mídia Exterior - Outdoor, Fronts e demais formatos estáticos:</strong> Relatório fotográfico com endereço de todos os pontos. Pontos ILUMINADOS: obrigatório foto NOTURNA.</li>
+                    <li><strong>Mídia Interna estática:</strong> Relatório fotográfico de todos os pontos e relação de locais.</li>
+                </ul>
+                <p>OUTROS MEIOS:</p>
+                <ul>
+                    <li><strong>Rádio:</strong> Relatório de veiculação automatizado. No caso de ações ao vivo, enviar gravação da ação ou relatório especificando ações e horários.</li>
+                    <li><strong>Cinema:</strong> Relatório de exibição citando complexo, número de salas, praça.</li>
+                    <li><strong>Mídia Impressa:</strong> Material físico (preferencialmente) + pdf/foto do título com o material veiculado.</li>
+                    <li><strong>Projetos Especiais:</strong> Relatório fotográfico ou vídeos + detalhamento das ações após o término da veiculação.</li>
+                    <li><strong>TV:</strong> Relatório de veiculação automatizado.</li>
+                    <li><strong>Internet:</strong> Relatório de veiculação + prints das peças - acompanhamento periódico junto à equipe de mídia para otimizações.</li>
+                </ul>
+                <p><strong>O NÃO ENVIO DOS RELATÓRIOS DE ACORDO COM ESPECIFICAÇÕES DESCRITAS AQUI E NAS PIs, ACARRETARÁ NO NÃO PAGAMENTO DAS VEICULAÇÕES ATÉ RELATÓRIOS ENVIADOS CFME ORIENTAÇÕES PASSADAS NA CONTRATAÇÃO DA MÍDIA (PI).</strong></p>
+            </div>
+
+            <form id="checkingForm" novalidate>
+                <div class="form-grid">
+                    <div class="form-group"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required placeholder="Nome completo" /></div>
+                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required placeholder="seu@email.com" /></div>
+                    <div class="form-group full-width pi-group">
+                        <label for="pi">Número da PI *</label>
+                        <input type="text" id="pi" name="n_pi" required placeholder="Digite a PI para carregar os dados" autocomplete="off" />
+                        <div id="piStatus" aria-live="polite"></div>
+                    </div>
+                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly /></div>
+                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly /></div>
+                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly /></div>
+                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly /></div>
+                    <div class="form-group">
+                        <label for="veiculo">Veículo</label>
+                        <input type="text" id="veiculo" name="veiculo" placeholder="Aguardando PI..." readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="meio">Meio</label>
+                        <select id="meio" name="meio" class="campo-bloqueado">
+                            <option value="">Aguardando PI...</option>
+                            <option value="DO">DOOH - Digital Out of Home</option><option value="ME">Mídia Exterior - MUB estático</option><option value="MO">Mídia Exterior - Metrô estático</option><option value="BD">Mídia Exterior - Busdoor/Taxidoor</option><option value="OD">Mídia Exterior - Outdoor</option><option value="FL">Mídia Exterior - Fronts</option><option value="MI">Mídia Interna estática</option><option value="RD">Rádio</option><option value="CI">Cinema</option><option value="JO">Mídia Impressa - Jornal</option><option value="RV">Mídia Impressa - Revista</option><option value="AT">Projetos Especiais - Ativação</option><option value="TV">TV</option><option value="IN">Internet</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
+                    <div class="form-group full-width">
+                        <label for="comprovantes">Comprovantes (arquivos) *</label>
+                        <div class="file-upload" id="fileUpload" role="button"><p>Arraste e solte ou <span>clique para selecionar</span></p><input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required /></div>
+                        <div class="file-list" id="fileList" aria-live="polite"></div>
+                    </div>
+                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
+                </div>
+            </form>
+            <div class="message-box" id="successMessage" role="alert"></div>
+            <div class="message-box" id="errorMessage" role="alert"></div>
         </div>
-
-        <form id="checkingForm" novalidate>
-            <div class="form-grid">
-                <div class="form-group"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required placeholder="Nome completo" /></div>
-                <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required placeholder="seu@email.com" /></div>
-
-                <div class="form-group full-width pi-group">
-                    <label for="pi">Número da PI *</label>
-                    <input type="text" id="pi" name="n_pi" required placeholder="Digite a PI para carregar os dados" autocomplete="off" />
-                    <div id="piStatus" aria-live="polite"></div>
-                </div>
-                
-                <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" placeholder="Aguardando PI..." readonly /></div>
-                <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" placeholder="Aguardando PI..." readonly /></div>
-                <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" placeholder="Aguardando PI..." readonly /></div>
-                <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" placeholder="Aguardando PI..." readonly /></div>
-                
-                <div class="form-group">
-                    <label for="veiculo">Veículo</label>
-                    <input type="text" id="veiculo" name="veiculo" placeholder="Aguardando PI..." readonly />
-                </div>
-                <div class="form-group">
-                    <label for="meio">Meio</label>
-                    <select id="meio" name="meio" class="campo-bloqueado">
-                        <option value="">Aguardando PI...</option>
-                        <option value="DO">DOOH - Digital Out of Home</option>
-                        <option value="ME">Mídia Exterior - MUB estático</option>
-                        <option value="MO">Mídia Exterior - Metrô estático</option>
-                        <option value="BD">Mídia Exterior - Busdoor/Taxidoor</option>
-                        <option value="OD">Mídia Exterior - Outdoor</option>
-                        <option value="FL">Mídia Exterior - Fronts</option>
-                        <option value="MI">Mídia Interna estática</option>
-                        <option value="RD">Rádio</option>
-                        <option value="CI">Cinema</option>
-                        <option value="JO">Mídia Impressa - Jornal</option>
-                        <option value="RV">Mídia Impressa - Revista</option>
-                        <option value="AT">Projetos Especiais - Ativação</option>
-                        <option value="TV">TV</option>
-                        <option value="IN">Internet</option>
-                    </select>
-                </div>
-                
-                <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Alguma informação adicional?"></textarea></div>
-                <div class="form-group full-width">
-                    <label for="comprovantes">Comprovantes (arquivos) *</label>
-                    <div class="file-upload" id="fileUpload" role="button"><p>Arraste e solte ou <span>clique para selecionar</span></p><input type="file" id="comprovantes" name="comprovantes" multiple accept=".jpg,.jpeg,.png,.pdf,.mp4,.mov" style="display:none" required /></div>
-                    <div class="file-list" id="fileList" aria-live="polite"></div>
-                </div>
-
-                <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
-            </div>
-        </form>
-
-        <div class="message-box" id="successMessage" role="alert"></div>
-        <div class="message-box" id="errorMessage" role="alert"></div>
     </div>
-
+    
     <footer class="footer-wrapper">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>OpusMúltipla</h3>
-                <ul>
-                    <li><a href="https://grupoom.com.br/opus-multipla/report360/" target="_blank">Report360</a></li>
-                    <li><a href="https://grupoom.com.br/opus-multipla/videos/" target="_blank">Vídeos</a></li>
-                    <li><a href="https://grupoom.com.br/opus-multipla/noticias/" target="_blank">Notícias</a></li>
-                    <li><a href="https://grupoom.com.br/contato-de-imprensa/" target="_blank">Contato de Imprensa</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Brainbox</h3>
-                <ul>
-                    <li><a href="https://grupoom.com.br/brainbox/branding/" target="_blank">Branding</a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/campanhas/" target="_blank">Campanhas</a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/design/" target="_blank">Design</a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/digital/" target="_blank">Digital</a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/marketing/" target="_blank">Marketing</a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/motion/" target="_blank">Motion</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>HouseCricket</h3>
-                <ul>
-                    <li><a href="https://grupoom.com.br/housecricket/o-instituto/" target="_blank">O Instituto</a></li>
-                    <li><a href="https://grupoom.com.br/housecricket/cursos/" target="_blank">Cursos</a></li>
-                    <li><a href="https://grupoom.com.br/housecricket/pesquisas/" target="_blank">Pesquisas</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Grupo OM</h3>
-                <ul>
-                    <li><a href="https://grupoom.com.br/grupo-om/empresas/" target="_blank">Empresas</a></li>
-                    <li><a href="https://grupoom.com.br/grupo-om/clientes/" target="_blank">Clientes</a></li>
-                    <li><a href="https://grupoom.com.br/grupo-om/historia/" target="_blank">História</a></li>
-                    <li><a href="https://grupoom.com.br/grupo-om/premios/" target="_blank">Prêmios</a></li>
-                    <li><a href="https://grupoom.com.br/opus-multipla/report360/" target="_blank">Report 360</a></li>
-                    <li><a href="https://grupoom.com.br/contato/" target="_blank">Onde estamos</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Informações</h3>
-                <ul>
-                    <li><a href="https://grupoom.com.br/compliance/canal-de-etica/" target="_blank">Canal de Ética</a></li>
-                    <li><a href="https://grupoom.com.br/contato/" target="_blank">Onde estamos</a></li>
-                    <li><a href="https://grupoom.com.br/contato-de-imprensa/" target="_blank">Contato de Imprensa</a></li>
-                    <li><a href="https://grupoom.com.br/politica-de-privacidade/" target="_blank">Política de Privacidade</a></li>
-                    <li><a href="https://grupoom.com.br/politica-de-cookies/" target="_blank">Política de Cookies</a></li>
-                    <li><a href="https://grupoom.com.br/trabalhe-conosco/" target="_blank">Trabalhe conosco</a></li>
-                </ul>
-            </div>
+        <div class="footer-logos">
+            <img src="https://i.imgur.com/3j3bA4g.png" alt="Logos das empresas do Grupo OM">
         </div>
         <div class="footer-gradient-bar"></div>
     </footer>
 
 <script>
+    // O SCRIPT JAVASCRIPT CONTINUA O MESMO DA VERSÃO ANTERIOR
+    // ELE JÁ ESTÁ PREPARADO PARA TODAS AS FUNCIONALIDADES
     (function () {
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -343,11 +214,8 @@
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
-        
-        // Novos campos para VEICULO (texto) e MEIO (select)
         const veiculoInput = document.getElementById('veiculo'); 
         const meioSelect = document.getElementById('meio');       
-        
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
@@ -391,31 +259,27 @@
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
-                    piStatus.style.color = var(--cor-sucesso);
+                    piStatus.style.color = 'var(--cor-sucesso)';
                     clienteInput.value = data.cliente || '';
                     campanhaInput.value = data.campanha || '';
                     produtoInput.value = data.produto || '';
                     periodoInput.value = data.periodo || '';
-                    
-                    // Preenche os campos Veículo e Meio
                     veiculoInput.value = data.veiculo || ''; 
                     meioSelect.value = data.meio || '';       
-                    
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada.';
-                    piStatus.style.color = var(--cor-erro);
+                    piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ao buscar PI.';
-                    piStatus.style.color = var(--cor-erro);
+                    piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
                 }
             }
         }
         
-        // Script de upload de arquivos (mantido do código anterior)
         const fileUpload = document.getElementById('fileUpload');
         const fileInput = document.getElementById('comprovantes');
         const fileList = document.getElementById('fileList');
@@ -442,9 +306,9 @@
         }
         
         fileUpload.addEventListener('click', () => fileInput.click());
-        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = var(--cor-borda-foco); });
-        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = var(--cor-borda); });
-        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = var(--cor-borda); handleFiles(e.dataTransfer.files); });
+        fileUpload.addEventListener('dragover', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda-foco)'; });
+        fileUpload.addEventListener('dragleave', () => { fileUpload.style.borderColor = 'var(--cor-borda)'; });
+        fileUpload.addEventListener('drop', (e) => { e.preventDefault(); fileUpload.style.borderColor = 'var(--cor-borda)'; handleFiles(e.dataTransfer.files); });
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         let debounceTimeout;
