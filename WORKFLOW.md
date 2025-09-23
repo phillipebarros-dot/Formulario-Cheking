@@ -166,6 +166,3 @@ O fluxo completo do workflow, incluindo todos os nós e parâmetros, está dispo
   Para depurar problemas de envio de arquivos, use o nó *Function* para inspecionar o conteúdo dos arquivos binários antes de enviá-los para o Google Drive.
 
 ---
-
-```
-
