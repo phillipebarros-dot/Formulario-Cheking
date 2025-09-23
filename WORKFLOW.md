@@ -1,5 +1,4 @@
 
-````markdown
 # Análise Técnica do Workflow n8n: **Formulário de Verificação**
 
 Este documento oferece uma visão detalhada do fluxo de trabalho automatizado no n8n, que gerencia o formulário de verificação. O workflow foi projetado para receber dados via webhook e processar dois tipos de ações principais: **Busca de PI** e **Envio de Verificação**. A seguir, estão descritos todos os detalhes do fluxo de trabalho, incluindo configurações, explicações sobre cada nó e o código JavaScript usado nos nós de tipo *Function*.
