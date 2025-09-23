@@ -1,4 +1,3 @@
-Claro! Abaixo está o conteúdo em Markdown do seu workflow com base na imagem que você compartilhou:
 
 ````markdown
 # Análise Técnica do Workflow n8n: **Formulário de Verificação**
