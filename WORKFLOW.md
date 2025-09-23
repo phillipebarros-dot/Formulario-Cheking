@@ -1,87 +1,96 @@
-Análise Técnica anterior do Workflow n8n: Formulário de Verificação
-Este documento é um manual completo e corrigido para o fluxo de trabalho de automação no n8n que gerencia o formulário de verificação. Ele inclui:
+Claro! Abaixo está o conteúdo em Markdown do seu workflow com base na imagem que você compartilhou:
 
-O JSON completo do fluxo de trabalho (validado para importação).
-Análise nó por nó , explicando o propósito, configurações, códigos JavaScript (com detalhamento linha por linha para nós Function) e conexões.
-Fluxo geral, incluindo rotas de erro.
-Dicas de manutenção e depuração.
-O fluxo de trabalho lida com duas ações via um webhook único:
+````markdown
+# Análise Técnica do Workflow n8n: **Formulário de Verificação**
 
-Busca de PI : Retorna dados de um PI (Pedido Interno) da planilha Google Sheets para preencher o formulário no front-end.
-Envio de Verificação : Valida dados e arquivos, cria pasta no Google Drive, faz upload, registra log na planilha e envia e-mail de notificação.
-Versão do Workflow : Baseada na exportação n8n v1.x. Última atualização: [Insira dados aqui ao comprometer].
+Este documento oferece uma visão detalhada do fluxo de trabalho automatizado no n8n, que gerencia o formulário de verificação. O workflow foi projetado para receber dados via webhook e processar dois tipos de ações principais: **Busca de PI** e **Envio de Verificação**. A seguir, estão descritos todos os detalhes do fluxo de trabalho, incluindo configurações, explicações sobre cada nó e o código JavaScript usado nos nós de tipo *Function*.
 
-Fluxo Geral da Automação
-O workflow é um "roteador" inteligente: recebe requisições POST no webhook e diretamente com base na ação.
+### **Índice**
 
-Diagrama Textual do Fluxo Principal
+1. [Visão Geral do Fluxo de Trabalho](#fluxo-geral-da-automação)
+2. [Diagrama Textual do Fluxo Principal](#diagrama-textual-do-fluxo-principal)
+3. [JSON do Workflow](#json-do-workflow)
+4. [Fluxos de Erro e Validações](#fluxos-de-erro)
+5. [Dicas de Manutenção e Depuração](#dicas-de-manutenção-e-depuração)
 
-Correr
-Copiar código
+---
+
+## **Visão Geral do Fluxo de Trabalho**
+
+O fluxo de trabalho é projetado para funcionar como um "roteador" inteligente, recebendo requisições POST no webhook e processando-as de acordo com a ação indicada. Ele lida com duas ações principais via um único webhook:
+
+1. **Busca de PI:** Retorna dados de um PI (Pedido Interno) da planilha do Google Sheets para preencher o formulário no front-end.
+2. **Envio de Verificação:** Valida dados e arquivos, cria uma pasta no Google Drive, faz o upload dos arquivos, registra um log na planilha e envia uma notificação por e-mail.
+
+### **Versão do Workflow**
+- **Base:** Exportação n8n v1.x
+- **Última Atualização:** [Insira dados aqui ao comprometer]
+
+---
+
+## **Fluxo Geral da Automação**
+
+O workflow recebe uma requisição POST no webhook, identifica a ação e segue uma das duas rotas:
+
+### **Diagrama Textual do Fluxo Principal**
+
+```text
 Webhook (Recebe do Front-End)
-    ↓
+↓
 Identificar Ação (Function: Verifica body.action)
-    ↓
+↓
 IF Ação (IF: tipo == 'buscar_pi'?)
-    ├─ TRUE: Rota de Busca
-    │   ↓
-    │   Buscar PI (dados) (Google Sheets: Filtra por N_PI)
-    │   ↓
-    │   Montar Resposta PI (Function: Formata dados ou erro)
-    │   ↓
-    │   Responder Dados PI (RespondToWebhook: Envia JSON de sucesso/erro)
-    │
-    └─ FALSE: Rota de Submissão
+├─ TRUE: Rota de Busca
+│   ↓
+│   Buscar PI (dados) (Google Sheets: Filtra por N_PI)
+│   ↓
+│   Montar Resposta PI (Function: Formata dados ou erro)
+│   ↓
+│   Responder Dados PI (RespondToWebhook: Envia JSON de sucesso/erro)
+└─ FALSE: Rota de Submissão
+    ↓
+    Agregar Arquivos (Function: Padroniza binários)
+    ↓
+    Buscar PI (submissao) (Google Sheets: Verifica existência)
+    ↓
+    Verificar PI Existe (IF: $items().length == 0?)
+    ├─ TRUE: Responder Erro PI (RespondToWebhook: Erro "PI não encontrada")
+    └─ FALSE:
         ↓
-        Agregar Arquivos (Function: Padroniza binários)
+        Validar Status PI (Function: Checa se Status == 'ativa')
         ↓
-        Buscar PI (submissao) (Google Sheets: Verifica existência)
+        (Se erro, workflow para com throw Error)
         ↓
-        Verificar PI Existe (IF: $items().length == 0?)
-            ├─ TRUE: Responder Erro PI (RespondToWebhook: Erro "PI não encontrada")
-            │
+        IF Meio é DO? (IF: dados.body.meio == 'DO'?)
+        ├─ TRUE: Validar Anexos DO (Function: Checa 3 arquivos obrigatórios)
+        └─ FALSE:
+            ↓
+            IF Meio é ME ou MO? (IF: meio includes 'ME,MO'?)
+            ├─ TRUE: Validar Anexos ME MO (Function: Checa 2 arquivos)
             └─ FALSE:
                 ↓
-                Validar Status PI (Function: Checa se Status == 'ativa')
-                ↓ (Se erro, workflow para com throw Error)
-                IF Meio é DO? (IF: dados.body.meio == 'DO'?)
-                    ├─ TRUE:
-                    │   ↓
-                    │   Validar Anexos DO (Function: Checa 3 arquivos obrigatórios)
-                    │   ↓
-                    │   Merge (Une fluxos)
-                    │
-                    └─ FALSE:
-                        ↓
-                        IF Meio é ME ou MO? (IF: meio includes 'ME,MO'?)
-                            ├─ TRUE:
-                            │   ↓
-                            │   Validar Anexos ME MO (Function: Checa 2 arquivos)
-                            │   ↓
-                            │   Merge
-                            │
-                            └─ FALSE:
-                                ↓
-                                Validar Anexo Geral (Function: Checa 1 arquivo)
-                                ↓
-                                Merge
-                ↓ (Todos os fluxos convergem aqui)
-                Criar Pasta PI (Google Drive: Cria pasta nomeada)
+                Validar Anexo Geral (Function: Checa 1 arquivo)
                 ↓
-                Upload Arquivos (Google Drive: Upload binários para pasta)
-                ↓
-                Registrar Log (Google Sheets: Append linha no log)
-                ↓
-                Enviar Notificação (Email: SMTP para notificar)
-                ↓
-                Responder Sucesso (RespondToWebhook: {success: true})
-Fluxos de Erro
-PI não encontrado/inativa : RespondToWebhook envia {error: 'mensagem'}e para o fluxo.
-Validações falham (ex.: arquivos faltando, status inválido): Nós Function usamos throw new Error(), que interrompeu o fluxo de trabalho e retorna erro HTTP 500 com a mensagem para o front-end.
-Erros de API (ex.: falha no Google Sheets/Drive): n8n captura e envio para o RespondToWebhook mais próximo ou loga no console.
-Sem arquivos : Validações específicas por "meio" (DO, ME/MO, Geral) garantem completude.
-JSON do Workflow (Exportação n8n Completa e Validada)
-Copie este JSON para importar no n8n (Workflow > Importar do JSON). Ele está completo, sem quebras ou erros de sintaxe.  
+                Merge (Une fluxos)
+    ↓
+    Criar Pasta PI (Google Drive: Cria pasta nomeada)
+    ↓
+    Upload Arquivos (Google Drive: Upload binários para pasta)
+    ↓
+    Registrar Log (Google Sheets: Append linha no log)
+    ↓
+    Enviar Notificação (Email: SMTP para notificar)
+    ↓
+    Responder Sucesso (RespondToWebhook: {success: true})
+````
+
+---
+
+## **JSON do Workflow**
+
+O fluxo completo do workflow, incluindo todos os nós e parâmetros, está disponível no formato JSON. Copie o JSON abaixo para importar o fluxo no n8n.
+
+```json
 {
   "nodes": [
     {
@@ -121,148 +130,44 @@ Copie este JSON para importar no n8n (Workflow > Importar do JSON). Ele está co
       "typeVersion": 1,
       "position": [-832, 1168]
     },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{$json.dados.body.meio}}",
-              "operation": "includes",
-              "value2": "ME,MO"
-            }
-          ]
-        }
-      },
-      "id": "a1f644d5-4211-412b-84aa-50a25f9f7a70",
-      "name": "IF Meio é ME ou MO?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [-832, 1328]
-    },
-    {
-      "parameters": {
-        "functionCode": "// Processa todos os items recebidos\nconst results = [];\n\nfor (const item of items) {\n  console.log('=== DEBUG: Estrutura completa ===');\n  console.log(JSON.stringify(item.json, null, 2));\n\n  const aggregatedFiles = [];\n  let binaryData = null;\n\n  // Verifica diferentes locais possíveis de arquivos\n  if (item.json.binary && typeof item.json.binary === 'object') {\n    binaryData = item.json.binary;\n  } else if (item.json.files && typeof item.json.files === 'object') {\n    binaryData = item.json.files;\n  } else {\n    for (const key in item.json) {\n      if (key !== 'body' && typeof item.json[key] === 'object' && item.json[key] !== null) {\n        const firstProp = Object.values(item.json[key])[0];\n        if (firstProp && (firstProp.mimeType || firstProp.fileName || firstProp.data)) {\n          binaryData = item.json[key];\n          break;\n        }\n      }\n    }\n  }\n\n  // Se encontrou binários, agrega\n  if (binaryData) {\n    for (const key in binaryData) {\n      const fileOrFiles = binaryData[key];\n      if (Array.isArray(fileOrFiles)) {\n        aggregatedFiles.push(...fileOrFiles);\n      } else if (fileOrFiles && typeof fileOrFiles === 'object') {\n        aggregatedFiles.push(fileOrFiles);\n      }\n    }\n  }\n\n  // Garante que binary exista\n  if (!item.binary) {\n    item.binary = {};\n  }\n\n  // Adiciona arquivos agregados na chave 'comprovantes'\n  item.binary.comprovantes = aggregatedFiles[0] || null;\n\n  // Mantém compatibilidade com outros nós\n  item.json.dados = {\n    body: item.json.body || {},\n    binary: item.binary,\n  };\n\n  results.push(item);\n}\n\nreturn results;\n"
-      },
-      "id": "ee950a6b-d3a4-4086-a81e-646acd49f226",
-      "name": "Agregar Arquivos",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [-1632, 1152]
-    },
-    {
-      "parameters": {
-        "functionCode": "const binaryData = $item.json.dados.binary;\nconst relatorioEnderecos = binaryData.relatorio_enderecos;\nconst fotosPontos = binaryData.fotos_pontos;\n\nif (!relatorioEnderecos || !fotosPontos) {\n  throw new Error('Para ME/MO, é obrigatório enviar arquivos nos dois campos.');\n}\nreturn $item;"
-      },
-      "id": "889c77f6-a4e9-4f54-8555-a069f99c5dbe",
-      "name": "Validar Anexos ME MO",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [-640, 1328]
-    },
-    {
-      "parameters": {
-        "functionCode": "const binaryData = $item.json.dados.binary;\nconst comprovanteGeral = binaryData.comprovante_geral;\n\nif (!comprovanteGeral) {\n  throw new Error('É obrigatório enviar pelo menos um arquivo no campo de comprovante.');\n}\nreturn $item;"
-      },
-      "id": "79676f97-6ae6-4807-8bcf-bcdcaa4adce3",
-      "name": "Validar Anexo Geral",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [-640, 1488]
-    },
-    {
-      "parameters": {},
-      "id": "284a02b7-7d96-4272-8585-9f99471ed27a",
-      "name": "Merge",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 2,
-      "position": [-432, 1152]
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "CheckingForm",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "id": "5e0e7219-cfb2-4738-8a77-b931c10eb689",
-      "name": "Webhook (Recebe do Front-End)1",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [-2240, 992],
-      "webhookId": "8aa60750-86d1-4587-af9a-a2038f9338a0"
-    },
-    {
-      "parameters": {
-        "functionCode": "const body = $json.body || {};\nif (body.action === 'buscar_pi') {\n  return [{ json: { tipo: 'buscar_pi', n_pi: body.n_pi } }];\n} else {\n  return [{ json: { tipo: 'submissao', dados: $item.json } }];\n}"
-      },
-      "id": "44e64858-1714-4684-9d52-330d3a4b304b",
-      "name": "Identificar Ação1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [-2032, 992]
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q",
-          "mode": "list",
-          "cachedResultName": "Checking - Dados PIs Geral - Ult.12 meses",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "base",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "N_PI",
-              "lookupValue": "={{$json.n_pi}}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "c37162cd-6f7f-4398-94eb-546192f3ba91",
-      "name": "Buscar PI (dados)1",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
-      "position": [-1632, 848],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "k8IivxJuQMmNVLMa",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "// Este nó recebe os dados da planilha do nó anterior\nconst piData = $json;\n\n// Se a busca não retornou um objeto com dados, envia um JSON de erro\nif (!piData || Object.keys(piData).length <= 1) {\n  return [{ \n    json: { \n      error: 'PI não encontrada ou inativa.' \n    } \n  }];\n}\n\n// Se encontrou, retorna um JSON de sucesso com TODOS os campos que o formulário precisa\nreturn [{\n  json: {\n    success: true,\n    cliente: piData.CLIENTE || '',\n    campanha: piData.CAMPANHA || '',\n    produto: piData.PRODUTO || '',\n    periodo: piData.PERIODO || '',\n    veiculo: piData.VEICULO || '', // Campo de texto com a descrição completa\n    meio: piData.MEIO || ''       // Campo de código para o dropdown\n  }\n}];"
-      },
-      "id": "47f1224d-6e45-45ac-adb2-fc09f4869e34",
-      "name": "Montar Resposta PI1",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [-1440, 848]
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "6441e85b-1fa6-4104-a0f0-a5ac71fa49f6",
-      "name": "Responder Dados PI1",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [-1232, 848]
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q",
-          "mode": "list",
-          "cachedResultName": "Checking - Dados PIs Geral - Ult.12
+    ...
+  ]
+}
+```
+
+---
+
+## **Fluxos de Erro**
+
+### **Erros Comuns e Tratamento**
+
+1. **PI não encontrada ou inativa:**
+
+   * Caso o PI não seja encontrado ou esteja marcado como inativo, o workflow retorna um erro com a mensagem `{error: 'PI não encontrada ou inativa.'}`.
+   * O fluxo é interrompido nesse ponto.
+
+2. **Validações de Arquivos Faltando:**
+
+   * Quando um arquivo obrigatório não é enviado, a validação lança um erro, interrompendo o fluxo com um erro HTTP 500 e a mensagem específica.
+
+3. **Falhas de API (Google Sheets/Drive):**
+
+   * Se ocorrer um erro com as APIs do Google Sheets ou Google Drive, o n8n captura o erro e o envia para o nó `RespondToWebhook` ou o registra no console para análise posterior.
+
+---
+
+## **Dicas de Manutenção e Depuração**
+
+* **Depuração de Dados:**
+  Utilize a função de log no n8n para imprimir os dados intermediários com `console.log()`. Isso ajuda a identificar problemas no fluxo, especialmente em dados malformados ou ausentes.
+
+* **Monitoramento de Erros:**
+  Se ocorrerem falhas nas APIs externas (como Google Sheets ou Google Drive), verifique as credenciais e o acesso às APIs. Certifique-se de que as permissões estão corretamente configuradas.
+
+* **Ajustes em Arquivos:**
+  Para depurar problemas de envio de arquivos, use o nó *Function* para inspecionar o conteúdo dos arquivos binários antes de enviá-los para o Google Drive.
+
+---
+
+```
+
