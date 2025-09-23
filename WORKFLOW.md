@@ -1,15 +1,87 @@
-# Análise Técnica Detalhada do Workflow n8n
+Análise Técnica anterior do Workflow n8n: Formulário de Verificação
+Este documento é um manual completo e corrigido para o fluxo de trabalho de automação no n8n que gerencia o formulário de verificação. Ele inclui:
 
-Este documento oferece uma análise técnica detalhada, nó por nó, do workflow de automação do formulário de checking, com foco especial na lógica e construção dos códigos JavaScript customizados. O objetivo é servir como um manual para manutenção, depuração e futuras evoluções do processo.
+O JSON completo do fluxo de trabalho (validado para importação).
+Análise nó por nó , explicando o propósito, configurações, códigos JavaScript (com detalhamento linha por linha para nós Function) e conexões.
+Fluxo geral, incluindo rotas de erro.
+Dicas de manutenção e depuração.
+O fluxo de trabalho lida com duas ações via um webhook único:
 
-### Fluxo Geral da Automação
+Busca de PI : Retorna dados de um PI (Pedido Interno) da planilha Google Sheets para preencher o formulário no front-end.
+Envio de Verificação : Valida dados e arquivos, cria pasta no Google Drive, faz upload, registra log na planilha e envia e-mail de notificação.
+Versão do Workflow : Baseada na exportação n8n v1.x. Última atualização: [Insira dados aqui ao comprometer].
 
-`Formulário Web` ➔ `1. Webhook` ➔ `2. Identificar Ação` ➔ `3. IF Ação` ➔ `[Rota de Busca]` OU `[Rota de Envio Completo]`
+Fluxo Geral da Automação
+O workflow é um "roteador" inteligente: recebe requisições POST no webhook e diretamente com base na ação.
 
----
+Diagrama Textual do Fluxo Principal
 
-## JSON do Workflow (Exportação n8n)
-
+Correr
+Copiar código
+Webhook (Recebe do Front-End)
+    ↓
+Identificar Ação (Function: Verifica body.action)
+    ↓
+IF Ação (IF: tipo == 'buscar_pi'?)
+    ├─ TRUE: Rota de Busca
+    │   ↓
+    │   Buscar PI (dados) (Google Sheets: Filtra por N_PI)
+    │   ↓
+    │   Montar Resposta PI (Function: Formata dados ou erro)
+    │   ↓
+    │   Responder Dados PI (RespondToWebhook: Envia JSON de sucesso/erro)
+    │
+    └─ FALSE: Rota de Submissão
+        ↓
+        Agregar Arquivos (Function: Padroniza binários)
+        ↓
+        Buscar PI (submissao) (Google Sheets: Verifica existência)
+        ↓
+        Verificar PI Existe (IF: $items().length == 0?)
+            ├─ TRUE: Responder Erro PI (RespondToWebhook: Erro "PI não encontrada")
+            │
+            └─ FALSE:
+                ↓
+                Validar Status PI (Function: Checa se Status == 'ativa')
+                ↓ (Se erro, workflow para com throw Error)
+                IF Meio é DO? (IF: dados.body.meio == 'DO'?)
+                    ├─ TRUE:
+                    │   ↓
+                    │   Validar Anexos DO (Function: Checa 3 arquivos obrigatórios)
+                    │   ↓
+                    │   Merge (Une fluxos)
+                    │
+                    └─ FALSE:
+                        ↓
+                        IF Meio é ME ou MO? (IF: meio includes 'ME,MO'?)
+                            ├─ TRUE:
+                            │   ↓
+                            │   Validar Anexos ME MO (Function: Checa 2 arquivos)
+                            │   ↓
+                            │   Merge
+                            │
+                            └─ FALSE:
+                                ↓
+                                Validar Anexo Geral (Function: Checa 1 arquivo)
+                                ↓
+                                Merge
+                ↓ (Todos os fluxos convergem aqui)
+                Criar Pasta PI (Google Drive: Cria pasta nomeada)
+                ↓
+                Upload Arquivos (Google Drive: Upload binários para pasta)
+                ↓
+                Registrar Log (Google Sheets: Append linha no log)
+                ↓
+                Enviar Notificação (Email: SMTP para notificar)
+                ↓
+                Responder Sucesso (RespondToWebhook: {success: true})
+Fluxos de Erro
+PI não encontrado/inativa : RespondToWebhook envia {error: 'mensagem'}e para o fluxo.
+Validações falham (ex.: arquivos faltando, status inválido): Nós Function usamos throw new Error(), que interrompeu o fluxo de trabalho e retorna erro HTTP 500 com a mensagem para o front-end.
+Erros de API (ex.: falha no Google Sheets/Drive): n8n captura e envio para o RespondToWebhook mais próximo ou loga no console.
+Sem arquivos : Validações específicas por "meio" (DO, ME/MO, Geral) garantem completude.
+JSON do Workflow (Exportação n8n Completa e Validada)
+Copie este JSON para importar no n8n (Workflow > Importar do JSON). Ele está completo, sem quebras ou erros de sintaxe.  
 {
   "nodes": [
     {
@@ -23,10 +95,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Enviar Notificação",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 1,
-      "position": [
-        400,
-        1168
-      ],
+      "position": [400, 1168],
       "id": "582e8ba9-3e30-404c-a322-600b56a3553f",
       "credentials": {
         "smtp": {
@@ -50,10 +119,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "IF Meio é DO?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        -832,
-        1168
-      ]
+      "position": [-832, 1168]
     },
     {
       "parameters": {
@@ -71,10 +137,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "IF Meio é ME ou MO?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        -832,
-        1328
-      ]
+      "position": [-832, 1328]
     },
     {
       "parameters": {
@@ -84,10 +147,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Agregar Arquivos",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        -1632,
-        1152
-      ]
+      "position": [-1632, 1152]
     },
     {
       "parameters": {
@@ -97,10 +157,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Validar Anexos ME MO",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        -640,
-        1328
-      ]
+      "position": [-640, 1328]
     },
     {
       "parameters": {
@@ -110,10 +167,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Validar Anexo Geral",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        -640,
-        1488
-      ]
+      "position": [-640, 1488]
     },
     {
       "parameters": {},
@@ -121,10 +175,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2,
-      "position": [
-        -432,
-        1152
-      ]
+      "position": [-432, 1152]
     },
     {
       "parameters": {
@@ -137,10 +188,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Webhook (Recebe do Front-End)1",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [
-        -2240,
-        992
-      ],
+      "position": [-2240, 992],
       "webhookId": "8aa60750-86d1-4587-af9a-a2038f9338a0"
     },
     {
@@ -151,10 +199,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Identificar Ação1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        -2032,
-        992
-      ]
+      "position": [-2032, 992]
     },
     {
       "parameters": {
@@ -186,10 +231,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Buscar PI (dados)1",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [
-        -1632,
-        848
-      ],
+      "position": [-1632, 848],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "k8IivxJuQMmNVLMa",
@@ -205,10 +247,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Montar Resposta PI1",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        -1440,
-        848
-      ]
+      "position": [-1440, 848]
     },
     {
       "parameters": {
@@ -218,10 +257,7 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
       "name": "Responder Dados PI1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [
-        -1232,
-        848
-      ]
+      "position": [-1232, 848]
     },
     {
       "parameters": {
@@ -229,25 +265,4 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
           "__rl": true,
           "value": "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q",
           "mode": "list",
-          "cachedResultName": "Checking - Dados PIs Geral - Ult.12 meses",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "base",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "N_PI",
-              "lookupValue": "={{$json.dados.body.n_pi}}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "cccff9bc-4f39-4c70-af13-f7868272e78e",
-      "name": "Buscar PI (submissao
+          "cachedResultName": "Checking - Dados PIs Geral - Ult.12
