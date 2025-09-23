@@ -8,138 +8,246 @@ Este documento oferece uma análise técnica detalhada, nó por nó, do workflow
 
 ---
 
-## Análise dos Nós (Node-by-Node)
+## JSON do Workflow (Exportação n8n)
 
-*A descrição dos nós principais (Webhook, IF, Google Sheets, etc.) permanece a mesma da versão anterior.*
-
----
-
-## Análise dos Códigos JavaScript (Nós `Function`)
-
-Esta seção detalha a construção e a lógica por trás de cada nó `Function`, que contém os scripts que dão inteligência ao nosso workflow.
-
-### 1. Nó: `Identificar Ação`
-
-* **Objetivo Estratégico:** Criar um "roteador" inicial. O formulário usa o mesmo Webhook para duas finalidades diferentes (buscar dados e enviar o formulário). Este código atua como um porteiro que olha para a "bagagem" de cada requisição e a etiqueta para que o nó `IF Ação` saiba para onde enviá-la.
-
-* **O Código Explicado:**
-
-    ```javascript
-    // 1. Acessa o 'body' da requisição. Se não existir, cria um objeto vazio para evitar erros.
-    const body = $json.body || {};
-
-    // 2. Verifica se dentro do 'body' existe um campo 'action' com o valor 'buscar_pi'.
-    if (body.action === 'buscar_pi') {
-      
-      // 3. Se a condição for verdadeira, ele constrói e retorna um novo objeto JSON simples.
-      //    Isso limpa a requisição, deixando apenas o que a Rota de Busca precisa.
-      return [{ json: { tipo: 'buscar_pi', n_pi: body.n_pi } }];
-
-    } else {
-      
-      // 4. Se a condição for falsa, significa que é uma submissão de formulário.
-      //    Ele constrói um objeto que aninha TODOS os dados originais (body, files, etc.)
-      //    dentro de uma propriedade chamada 'dados', facilitando o acesso nas etapas seguintes.
-      return [{ json: { tipo: 'submissao', dados: $item.json } }];
-    }
-    ```
-
-* **Por que foi construído assim?**
-    * Para manter o workflow organizado, separando completamente a lógica de busca e de envio.
-    * A criação do objeto `{ tipo: '...' }` permite que o nó `IF` seguinte tenha uma condição de verificação simples e clara.
-
-### 2. Nó: `Montar Resposta PI` (Na Rota de Busca)
-
-* **Objetivo Estratégico:** Atuar como um "Assessor de Imprensa". Ele pega os dados brutos vindos da planilha e os formata em uma resposta limpa e padronizada que o JavaScript do formulário consiga entender e utilizar facilmente.
-
-* **O Código Explicado:**
-
-    ```javascript
-    // 1. `$json` aqui contém o resultado da busca no Google Sheets.
-    const piData = $json;
-
-    // 2. Faz uma verificação de segurança. Se o objeto `piData` não existir ou estiver
-    //    praticamente vazio (só com metadados), significa que a PI não foi encontrada.
-    if (!piData || Object.keys(piData).length <= 1) {
-      
-      // 3. Nesse caso, ele retorna um objeto JSON com uma chave 'error'. O JavaScript do
-      //    formulário está programado para procurar essa chave e exibir a mensagem.
-      return [{ json: { error: 'PI não encontrada ou inativa.' } }];
-    }
-
-    // 4. Se os dados foram encontrados, ele constrói um objeto de sucesso.
-    return [{
-      json: {
-        success: true, // Sinaliza para o formulário que a operação deu certo.
-        // 5. Mapeia os nomes das colunas da planilha (ex: 'CLIENTE') para chaves
-        //    amigáveis (ex: 'cliente'). O `|| ''` é uma segurança para garantir
-        //    que, se um campo estiver vazio na planilha, ele envie uma string vazia
-        //    em vez de `null`, evitando erros no front-end.
-        cliente: piData.CLIENTE || '',
-        campanha: piData.CAMPANHA || '',
-        produto: piData.PRODUTO || '',
-        periodo: piData.PERIODO || '',
-        veiculo: piData.VEICULO || '',
-        meio: piData.MEIO || ''
+{
+  "nodes": [
+    {
+      "parameters": {
+        "fromEmail": "phillipe.barros@grupoom.com.br",
+        "toEmail": "grupoom.com.br",
+        "subject": "Checking Validado - PI {{$json.dados.body.pi}}",
+        "text": "=O checking para a PI {{$json.dados.body.pi}} foi enviado e validado com sucesso.\n\nCliente: {{$json.data[0].cliente}}\nVeículo: {{$json.dados.body.veiculo}}\nCampanha: {{$json.data[0].campanha}}\nProduto: {{$json.data[0].produto}}\nPeríodo: {{$json.data[0].periodo}}\n\nArquivos enviados: {{$json.dados.binary.comprovantes ? $json.dados.binary.comprovantes.length : 0}}",
+        "options": {}
+      },
+      "name": "Enviar Notificação",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        400,
+        1168
+      ],
+      "id": "582e8ba9-3e30-404c-a322-600b56a3553f",
+      "credentials": {
+        "smtp": {
+          "id": "RWkmYjbSwCOVqlXN",
+          "name": "SMTP account"
+        }
       }
-    }];
-    ```
-
-* **Por que foi construído assim?**
-    * Para criar um "contrato de API" claro entre o back-end (n8n) e o front-end (`index.html`). O formulário sempre saberá o que esperar: um objeto com a chave `success` ou `error`.
-    * Para tratar dados nulos (`|| ''`), tornando o front-end mais resiliente a falhas ou campos em branco na planilha.
-
-### 3. Nó: `Validar Status PI` (Na Rota de Envio)
-
-* **Objetivo Estratégico:** Atuar como um "Guarda de Segurança" ou "Auditor". Sua única função é aplicar uma regra de negócio crítica: PIs que não estão "ativas" não podem receber novos checkings.
-
-* **O Código Explicado:**
-
-    ```javascript
-    // 1. `$json` aqui contém os dados da PI que foram revalidados no passo anterior.
-    const piData = $json;
-
-    // 2. Esta é a condição de validação. Ela verifica duas coisas:
-    //    - `!piData.Status`: A PI não tem uma coluna de Status preenchida? (Falha)
-    //    - `piData.Status.toLowerCase() !== 'ativa'`: O status existe, mas não é 'ativa'? (Falha)
-    //    O `.toLowerCase()` garante que a verificação funcione para "Ativa", "ativa" ou "ATIVA".
-    if (!piData.Status || piData.Status.toLowerCase() !== 'ativa') {
-      
-      // 3. Se a condição for verdadeira, usamos `throw new Error()`. Isso tem um efeito
-      //    especial no n8n: ele **interrompe a execução do workflow imediatamente** e
-      //    envia a mensagem de erro de volta para o formulário.
-      throw new Error('A PI informada não está ativa e não pode receber checkings.');
-    }
-
-    // 4. Se a PI passar na validação, o nó simplesmente retorna os dados para o próximo passo.
-    return $json;
-    ```
-
-* **Por que foi construído assim?**
-    * O uso de `throw new Error` é a maneira mais eficiente e correta de interromper um fluxo no n8n com base em uma falha de lógica de negócio, retornando um erro claro para o usuário.
-    * Isso impede que o workflow execute ações desnecessárias (como criar pastas ou salvar arquivos) para uma PI inválida.
-
-### 4. Nós: `Validar Anexos ME / DO` (Na Rota de Envio)
-
-* **Objetivo Estratégico:** Atuar como um "Fiscal de Documentos". Ele aplica regras de negócio específicas que dependem do tipo de "Meio", garantindo que a submissão esteja completa antes de prosseguir.
-
-* **O Código Explicado (Exemplo para "DO"):**
-    ```javascript
-    // 1. Acessamos os arquivos, que estão aninhados dentro da estrutura de dados.
-    const anexos = $json.dados.binary.comprovantes;
-
-    // 2. A condição verifica se a propriedade 'anexos' não existe ou se a quantidade
-    //    de itens na lista (`.length`) é menor que o mínimo exigido (neste caso, 3).
-    if (!anexos || anexos.length < 3) {
-      
-      // 3. Se a condição falhar, ele interrompe o workflow com uma mensagem de erro específica.
-      throw new Error('Para DO, mínimo de 3 anexos são necessários.');
-    }
-
-    // 4. Se a quantidade de anexos for suficiente, retorna os dados para o próximo nó.
-    return $json;
-    ```
-
-* **Por que foi construído assim?**
-    * Para modularizar as regras de negócio. Em vez de um grande bloco de código, temos pequenos nós especializados, tornando o workflow mais fácil de ler e de dar manutenção.
-    * Novas validações para outros tipos de "Meio" podem ser facilmente adicionadas no futuro, sem alterar os nós existentes.
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.dados.body.meio}}",
+              "value2": "DO"
+            }
+          ]
+        }
+      },
+      "id": "f3521cba-57a6-46c4-8576-bee1ba55ef18",
+      "name": "IF Meio é DO?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        1168
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.dados.body.meio}}",
+              "operation": "includes",
+              "value2": "ME,MO"
+            }
+          ]
+        }
+      },
+      "id": "a1f644d5-4211-412b-84aa-50a25f9f7a70",
+      "name": "IF Meio é ME ou MO?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Processa todos os items recebidos\nconst results = [];\n\nfor (const item of items) {\n  console.log('=== DEBUG: Estrutura completa ===');\n  console.log(JSON.stringify(item.json, null, 2));\n\n  const aggregatedFiles = [];\n  let binaryData = null;\n\n  // Verifica diferentes locais possíveis de arquivos\n  if (item.json.binary && typeof item.json.binary === 'object') {\n    binaryData = item.json.binary;\n  } else if (item.json.files && typeof item.json.files === 'object') {\n    binaryData = item.json.files;\n  } else {\n    for (const key in item.json) {\n      if (key !== 'body' && typeof item.json[key] === 'object' && item.json[key] !== null) {\n        const firstProp = Object.values(item.json[key])[0];\n        if (firstProp && (firstProp.mimeType || firstProp.fileName || firstProp.data)) {\n          binaryData = item.json[key];\n          break;\n        }\n      }\n    }\n  }\n\n  // Se encontrou binários, agrega\n  if (binaryData) {\n    for (const key in binaryData) {\n      const fileOrFiles = binaryData[key];\n      if (Array.isArray(fileOrFiles)) {\n        aggregatedFiles.push(...fileOrFiles);\n      } else if (fileOrFiles && typeof fileOrFiles === 'object') {\n        aggregatedFiles.push(fileOrFiles);\n      }\n    }\n  }\n\n  // Garante que binary exista\n  if (!item.binary) {\n    item.binary = {};\n  }\n\n  // Adiciona arquivos agregados na chave 'comprovantes'\n  item.binary.comprovantes = aggregatedFiles[0] || null;\n\n  // Mantém compatibilidade com outros nós\n  item.json.dados = {\n    body: item.json.body || {},\n    binary: item.binary,\n  };\n\n  results.push(item);\n}\n\nreturn results;\n"
+      },
+      "id": "ee950a6b-d3a4-4086-a81e-646acd49f226",
+      "name": "Agregar Arquivos",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const binaryData = $item.json.dados.binary;\nconst relatorioEnderecos = binaryData.relatorio_enderecos;\nconst fotosPontos = binaryData.fotos_pontos;\n\nif (!relatorioEnderecos || !fotosPontos) {\n  throw new Error('Para ME/MO, é obrigatório enviar arquivos nos dois campos.');\n}\nreturn $item;"
+      },
+      "id": "889c77f6-a4e9-4f54-8555-a069f99c5dbe",
+      "name": "Validar Anexos ME MO",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const binaryData = $item.json.dados.binary;\nconst comprovanteGeral = binaryData.comprovante_geral;\n\nif (!comprovanteGeral) {\n  throw new Error('É obrigatório enviar pelo menos um arquivo no campo de comprovante.');\n}\nreturn $item;"
+      },
+      "id": "79676f97-6ae6-4807-8bcf-bcdcaa4adce3",
+      "name": "Validar Anexo Geral",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        1488
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "284a02b7-7d96-4272-8585-9f99471ed27a",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "CheckingForm",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "5e0e7219-cfb2-4738-8a77-b931c10eb689",
+      "name": "Webhook (Recebe do Front-End)1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2240,
+        992
+      ],
+      "webhookId": "8aa60750-86d1-4587-af9a-a2038f9338a0"
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $json.body || {};\nif (body.action === 'buscar_pi') {\n  return [{ json: { tipo: 'buscar_pi', n_pi: body.n_pi } }];\n} else {\n  return [{ json: { tipo: 'submissao', dados: $item.json } }];\n}"
+      },
+      "id": "44e64858-1714-4684-9d52-330d3a4b304b",
+      "name": "Identificar Ação1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2032,
+        992
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q",
+          "mode": "list",
+          "cachedResultName": "Checking - Dados PIs Geral - Ult.12 meses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "base",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "N_PI",
+              "lookupValue": "={{$json.n_pi}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c37162cd-6f7f-4398-94eb-546192f3ba91",
+      "name": "Buscar PI (dados)1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1632,
+        848
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "k8IivxJuQMmNVLMa",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Este nó recebe os dados da planilha do nó anterior\nconst piData = $json;\n\n// Se a busca não retornou um objeto com dados, envia um JSON de erro\nif (!piData || Object.keys(piData).length <= 1) {\n  return [{ \n    json: { \n      error: 'PI não encontrada ou inativa.' \n    } \n  }];\n}\n\n// Se encontrou, retorna um JSON de sucesso com TODOS os campos que o formulário precisa\nreturn [{\n  json: {\n    success: true,\n    cliente: piData.CLIENTE || '',\n    campanha: piData.CAMPANHA || '',\n    produto: piData.PRODUTO || '',\n    periodo: piData.PERIODO || '',\n    veiculo: piData.VEICULO || '', // Campo de texto com a descrição completa\n    meio: piData.MEIO || ''       // Campo de código para o dropdown\n  }\n}];"
+      },
+      "id": "47f1224d-6e45-45ac-adb2-fc09f4869e34",
+      "name": "Montar Resposta PI1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "6441e85b-1fa6-4104-a0f0-a5ac71fa49f6",
+      "name": "Responder Dados PI1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -1232,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q",
+          "mode": "list",
+          "cachedResultName": "Checking - Dados PIs Geral - Ult.12 meses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "base",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "N_PI",
+              "lookupValue": "={{$json.dados.body.n_pi}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cccff9bc-4f39-4c70-af13-f7868272e78e",
+      "name": "Buscar PI (submissao
