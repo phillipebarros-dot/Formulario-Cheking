@@ -258,9 +258,7 @@
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
         let piFetchController = null;
-        // URLs separadas para cada ação
-        const webhookBuscaUrl = 'https://n8n.grupoom.com.br/webhook/buscar-pi';
-        const webhookEnvioUrl = 'https://n8n.grupoom.com.br/webhook/enviar-checking';
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm'; // Atualize se a URL de produção for diferente
 
         function showMessage(element, message) { element.textContent = message; element.style.display = 'block'; }
         function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
@@ -296,26 +294,13 @@
             atualizarCamposDeAnexo('');
 
             try {
-                // USA A NOVA URL DE BUSCA
-                const response = await fetch(webhookBuscaUrl, {
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    // Não precisa mais enviar 'action', pois a URL já define a ação
-                    body: JSON.stringify({ n_pi: npi }),
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
-
-                if (!response.ok) {
-                    // Tenta ler o erro do corpo da resposta, se houver
-                    let errorData;
-                    try {
-                        errorData = await response.json();
-                    } catch(e) {
-                        throw new Error(`Erro de rede: ${response.statusText}`);
-                    }
-                    throw new Error(errorData.message || `Erro de rede: ${response.statusText}`);
-                }
-
+                if (!response.ok) throw new Error('Erro de rede');
                 const data = await response.json();
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados.';
@@ -335,9 +320,6 @@
                     piStatus.textContent = 'Falha na comunicação.';
                     piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
-                    // Mostra o erro detalhado no console para depuração
-                    console.error("Erro ao buscar PI:", error);
-                    showMessage(errorMessage, `Erro ao buscar dados da PI: ${error.message}`);
                 }
             }
         }
@@ -365,29 +347,18 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            // Não precisa mais enviar 'action'
-            
-            try {
-                // USA A NOVA URL DE ENVIO
-                const response = await fetch(webhookEnvioUrl, { method: 'POST', body: formData });
-                
-                // Trata a resposta, que pode não ser JSON em caso de erro no servidor
-                let result;
-                try {
-                    result = await response.json();
-                } catch (e) {
-                    throw new Error("A resposta do servidor não é um JSON válido. Verifique os logs do n8n.");
-                }
+            formData.append('action', 'submissao');
 
-                if (!response.ok) throw new Error(result.message || 'Erro no servidor durante o envio.');
+            try {
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Erro no servidor.');
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 resetPIFields();
-                piStatus.textContent = '';
             } catch (error) {
                 showMessage(errorMessage, error.message.includes('fetch') ? 'Falha na comunicação com o servidor.' : error.message);
-                console.error("Erro no envio:", error);
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
