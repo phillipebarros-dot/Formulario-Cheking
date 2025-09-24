@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checking OpusMúltipla</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --cor-primaria: #0033a0;
@@ -21,127 +22,356 @@
             --cor-erro: #c53030;
             --cor-desabilitado: #edf2f7;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
-        .container { max-width: 1100px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); padding: 2.5rem 3rem; }
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header img { max-width: 450px; margin-bottom: 0.5rem; }
-        .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cor-fundo-claro);
+            color: var(--cor-secundaria);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--cor-fundo-secao);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--cor-sombra);
+            border: 1px solid var(--cor-borda);
+            position: relative;
+            overflow: hidden;
+            padding: 2.5rem 3rem;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header img.logo-opusmultipla {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--cor-secundaria);
+            letter-spacing: 1px;
+            margin-top: 0;
+            line-height: 1.2;
+        }
+        
+        .attention-box img {
+            max-width: 100%; height: auto; display: block; margin-bottom: 2.5rem; border-radius: 8px;
+        }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
-        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; }
-        input, select, textarea { padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
+
+        input, select, textarea {
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s;
+        }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
-        input[readonly] { background: var(--cor-desabilitado); }
-        button { width: 100%; padding: 1rem; background: var(--cor-primaria); color: white; border: none; border-radius: 8px; font-weight: 600; margin-top: 1rem; cursor: pointer; }
-        button:hover { background: #00226e; }
+        input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
+        select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        
+        .upload-container {
+            border: 2px dashed var(--cor-borda);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        .upload-group {
+            margin-bottom: 1rem;
+        }
+        .upload-group:last-child {
+            margin-bottom: 0;
+        }
+        input[type="file"] {
+            font-size: 0.9rem;
+        }
+        
+        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
+        button[type="submit"]:hover { background-color: #00226e; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
-        #successMessage { background: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
-        #errorMessage { background: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
+        #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
+        #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
+
+        .footer-wrapper { 
+            width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; 
+        }
+        .footer-gradient-bar { 
+            order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+        .footer-content {
+            background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
+        }
+        .main-logo-block {
+            display: flex; flex-direction: column; align-items: center; color: white; text-align: center;
+        }
+        .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
+        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
+        .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
+        .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
+        .agency-logos li a:hover { opacity: 0.7; }
+        .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
     </style>
 </head>
 <body>
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="logo-opus.png" alt="Logo OpusMúltipla">
+                <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
+            </div>
+
+            <div class="attention-box">
+                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
             </div>
 
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
-                    <div class="form-group full-width"><label for="nome">Nome *</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="email">E-mail *</label><input type="email" id="email" name="email" required></div>
-                    <div class="form-group"><label for="telefone">Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
+                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
+                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
                     <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required><div id="piStatus"></div></div>
                     <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
                     <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
                     <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
                     <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" readonly></div>
                     <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" readonly></div>
-                </div>
-                <button type="submit">Enviar Checking</button>
-            </form>
+                    <div class="form-group">
+                        <label for="meio">Meio</label>
+                        <select id="meio" name="meio" class="campo-bloqueado">
+                            <option value="">Aguardando PI...</option>
+                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RF">Rádio Frequência</option><option value="RV">Revista</option><option value="TV">TV</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
+                    
+                    <div class="form-group full-width">
+                        <label>Comprovantes *</label>
+                        <div id="upload-area-dinamica" class="upload-container">
+                            <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
+                            
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_fotografico">Relatório Fotográfico *</label>
+                                <input type="file" name="relatorio_fotografico" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_exibicoes">Relatório de Exibições *</label>
+                                <input type="file" name="relatorio_exibicoes" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="video_diurno">Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno" multiple>
+                            </div>
 
+                            <div class="upload-group" data-meio="ME MO" style="display: none;">
+                                <label for="relatorio_enderecos">Relatório com Endereços/Pontos *</label>
+                                <input type="file" name="relatorio_enderecos" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="ME MO" style="display: none;">
+                                <label for="fotos_pontos">Fotos dos Pontos *</label>
+                                <input type="file" name="fotos_pontos" multiple>
+                            </div>
+
+                            <div class="upload-group" data-meio="BD OD FL MI RD TP CI JO RV AT TV IN RF" style="display: none;">
+                                <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
+                                <input type="file" name="comprovante_geral" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
+                </div>
+            </form>
             <div class="message-box" id="successMessage"></div>
             <div class="message-box" id="errorMessage"></div>
         </div>
     </div>
+    
+    <footer class="footer-wrapper">
+        <div class="footer-gradient-bar"></div>
+        <div class="footer-content">
+            <div class="main-logo-block">
+                <span class="main-logo-grupo">GRUPO OM</span>
+                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
+            </div>
+            <nav class="agency-logos">
+                <ul>
+                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
+                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
+                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
+                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
 
 <script>
-(function () {
-    const form = document.getElementById('checkingForm');
-    const piInput = document.getElementById('pi');
-    const piStatus = document.getElementById('piStatus');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const submitButton = form.querySelector('button[type="submit"]');
+    (function () {
+        const form = document.getElementById('checkingForm');
+        const piInput = document.getElementById('pi');
+        const piStatus = document.getElementById('piStatus');
+        const clienteInput = document.getElementById('cliente');
+        const campanhaInput = document.getElementById('campanha');
+        const produtoInput = document.getElementById('produto');
+        const periodoInput = document.getElementById('periodo');
+        const veiculoInput = document.getElementById('veiculo'); 
+        const meioSelect = document.getElementById('meio');       
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const uploadArea = document.getElementById('upload-area-dinamica');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
-    // 🔹 Substitua pelos webhooks reais do seu n8n
-    const webhookPI = 'https://n8n.grupoom.com.br/webhook/CheckingFormPI';
-    const webhookSubmit = 'https://n8n.grupoom.com.br/webhook/CheckingFormSubmit';
+        let piFetchController = null;
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm'; // Atualize se a URL de produção for diferente
 
-    function showMessage(element, msg) { element.textContent = msg; element.style.display = 'block'; }
-    function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
+        function showMessage(element, message) { element.textContent = message; element.style.display = 'block'; }
+        function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
+        function resetPIFields() {
+            clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
+            atualizarCamposDeAnexo('');
+        }
 
-    // Buscar PI no n8n
-    async function buscarDadosPI(npi) {
-        if (!npi) return;
-        piStatus.textContent = 'Buscando...';
-        try {
-            const response = await fetch(webhookPI, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'buscar_pi', n_pi: npi })
-            });
-            const data = await response.json();
-            if (data.success) {
-                piStatus.textContent = 'Dados encontrados!';
-                for (const key in data) {
-                    if (document.getElementById(key)) {
-                        document.getElementById(key).value = data[key];
-                    }
+        function atualizarCamposDeAnexo(meio) {
+            let algumCampoVisivel = false;
+            allUploadGroups.forEach(group => {
+                const meiosDoGrupo = group.dataset.meio.split(' ');
+                if (meio && meiosDoGrupo.includes(meio)) {
+                    group.style.display = 'block';
+                    group.querySelector('input[type="file"]').required = true;
+                    algumCampoVisivel = true;
+                } else {
+                    group.style.display = 'none';
+                    group.querySelector('input[type="file"]').required = false;
                 }
-            } else {
-                piStatus.textContent = data.error || 'PI não encontrada.';
-            }
-        } catch {
-            piStatus.textContent = 'Erro ao consultar PI.';
+            });
+            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
         }
-    }
 
-    piInput.addEventListener('blur', () => buscarDadosPI(piInput.value.trim()));
+        async function buscarDadosPI(npi) {
+            if (!npi) { resetPIFields(); return; }
+            if (piFetchController) piFetchController.abort();
+            
+            piFetchController = new AbortController();
+            piStatus.textContent = 'Buscando...';
+            piStatus.style.color = 'var(--cor-texto-claro)';
+            clearMessages();
+            atualizarCamposDeAnexo('');
 
-    // Enviar submissão
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        clearMessages();
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+                    signal: piFetchController.signal,
+                });
+                if (!response.ok) throw new Error('Erro de rede');
+                const data = await response.json();
+                if (data.success) {
+                    piStatus.textContent = 'Dados carregados.';
+                    piStatus.style.color = 'var(--cor-sucesso)';
+                    Object.keys(data).forEach(key => {
+                        const input = document.getElementById(key);
+                        if(input) input.value = data[key] || '';
+                    });
+                    atualizarCamposDeAnexo(data.meio);
+                } else {
+                    piStatus.textContent = data.error || 'PI não encontrada.';
+                    piStatus.style.color = 'var(--cor-erro)';
+                    resetPIFields();
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    piStatus.textContent = 'Falha na comunicação.';
+                    piStatus.style.color = 'var(--cor-erro)';
+                    resetPIFields();
+                }
+            }
+        }
+        
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearMessages();
 
-        const formData = new FormData(form);
-        formData.append('action', 'submissao');
+            let camposAnexoObrigatoriosPreenchidos = true;
+            const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            
+            camposAnexoVisiveis.forEach(input => {
+                if (input.required && input.files.length === 0) {
+                    camposAnexoObrigatoriosPreenchidos = false;
+                }
+            });
 
-        submitButton.textContent = 'Enviando...';
-        submitButton.disabled = true;
+            if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante.');
+                return;
+            }
 
-        try {
-            const response = await fetch(webhookSubmit, { method: 'POST', body: formData });
-            const result = await response.json();
-            if (result.success) {
-                showMessage(successMessage, result.message || 'Enviado com sucesso!');
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Enviando...';
+            submitButton.disabled = true;
+            
+            const formData = new FormData(form);
+            formData.append('action', 'submissao');
+
+            try {
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Erro no servidor.');
+                
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
-            } else {
-                showMessage(errorMessage, result.error || 'Falha ao enviar.');
+                resetPIFields();
+            } catch (error) {
+                showMessage(errorMessage, error.message.includes('fetch') ? 'Falha na comunicação com o servidor.' : error.message);
+            } finally {
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
             }
-        } catch {
-            showMessage(errorMessage, 'Erro de comunicação com servidor.');
-        } finally {
-            submitButton.textContent = 'Enviar Checking';
-            submitButton.disabled = false;
-        }
-    });
-})();
+        });
+        
+        let debounceTimeout;
+        piInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
+        });
+
+    })();
 </script>
 </body>
 </html>
