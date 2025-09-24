@@ -258,12 +258,7 @@
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
         let piFetchController = null;
-        
-        // --- INÍCIO DA ALTERAÇÃO ---
-        // URLs separadas para cada ação, conforme o novo fluxo do n8n
-        const webhookBuscaUrl = 'https://n8n.grupoom.com.br/webhook/buscar-pi';
-        const webhookEnvioUrl = 'https://n8n.grupoom.com.br/webhook/enviar-checking';
-        // --- FIM DA ALTERAÇÃO ---
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm'; // Atualize se a URL de produção for diferente
 
         function showMessage(element, message) { element.textContent = message; element.style.display = 'block'; }
         function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
@@ -299,16 +294,12 @@
             atualizarCamposDeAnexo('');
 
             try {
-                // --- INÍCIO DA ALTERAÇÃO ---
-                // Usa a nova URL de busca e remove o campo 'action' do corpo
-                const response = await fetch(webhookBuscaUrl, {
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ n_pi: npi }),
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
-                // --- FIM DA ALTERAÇÃO ---
-
                 if (!response.ok) throw new Error('Erro de rede');
                 const data = await response.json();
                 if (data.success) {
@@ -356,17 +347,10 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            // --- INÍCIO DA ALTERAÇÃO ---
-            // Remove a linha que adiciona o campo 'action', pois não é mais necessário
-            // formData.append('action', 'submissao'); 
-            // --- FIM DA ALTERAÇÃO ---
+            formData.append('action', 'submissao');
 
             try {
-                // --- INÍCIO DA ALTERAÇÃO ---
-                // Usa a nova URL de envio
-                const response = await fetch(webhookEnvioUrl, { method: 'POST', body: formData });
-                // --- FIM DA ALTERAÇÃO ---
-
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Erro no servidor.');
                 
