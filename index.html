@@ -345,14 +345,24 @@
             atualizarCamposDeAnexo('');
 
             try {
+                // CORREÇÃO: Enviar como FormData para ser compatível com o Webhook
+                const formData = new FormData();
+                formData.append('action', 'buscar_pi');
+                formData.append('n_pi', npi);
+
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+                    body: formData, // Enviando como FormData
                     signal: piFetchController.signal,
                 });
-                if (!response.ok) throw new Error('Erro de rede ao buscar PI.');
+                
+                // O tratamento da resposta continua o mesmo
+                if (!response.ok) {
+                    let errorText = await response.text();
+                    throw new Error(`Erro de rede ao buscar PI: ${response.status} ${errorText}`);
+                }
                 const data = await response.json();
+
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados.';
                     piStatus.style.color = 'var(--cor-sucesso)';
@@ -368,7 +378,7 @@
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    piStatus.textContent = 'Falha na comunicação.';
+                    piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
                 }
@@ -438,3 +448,4 @@
 </script>
 </body>
 </html>
+
