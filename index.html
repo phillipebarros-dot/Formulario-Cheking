@@ -21,6 +21,9 @@
             --cor-sucesso: #2d8a5b;
             --cor-erro: #c53030;
             --cor-desabilitado: #edf2f7;
+            --cor-aviso-fundo: #fefcbf;
+            --cor-aviso-texto: #9f580a;
+            --cor-aviso-borda: #fce18a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -86,8 +89,22 @@
             line-height: 1.2;
         }
         
+        .attention-box {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        .attention-box .warning-text {
+            background-color: var(--cor-aviso-fundo);
+            border: 1px solid var(--cor-aviso-borda);
+            color: var(--cor-aviso-texto);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
         .attention-box img {
-            max-width: 100%; height: auto; display: block; margin-bottom: 2.5rem; border-radius: 8px;
+            max-width: 100%; height: auto; display: block; border-radius: 8px;
         }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -109,7 +126,7 @@
             margin-top: 0.5rem;
         }
         .upload-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .upload-group:last-child {
             margin-bottom: 0;
@@ -153,8 +170,14 @@
                 <h1>CHECKING</h1>
             </div>
 
+            <!-- ÁREA DE COMUNICADO ATUALIZADA -->
             <div class="attention-box">
-                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
+                <div class="warning-text">
+                    SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. 
+                    <br>Conferir número de anexos e informações obrigatórias por meio (cfme contratado em PI).
+                    <br>O não envio dos relatórios de acordo com especificações descritas aqui e nas PIs, acarretará no não pagto das veiculações até relatórios enviados cfme orientações passadas na contratação da mídia (PI).
+                </div>
+                <img src="https://placehold.co/1100x250/f8f8f8/333333?text=CHECKING+OPUSM%C3%9ALTIPLA" alt="Instruções de Checking">
             </div>
 
             <form id="checkingForm" novalidate>
@@ -177,37 +200,66 @@
                     </div>
                     <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
                     
+                    <!-- CAMPOS DE UPLOAD DINÂMICOS POR MEIO -->
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
+                            <!-- MEIO: DO -->
                             <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label for="relatorio_fotografico">Relatório Fotográfico *</label>
-                                <input type="file" name="relatorio_fotografico" multiple>
+                                <label for="relatorio_fotografico_do">Relatório Fotográfico de Todos os Pontos *</label>
+                                <input type="file" name="relatorio_fotografico_do" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label for="relatorio_exibicoes">Relatório de Exibições *</label>
-                                <input type="file" name="relatorio_exibicoes" multiple>
+                                <label for="relatorio_exibicoes_do">Relatório de Exibições Automatizado *</label>
+                                <input type="file" name="relatorio_exibicoes_do" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label for="video_diurno">Vídeo Diurno *</label>
-                                <input type="file" name="video_diurno" multiple>
+                                <label for="video_diurno_do">Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno_do" multiple>
                             </div>
 
-                            <div class="upload-group" data-meio="ME MO" style="display: none;">
-                                <label for="relatorio_enderecos">Relatório com Endereços/Pontos *</label>
-                                <input type="file" name="relatorio_enderecos" multiple>
+                            <!-- MEIO: ME -->
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label for="relatorio_enderecos_me">Relatório com Endereço dos Pontos *</label>
+                                <input type="file" name="relatorio_enderecos_me" multiple>
                             </div>
-                            <div class="upload-group" data-meio="ME MO" style="display: none;">
-                                <label for="fotos_pontos">Fotos dos Pontos *</label>
-                                <input type="file" name="fotos_pontos" multiple>
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label for="fotos_pontos_me">Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label>
+                                <input type="file" name="fotos_pontos_me" multiple>
                             </div>
 
-                            <div class="upload-group" data-meio="BD OD FL MI RD TP CI JO RV AT TV IN RF" style="display: none;">
+                            <!-- MEIO: MO -->
+                             <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label for="relatorio_estacoes_mo">Relatório com Listagem de Estações/Linhas/Carros *</label>
+                                <input type="file" name="relatorio_estacoes_mo" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label for="fotos_videos_mo">Fotos ou Vídeos (Amostrais) *</label>
+                                <input type="file" name="fotos_videos_mo" multiple>
+                            </div>
+
+                             <!-- MEIOS COM 1 ANEXO -->
+                             <div class="upload-group" data-meio="BD" style="display: none;">
+                                <label for="comprovante_bd">Relatório Fotográfico de Todos os Ônibus/Carros *</label>
+                                <input type="file" name="comprovante_bd" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="OD FL" style="display: none;">
+                                <label for="comprovante_od_fl">Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label>
+                                <input type="file" name="comprovante_od_fl" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="MI" style="display: none;">
+                                <label for="comprovante_mi">Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label>
+                                <input type="file" name="comprovante_mi" multiple>
+                            </div>
+
+                            <!-- OUTROS MEIOS (Genérico) -->
+                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;">
                                 <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
                                 <input type="file" name="comprovante_geral" multiple>
                             </div>
+
                         </div>
                     </div>
                     
@@ -249,7 +301,7 @@
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
         const veiculoInput = document.getElementById('veiculo'); 
-        const meioSelect = document.getElementById('meio');       
+        const meioSelect = document.getElementById('meio');         
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
@@ -258,9 +310,9 @@
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
 
         let piFetchController = null;
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm'; // Atualize se a URL de produção for diferente
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
-        function showMessage(element, message) { element.textContent = message; element.style.display = 'block'; }
+        function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; }
         function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
         function resetPIFields() {
             clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
@@ -271,13 +323,14 @@
             let algumCampoVisivel = false;
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
+                const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
-                    group.querySelector('input[type="file"]').required = true;
+                    if (input) input.required = true;
                     algumCampoVisivel = true;
                 } else {
                     group.style.display = 'none';
-                    group.querySelector('input[type="file"]').required = false;
+                    if (input) input.required = false;
                 }
             });
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
@@ -300,7 +353,7 @@
                     body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
-                if (!response.ok) throw new Error('Erro de rede');
+                if (!response.ok) throw new Error('Erro de rede ao buscar PI.');
                 const data = await response.json();
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados.';
@@ -338,7 +391,7 @@
             });
 
             if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
-                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante.');
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante visível.');
                 return;
             }
 
@@ -351,11 +404,23 @@
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                
+                if (!response.ok) {
+                    let errorMsg = `Erro no servidor: ${response.status}`;
+                    try {
+                        const errorResult = await response.json();
+                        errorMsg = errorResult.message || errorMsg;
+                    } catch (e) {
+                        // Resposta não era JSON, usa mensagem padrão.
+                    }
+                    throw new Error(errorMsg);
+                }
+                
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.message || 'Erro no servidor.');
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
+                piStatus.textContent = '';
                 resetPIFields();
             } catch (error) {
                 showMessage(errorMessage, error.message.includes('fetch') ? 'Falha na comunicação com o servidor.' : error.message);
@@ -375,3 +440,4 @@
 </script>
 </body>
 </html>
+
