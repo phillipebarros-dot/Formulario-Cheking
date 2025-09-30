@@ -10,42 +10,149 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-fundo: #fefcbf; --cor-aviso-texto: #9f580a; --cor-aviso-borda: #fce18a;
+            --cor-primaria: #0033a0;
+            --cor-secundaria: #1a202c;
+            --cor-texto-claro: #4a5568;
+            --cor-fundo-claro: #f7fafc;
+            --cor-fundo-secao: #ffffff;
+            --cor-borda: #e2e8f0;
+            --cor-borda-foco: #0033a0;
+            --cor-sombra: rgba(0, 0, 0, 0.05);
+            --cor-sucesso: #2d8a5b;
+            --cor-erro: #c53030;
+            --cor-desabilitado: #edf2f7;
+            --cor-aviso-fundo: #fefcbf;
+            --cor-aviso-texto: #9f580a;
+            --cor-aviso-borda: #fce18a;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; line-height: 1.6; }
-        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
-        .container { max-width: 1100px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); position: relative; overflow: hidden; padding: 2.5rem 3rem; }
-        .container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header img.logo-opusmultipla { max-width: 450px; width: 100%; height: auto; margin-bottom: 0.5rem; }
-        .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; }
-        .attention-box { margin-bottom: 2.5rem; text-align: center; }
-        .attention-box .warning-text { background-color: var(--cor-aviso-fundo); border: 1px solid var(--cor-aviso-borda); color: var(--cor-aviso-texto); padding: 1.5rem; border-radius: 8px; font-weight: 700; text-align: center; margin-bottom: 1.5rem; }
-        .attention-box img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cor-fundo-claro);
+            color: var(--cor-secundaria);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--cor-fundo-secao);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--cor-sombra);
+            border: 1px solid var(--cor-borda);
+            position: relative;
+            overflow: hidden;
+            padding: 2.5rem 3rem;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header img.logo-opusmultipla {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--cor-secundaria);
+            letter-spacing: 1px;
+            margin-top: 0;
+            line-height: 1.2;
+        }
+        
+        .attention-box {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        .attention-box .warning-text {
+            background-color: var(--cor-aviso-fundo);
+            border: 1px solid var(--cor-aviso-borda);
+            color: var(--cor-aviso-texto);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .attention-box img {
+            max-width: 100%; height: auto; display: block; border-radius: 8px;
+        }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
         label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
-        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
+
+        input, select, textarea {
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s;
+        }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-        .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
-        .upload-group { margin-bottom: 1.5rem; }
-        .upload-group:last-child { margin-bottom: 0; }
-        input[type="file"] { font-size: 0.9rem; }
+        
+        .upload-container {
+            border: 2px dashed var(--cor-borda);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        .upload-group {
+            margin-bottom: 1.5rem;
+        }
+        .upload-group:last-child {
+            margin-bottom: 0;
+        }
+        input[type="file"] {
+            font-size: 0.9rem;
+        }
+        
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
         button[type="submit"]:hover { background-color: #00226e; }
-        button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; }
-        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
-        .footer-gradient-bar { order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .footer-content { background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
-        .main-logo-block { display: flex; flex-direction: column; align-items: center; color: white; text-align: center; }
+
+        .footer-wrapper { 
+            width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; 
+        }
+        .footer-gradient-bar { 
+            order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+        .footer-content {
+            background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem;
+        }
+        .main-logo-block {
+            display: flex; flex-direction: column; align-items: center; color: white; text-align: center;
+        }
         .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
         .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
         .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
@@ -62,9 +169,10 @@
                 <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
+
             <div class="attention-box">
                 <div class="warning-text">
-                    SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.
+                    SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS. 
                     <br>Conferir número de anexos e informações obrigatórias por meio (cfme contratado em PI).
                     <br>O não envio dos relatórios de acordo com especificações descritas aqui e nas PIs, acarretará no não pagto das veiculações até relatórios enviados cfme orientações passadas na contratação da mídia (PI).
                 </div>
@@ -96,20 +204,58 @@
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label for="relatorio_fotografico_do">Relatório Fotográfico de Todos os Pontos *</label><input type="file" id="relatorio_fotografico_do" name="relatorio_fotografico_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label for="relatorio_exibicoes_do">Relatório de Exibições Automatizado *</label><input type="file" id="relatorio_exibicoes_do" name="relatorio_exibicoes_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label for="video_diurno_do">Vídeo Diurno *</label><input type="file" id="video_diurno_do" name="video_diurno_do" multiple></div>
+                            <!-- MEIO: DO -->
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_fotografico_do">Relatório Fotográfico de Todos os Pontos *</label>
+                                <input type="file" name="relatorio_fotografico_do" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="relatorio_exibicoes_do">Relatório de Exibições Automatizado *</label>
+                                <input type="file" name="relatorio_exibicoes_do" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label for="video_diurno_do">Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno_do" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label for="relatorio_enderecos_me">Relatório com Endereço dos Pontos *</label><input type="file" id="relatorio_enderecos_me" name="relatorio_enderecos_me" multiple></div>
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label for="fotos_pontos_me">Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label><input type="file" id="fotos_pontos_me" name="fotos_pontos_me" multiple></div>
+                            <!-- MEIO: ME -->
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label for="relatorio_enderecos_me">Relatório com Endereço dos Pontos *</label>
+                                <input type="file" name="relatorio_enderecos_me" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label for="fotos_pontos_me">Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label>
+                                <input type="file" name="fotos_pontos_me" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label for="relatorio_estacoes_mo">Relatório com Listagem de Estações/Linhas/Carros *</label><input type="file" id="relatorio_estacoes_mo" name="relatorio_estacoes_mo" multiple></div>
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label for="fotos_videos_mo">Fotos ou Vídeos (Amostrais) *</label><input type="file" id="fotos_videos_mo" name="fotos_videos_mo" multiple></div>
+                            <!-- MEIO: MO -->
+                             <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label for="relatorio_estacoes_mo">Relatório com Listagem de Estações/Linhas/Carros *</label>
+                                <input type="file" name="relatorio_estacoes_mo" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label for="fotos_videos_mo">Fotos ou Vídeos (Amostrais) *</label>
+                                <input type="file" name="fotos_videos_mo" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="BD" style="display: none;"><label for="comprovante_bd">Relatório Fotográfico de Todos os Ônibus/Carros *</label><input type="file" id="comprovante_bd" name="comprovante_bd" multiple></div>
-                            <div class="upload-group" data-meio="OD FL" style="display: none;"><label for="comprovante_od_fl">Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label><input type="file" id="comprovante_od_fl" name="comprovante_od_fl" multiple></div>
-                            <div class="upload-group" data-meio="MI" style="display: none;"><label for="comprovante_mi">Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label><input type="file" id="comprovante_mi" name="comprovante_mi" multiple></div>
-                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label for="comprovante_geral">Relatório / Comprovante Geral *</label><input type="file" id="comprovante_geral" name="comprovante_geral" multiple></div>
+                             <!-- MEIOS COM 1 ANEXO -->
+                             <div class="upload-group" data-meio="BD" style="display: none;">
+                                <label for="comprovante_bd">Relatório Fotográfico de Todos os Ônibus/Carros *</label>
+                                <input type="file" name="comprovante_bd" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="OD FL" style="display: none;">
+                                <label for="comprovante_od_fl">Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label>
+                                <input type="file" name="comprovante_od_fl" multiple>
+                            </div>
+                             <div class="upload-group" data-meio="MI" style="display: none;">
+                                <label for="comprovante_mi">Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label>
+                                <input type="file" name="comprovante_mi" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;">
+                                <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
+                                <input type="file" name="comprovante_geral" multiple>
+                            </div>
+
                         </div>
                     </div>
                     
@@ -150,8 +296,8 @@
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
         const periodoInput = document.getElementById('periodo');
-        const veiculoInput = document.getElementById('veiculo');
-        const meioSelect = document.getElementById('meio');
+        const veiculoInput = document.getElementById('veiculo'); 
+        const meioSelect = document.getElementById('meio');         
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const submitButton = form.querySelector('button[type="submit"]');
@@ -165,7 +311,7 @@
         function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; }
         function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
         function resetPIFields() {
-            clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';
+            clienteInput.value = ''; campanhaInput.value = ''; produtoInput.value = ''; periodoInput.value = ''; veiculoInput.value = ''; meioSelect.value = '';   
             atualizarCamposDeAnexo('');
         }
 
@@ -186,38 +332,37 @@
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
         }
 
-        // --- FUNÇÃO CORRIGIDA ---
         async function buscarDadosPI(npi) {
-            if (!npi) { resetPIFields(); piStatus.textContent = ''; return; }
+            if (!npi) { resetPIFields(); return; }
             if (piFetchController) piFetchController.abort();
             
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando...';
             piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
-            resetPIFields();
+            atualizarCamposDeAnexo('');
 
             try {
-                const payload = {
-                    action: 'buscar_pi',
-                    n_pi: npi
-                };
+                const formData = new FormData();
+                formData.append('action', String('buscar_pi'));
+                formData.append('n_pi', npi);
 
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
+                    body: formData,
                     signal: piFetchController.signal,
                 });
                 
-                const data = await response.json();
-
                 if (!response.ok) {
-                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
+                    let errorText = await response.text();
+                    throw new Error(`Erro de rede ao buscar PI: ${response.status} ${errorText}`);
                 }
+                
+                const text = await response.text();
+                const data = text ? JSON.parse(text) : { success: false };
 
                 if (data.success) {
-                    piStatus.textContent = 'Dados carregados com sucesso.';
+                    piStatus.textContent = 'Dados carregados.';
                     piStatus.style.color = 'var(--cor-sucesso)';
                     Object.keys(data).forEach(key => {
                         const input = document.getElementById(key);
@@ -225,7 +370,7 @@
                     });
                     atualizarCamposDeAnexo(data.meio);
                 } else {
-                    piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
+                    piStatus.textContent = data.error || 'PI não encontrada.';
                     piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
                 }
@@ -234,7 +379,6 @@
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
                     resetPIFields();
-                    console.error("Erro ao buscar PI:", error);
                 }
             }
         }
@@ -253,7 +397,7 @@
             });
 
             if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
-                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante visível.');
                 return;
             }
 
@@ -262,12 +406,13 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            // O action para submissão é adicionado para diferenciar da busca de PI
-            formData.append('action', 'submissao_form'); 
+            formData.append('action', String('submissao'));
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-                const result = await response.json();
+                
+                const text = await response.text();
+                const result = text ? JSON.parse(text) : { success: false, message: 'Resposta vazia do servidor' };
                 
                 if (!response.ok || !result.success) {
                     throw new Error(result.message || `Erro no servidor: ${response.status}`);
@@ -286,7 +431,7 @@
         });
         
         let debounceTimeout;
-        piInput.addEventListener('input', () => {
+        piInput.addEventListener('input', () => { 
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
         });
