@@ -207,53 +207,53 @@
                             <!-- MEIO: DO -->
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label for="relatorio_fotografico_do">Relatório Fotográfico de Todos os Pontos *</label>
-                                <input type="file" name="relatorio_fotografico_do" multiple>
+                                <input type="file" id="relatorio_fotografico_do" name="relatorio_fotografico_do" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label for="relatorio_exibicoes_do">Relatório de Exibições Automatizado *</label>
-                                <input type="file" name="relatorio_exibicoes_do" multiple>
+                                <input type="file" id="relatorio_exibicoes_do" name="relatorio_exibicoes_do" multiple>
                             </div>
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label for="video_diurno_do">Vídeo Diurno *</label>
-                                <input type="file" name="video_diurno_do" multiple>
+                                <input type="file" id="video_diurno_do" name="video_diurno_do" multiple>
                             </div>
 
                             <!-- MEIO: ME -->
                             <div class="upload-group" data-meio="ME" style="display: none;">
                                 <label for="relatorio_enderecos_me">Relatório com Endereço dos Pontos *</label>
-                                <input type="file" name="relatorio_enderecos_me" multiple>
+                                <input type="file" id="relatorio_enderecos_me" name="relatorio_enderecos_me" multiple>
                             </div>
                             <div class="upload-group" data-meio="ME" style="display: none;">
                                 <label for="fotos_pontos_me">Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label>
-                                <input type="file" name="fotos_pontos_me" multiple>
+                                <input type="file" id="fotos_pontos_me" name="fotos_pontos_me" multiple>
                             </div>
 
                             <!-- MEIO: MO -->
                              <div class="upload-group" data-meio="MO" style="display: none;">
                                 <label for="relatorio_estacoes_mo">Relatório com Listagem de Estações/Linhas/Carros *</label>
-                                <input type="file" name="relatorio_estacoes_mo" multiple>
+                                <input type="file" id="relatorio_estacoes_mo" name="relatorio_estacoes_mo" multiple>
                             </div>
                              <div class="upload-group" data-meio="MO" style="display: none;">
                                 <label for="fotos_videos_mo">Fotos ou Vídeos (Amostrais) *</label>
-                                <input type="file" name="fotos_videos_mo" multiple>
+                                <input type="file" id="fotos_videos_mo" name="fotos_videos_mo" multiple>
                             </div>
 
                              <!-- MEIOS COM 1 ANEXO -->
                              <div class="upload-group" data-meio="BD" style="display: none;">
                                 <label for="comprovante_bd">Relatório Fotográfico de Todos os Ônibus/Carros *</label>
-                                <input type="file" name="comprovante_bd" multiple>
+                                <input type="file" id="comprovante_bd" name="comprovante_bd" multiple>
                             </div>
                              <div class="upload-group" data-meio="OD FL" style="display: none;">
                                 <label for="comprovante_od_fl">Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label>
-                                <input type="file" name="comprovante_od_fl" multiple>
+                                <input type="file" id="comprovante_od_fl" name="comprovante_od_fl" multiple>
                             </div>
                              <div class="upload-group" data-meio="MI" style="display: none;">
                                 <label for="comprovante_mi">Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label>
-                                <input type="file" name="comprovante_mi" multiple>
+                                <input type="file" id="comprovante_mi" name="comprovante_mi" multiple>
                             </div>
                             <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;">
                                 <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
-                                <input type="file" name="comprovante_geral" multiple>
+                                <input type="file" id="comprovante_geral" name="comprovante_geral" multiple>
                             </div>
 
                         </div>
@@ -344,7 +344,7 @@
 
             try {
                 const formData = new FormData();
-                formData.append('action', String('buscar_pi'));
+                formData.append('action', 'buscar_pi');
                 formData.append('n_pi', npi);
 
                 const response = await fetch(webhookUrl, {
@@ -405,8 +405,30 @@
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             
-            const formData = new FormData(form);
-            formData.append('action', String('submissao'));
+            const formData = new FormData();
+            
+            // Adiciona campos de texto do formulário
+            const formElements = form.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                const element = formElements[i];
+                if (element.type !== 'file' && element.name && element.value) {
+                    formData.append(element.name, element.value);
+                }
+            }
+            
+            // Adiciona o action
+            formData.append('action', 'submissao');
+            
+            // Adiciona arquivos individualmente com índices
+            camposAnexoVisiveis.forEach(fileInput => {
+                if (fileInput.files.length > 0) {
+                    const fieldName = fileInput.name;
+                    Array.from(fileInput.files).forEach((file, index) => {
+                        // Nome único para cada arquivo: campo_índice
+                        formData.append(`${fieldName}_${index}`, file, file.name);
+                    });
+                }
+            });
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
