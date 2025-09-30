@@ -221,7 +221,7 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.message || `Erro ao buscar PI: ${response.status}`);
+                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
                 }
 
                 if (data.success) {
@@ -229,7 +229,7 @@
                     piStatus.style.color = 'var(--cor-sucesso)';
                     const fieldsToFill = { cliente, campanha, produto, periodo, veiculo, meio };
                      for(const key in fieldsToFill) {
-                        if(fieldsToFill[key] && data[key]) {
+                        if(fieldsToFill[key] && data[key] !== undefined) {
                             fieldsToFill[key].value = data[key];
                         }
                     }
@@ -270,13 +270,25 @@
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             
-            // Usar o construtor FormData com o formulário diretamente é mais robusto
             const formData = new FormData(form);
+            
+            // CORREÇÃO FINAL: Anexar múltiplos arquivos com o mesmo nome de campo
+            const allFileInputs = form.querySelectorAll('input[type="file"]');
+            allFileInputs.forEach(input => {
+                // Remove os arquivos que o FormData já pegou para evitar duplicatas
+                formData.delete(input.name); 
+                // Adiciona cada arquivo individualmente com o mesmo nome de campo
+                if (input.files.length > 0) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        formData.append(input.name, input.files[i]);
+                    }
+                }
+            });
+
             formData.append('action', 'submissao_form');
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-                // Sempre tente analisar a resposta como JSON
                 const result = await response.json();
                 
                 if (!response.ok || !result.success) {
@@ -293,7 +305,6 @@
                 if (error.message.includes('fetch')) {
                     errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
                 } else if (error instanceof SyntaxError) {
-                    // Ocorre se a resposta do servidor não for um JSON válido
                     errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                 } else {
                     errorMessageText = error.message;
