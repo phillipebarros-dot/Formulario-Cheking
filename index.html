@@ -251,8 +251,6 @@
                                 <label for="comprovante_mi">Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label>
                                 <input type="file" name="comprovante_mi" multiple>
                             </div>
-
-                            <!-- OUTROS MEIOS (Genérico) -->
                             <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;">
                                 <label for="comprovante_geral">Relatório / Comprovante Geral *</label>
                                 <input type="file" name="comprovante_geral" multiple>
@@ -345,23 +343,23 @@
             atualizarCamposDeAnexo('');
 
             try {
-                // CORREÇÃO: Enviar como FormData para ser compatível com o Webhook
                 const formData = new FormData();
-                formData.append('action', 'buscar_pi');
+                formData.append('action', String('buscar_pi'));
                 formData.append('n_pi', npi);
 
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    body: formData, // Enviando como FormData
+                    body: formData,
                     signal: piFetchController.signal,
                 });
                 
-                // O tratamento da resposta continua o mesmo
                 if (!response.ok) {
                     let errorText = await response.text();
                     throw new Error(`Erro de rede ao buscar PI: ${response.status} ${errorText}`);
                 }
-                const data = await response.json();
+                
+                const text = await response.text();
+                const data = text ? JSON.parse(text) : { success: false };
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados.';
@@ -408,23 +406,17 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            formData.append('action', 'submissao');
+            formData.append('action', String('submissao'));
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 
-                if (!response.ok) {
-                    let errorMsg = `Erro no servidor: ${response.status}`;
-                    try {
-                        const errorResult = await response.json();
-                        errorMsg = errorResult.message || errorMsg;
-                    } catch (e) {
-                        // Resposta não era JSON, usa mensagem padrão.
-                    }
-                    throw new Error(errorMsg);
-                }
+                const text = await response.text();
+                const result = text ? JSON.parse(text) : { success: false, message: 'Resposta vazia do servidor' };
                 
-                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
+                }
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
@@ -439,7 +431,7 @@
         });
         
         let debounceTimeout;
-        piInput.addEventListener('input', () => {
+        piInput.addEventListener('input', () => { 
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
         });
