@@ -53,6 +53,15 @@
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
+        
+        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
+        .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
+        .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
+        .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
+        .drive-link-section h3 { color: #856404; margin-bottom: 1rem; font-size: 1.1rem; }
+        .drive-link-section p { font-size: 0.9rem; margin-bottom: 1rem; color: #856404; }
+        .drive-link-section input { background: white; }
+        .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
     </style>
 </head>
 <body>
@@ -64,9 +73,9 @@
             </div>
             <div class="attention-box">
                 <div class="warning-text">
-                    SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.
-                    <br>Conferir número de anexos e informações obrigatórias por meio (cfme contratado em PI).
-                    <br>O não envio dos relatórios de acordo com especificações descritas aqui e nas PIs, acarretará no não pagto das veiculações até relatórios enviados cfme orientações passadas na contratação da mídia (PI).
+                    ARQUIVOS ATÉ 200MB: Envie diretamente pelo formulário.<br>
+                    ARQUIVOS ACIMA DE 200MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
+                    O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
                 </div>
                 <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
             </div>
@@ -93,6 +102,7 @@
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
+                        <div class="size-info">Limite: 200MB total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
@@ -110,6 +120,22 @@
                             <div class="upload-group" data-meio="OD FL" style="display: none;"><label>Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label><input type="file" name="comprovante_od_fl" multiple></div>
                             <div class="upload-group" data-meio="MI" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label><input type="file" name="comprovante_mi" multiple></div>
                             <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                        </div>
+                        <div class="file-counter" id="fileCounter"></div>
+                        <div class="size-warning" id="sizeWarning">
+                            ⚠️ Tamanho total excede 200MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                        </div>
+                    </div>
+
+                    <!-- Seção de Link do Google Drive (aparece quando > 200MB) -->
+                    <div class="form-group full-width">
+                        <div class="drive-link-section" id="driveLinkSection">
+                            <h3>📁 Link do Google Drive</h3>
+                            <p>Como seus arquivos ultrapassam 200MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
+                            <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
+                            <p style="margin-top: 1rem; font-size: 0.85em;">
+                                <strong>Importante:</strong> Configure a pasta como "Qualquer pessoa com o link pode visualizar"
+                            </p>
                         </div>
                     </div>
                     
@@ -143,6 +169,8 @@
 
 <script>
     (function () {
+        const MAX_SIZE = 200 * 1024 * 1024; // 200MB
+        
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -158,6 +186,10 @@
         const uploadArea = document.getElementById('upload-area-dinamica');
         const uploadPlaceholder = document.getElementById('upload-placeholder');
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
+        const sizeWarning = document.getElementById('sizeWarning');
+        const driveLinkSection = document.getElementById('driveLinkSection');
+        const driveLink = document.getElementById('driveLink');
+        const fileCounter = document.getElementById('fileCounter');
 
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
@@ -165,8 +197,73 @@
         function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; }
         function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
         
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function checkTotalFileSize() {
+            let totalSize = 0;
+            let totalFiles = 0;
+            
+            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            visibleFileInputs.forEach(input => {
+                if (input.files) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        totalSize += input.files[i].size;
+                        totalFiles++;
+                    }
+                }
+            });
+
+            if (totalFiles > 0) {
+                fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
+                fileCounter.style.display = 'block';
+            } else {
+                fileCounter.style.display = 'none';
+            }
+
+            if (totalSize > MAX_SIZE) {
+                // Desabilita uploads e mostra seção de link
+                sizeWarning.style.display = 'block';
+                driveLinkSection.style.display = 'block';
+                driveLink.required = true;
+                
+                // Desabilita todos os inputs de arquivo
+                visibleFileInputs.forEach(input => {
+                    input.disabled = true;
+                    input.required = false;
+                });
+            } else {
+                // Habilita uploads normais
+                sizeWarning.style.display = 'none';
+                driveLinkSection.style.display = 'none';
+                driveLink.required = false;
+                driveLink.value = '';
+                
+                visibleFileInputs.forEach(input => {
+                    input.disabled = false;
+                    const meiosDoGrupo = input.closest('.upload-group').dataset.meio.split(' ');
+                    const meioAtual = meioSelect.value;
+                    if (meioAtual && meiosDoGrupo.includes(meioAtual)) {
+                        input.required = true;
+                    }
+                });
+            }
+        }
+
+        // Monitora mudanças nos campos de arquivo
+        uploadArea.addEventListener('change', function(e) {
+            if (e.target.type === 'file') {
+                checkTotalFileSize();
+            }
+        });
+        
         function resetPIFields() {
-            const fieldsToReset = { cliente, campanha, produto, periodo, veiculo };
+            const fieldsToReset = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput };
             for(const key in fieldsToReset) {
                 fieldsToReset[key].value = '';
             }
@@ -181,14 +278,27 @@
                 const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
-                    if (input) input.required = true;
+                    if (input) {
+                        input.required = true;
+                        input.disabled = false;
+                    }
                     algumCampoVisivel = true;
                 } else {
                     group.style.display = 'none';
-                    if (input) input.required = false;
+                    if (input) {
+                        input.required = false;
+                        input.value = '';
+                    }
                 }
             });
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
+            
+            // Reseta contadores e avisos
+            fileCounter.style.display = 'none';
+            sizeWarning.style.display = 'none';
+            driveLinkSection.style.display = 'none';
+            driveLink.required = false;
+            driveLink.value = '';
         }
 
         async function buscarDadosPI(npi) {
@@ -227,7 +337,7 @@
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
                     piStatus.style.color = 'var(--cor-sucesso)';
-                    const fieldsToFill = { cliente, campanha, produto, periodo, veiculo, meio };
+                    const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
                      for(const key in fieldsToFill) {
                         if(fieldsToFill[key] && data[key] !== undefined) {
                             fieldsToFill[key].value = data[key];
@@ -252,17 +362,34 @@
             e.preventDefault();
             clearMessages();
 
-            let camposAnexoObrigatoriosPreenchidos = true;
-            const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            // Verifica se é envio por link ou por arquivo
+            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value;
             
-            camposAnexoVisiveis.forEach(input => {
-                if (input.required && input.files.length === 0) {
-                    camposAnexoObrigatoriosPreenchidos = false;
+            if (usandoLink) {
+                // Validação de link
+                if (!driveLink.value.includes('drive.google.com')) {
+                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
+                    return;
                 }
-            });
+            } else {
+                // Validação de arquivos
+                let camposAnexoObrigatoriosPreenchidos = true;
+                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
+                
+                camposAnexoVisiveis.forEach(input => {
+                    if (input.required && input.files.length === 0) {
+                        camposAnexoObrigatoriosPreenchidos = false;
+                    }
+                });
 
-            if (!form.checkValidity() || !camposAnexoObrigatoriosPreenchidos) {
-                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                if (!camposAnexoObrigatoriosPreenchidos) {
+                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                    return;
+                }
+            }
+
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*).');
                 return;
             }
 
@@ -272,57 +399,17 @@
             
             const formData = new FormData(form);
             
-            // CORREÇÃO FINAL: Anexar múltiplos arquivos com o mesmo nome de campo
-            const allFileInputs = form.querySelectorAll('input[type="file"]');
-            allFileInputs.forEach(input => {
-                // Remove os arquivos que o FormData já pegou para evitar duplicatas
-                formData.delete(input.name); 
-                // Adiciona cada arquivo individualmente com o mesmo nome de campo
-                if (input.files.length > 0) {
-                    for (let i = 0; i < input.files.length; i++) {
-                        formData.append(input.name, input.files[i]);
-                    }
-                }
-            });
-
-            formData.append('action', 'submissao_form');
-
-            try {
-                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-                const result = await response.json();
+            if (usandoLink) {
+                // Modo link do Drive
+                formData.append('upload_method', 'drive_link');
+            } else {
+                // Modo upload binário
+                formData.delete('drive_link');
                 
-                if (!response.ok || !result.success) {
-                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
-                }
-                
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
-                form.reset();
-                piStatus.textContent = '';
-                resetPIFields();
-                
-            } catch (error) {
-                let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error.message.includes('fetch')) {
-                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                } else if (error instanceof SyntaxError) {
-                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
-                } else {
-                    errorMessageText = error.message;
-                }
-                showMessage(errorMessage, errorMessageText);
-            } finally {
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
-            }
-        });
-        
-        let debounceTimeout;
-        piInput.addEventListener('input', () => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
-        });
-
-    })();
-</script>
-</body>
-</html>
+                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
+                allFileInputs.forEach(input => {
+                    formData.delete(input.name); 
+                    if (input.files.length > 0) {
+                        for (let i = 0; i < input.files.length; i++) {
+                            formData.append(input.name, input.files[i]);
+                        }
