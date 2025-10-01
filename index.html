@@ -413,3 +413,50 @@
                         for (let i = 0; i < input.files.length; i++) {
                             formData.append(input.name, input.files[i]);
                         }
+                    }
+                });
+                formData.append('upload_method', 'binary');
+            }
+
+            formData.append('action', 'submissao_form');
+
+            try {
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
+                }
+                
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                form.reset();
+                piStatus.textContent = '';
+                resetPIFields();
+                fileCounter.style.display = 'none';
+                
+            } catch (error) {
+                let errorMessageText = 'Ocorreu um erro inesperado.';
+                if (error.message.includes('fetch')) {
+                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
+                } else if (error instanceof SyntaxError) {
+                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
+                } else {
+                    errorMessageText = error.message;
+                }
+                showMessage(errorMessage, errorMessageText);
+            } finally {
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+            }
+        });
+        
+        let debounceTimeout;
+        piInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
+        });
+
+    })();
+</script>
+</body>
+</html>
