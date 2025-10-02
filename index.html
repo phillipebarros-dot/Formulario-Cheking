@@ -54,7 +54,6 @@
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         
-        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -73,8 +72,8 @@
             </div>
             <div class="attention-box">
                 <div class="warning-text">
-                    ARQUIVOS ATÉ 200MB: Envie diretamente pelo formulário.<br>
-                    ARQUIVOS ACIMA DE 200MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
+                    ARQUIVOS ATÉ 500MB: Envie diretamente pelo formulário.<br>
+                    ARQUIVOS ACIMA DE 500MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
                     O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
                 </div>
                 <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
@@ -102,7 +101,7 @@
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
-                        <div class="size-info">Limite: 200MB total por envio</div>
+                        <div class="size-info">Limite: 500MB total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
@@ -123,15 +122,14 @@
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
-                            ⚠️ Tamanho total excede 200MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
                         </div>
                     </div>
 
-                    <!-- Seção de Link do Google Drive (aparece quando > 200MB) -->
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
                             <h3>📁 Link do Google Drive</h3>
-                            <p>Como seus arquivos ultrapassam 200MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
+                            <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
                             <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
                             <p style="margin-top: 1rem; font-size: 0.85em;">
                                 <strong>Importante:</strong> Configure a pasta como "Qualquer pessoa com o link pode visualizar"
@@ -169,7 +167,7 @@
 
 <script>
     (function () {
-        const MAX_SIZE = 200 * 1024 * 1024; // 200MB
+        const MAX_SIZE = 500 * 1024 * 1024; // 500MB
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -227,18 +225,15 @@
             }
 
             if (totalSize > MAX_SIZE) {
-                // Desabilita uploads e mostra seção de link
                 sizeWarning.style.display = 'block';
                 driveLinkSection.style.display = 'block';
                 driveLink.required = true;
                 
-                // Desabilita todos os inputs de arquivo
                 visibleFileInputs.forEach(input => {
                     input.disabled = true;
                     input.required = false;
                 });
             } else {
-                // Habilita uploads normais
                 sizeWarning.style.display = 'none';
                 driveLinkSection.style.display = 'none';
                 driveLink.required = false;
@@ -255,7 +250,6 @@
             }
         }
 
-        // Monitora mudanças nos campos de arquivo
         uploadArea.addEventListener('change', function(e) {
             if (e.target.type === 'file') {
                 checkTotalFileSize();
