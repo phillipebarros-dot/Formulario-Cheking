@@ -234,7 +234,6 @@
             fileCounter.style.display = totalFiles > 0 ? 'block' : 'none';
             fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
 
-            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
             const isOverSize = totalSize > MAX_SIZE;
 
             sizeWarning.style.display = isOverSize ? 'block' : 'none';
@@ -305,9 +304,18 @@
             e.preventDefault();
             clearMessages();
 
-            // Adiciona diagnóstico no console
+            const usandoLink = driveLinkSection.style.display === 'block';
+            
+            if (usandoLink) {
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    input.required = false;
+                });
+            }
+
             console.clear();
             console.log("--- Iniciando Validação ---");
+            console.log("Usando link do Drive?", usandoLink);
             form.querySelectorAll('[required]').forEach(field => {
                 console.log(`Campo '${field.name}' é obrigatório. Valor/arquivos: ${field.files ? field.files.length : field.value}. Válido? ${field.checkValidity()}`, field);
             });
@@ -323,7 +331,6 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            const usandoLink = driveLinkSection.style.display === 'block';
             
             formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.append('action', 'submissao_form');
@@ -347,7 +354,7 @@
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
-                 [piInput, nomeInput, emailInput, telefoneInput].forEach(el => el.value = '');
+                [piInput, nomeInput, emailInput, telefoneInput].forEach(el => el.value = '');
                 piStatus.textContent = '';
                 [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
                 updateFormState('');
