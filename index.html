@@ -54,6 +54,7 @@
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         
+        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -126,6 +127,7 @@
                         </div>
                     </div>
 
+                    <!-- Seção de Link do Google Drive (aparece quando > 500MB) -->
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
                             <h3>📁 Link do Google Drive</h3>
@@ -225,15 +227,18 @@
             }
 
             if (totalSize > MAX_SIZE) {
+                // Desabilita uploads e mostra seção de link
                 sizeWarning.style.display = 'block';
                 driveLinkSection.style.display = 'block';
                 driveLink.required = true;
                 
+                // Desabilita todos os inputs de arquivo
                 visibleFileInputs.forEach(input => {
                     input.disabled = true;
                     input.required = false;
                 });
             } else {
+                // Habilita uploads normais
                 sizeWarning.style.display = 'none';
                 driveLinkSection.style.display = 'none';
                 driveLink.required = false;
@@ -250,6 +255,7 @@
             }
         }
 
+        // Monitora mudanças nos campos de arquivo
         uploadArea.addEventListener('change', function(e) {
             if (e.target.type === 'file') {
                 checkTotalFileSize();
