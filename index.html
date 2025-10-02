@@ -54,6 +54,7 @@
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         
+        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -126,6 +127,7 @@
                         </div>
                     </div>
 
+                    <!-- Seção de Link do Google Drive (aparece quando > 500MB) -->
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
                             <h3>📁 Link do Google Drive</h3>
@@ -167,7 +169,7 @@
 
 <script>
     (function () {
-        const MAX_SIZE = 500 * 1024 * 1024;
+        const MAX_SIZE = 500 * 1024 * 1024; // 500MB
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -188,10 +190,6 @@
         const driveLinkSection = document.getElementById('driveLinkSection');
         const driveLink = document.getElementById('driveLink');
         const fileCounter = document.getElementById('fileCounter');
-        
-        const nomeInput = document.getElementById('nome');
-        const emailInput = document.getElementById('email');
-        const telefoneInput = document.getElementById('telefone');
 
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
@@ -204,79 +202,108 @@
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
         }
 
-        // Função Única para gerenciar o estado do formulário
-        function updateFormState(meio) {
-            // 1. Mostra/esconde campos de anexo baseados no "Meio"
+        function checkTotalFileSize() {
+            let totalSize = 0;
+            let totalFiles = 0;
+            
+            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            visibleFileInputs.forEach(input => {
+                if (input.files) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        totalSize += input.files[i].size;
+                        totalFiles++;
+                    }
+                }
+            });
+
+            if (totalFiles > 0) {
+                fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
+                fileCounter.style.display = 'block';
+            } else {
+                fileCounter.style.display = 'none';
+            }
+
+            if (totalSize > MAX_SIZE) {
+                // Desabilita uploads e mostra seção de link
+                sizeWarning.style.display = 'block';
+                driveLinkSection.style.display = 'block';
+                driveLink.required = true;
+                
+                // Desabilita todos os inputs de arquivo
+                visibleFileInputs.forEach(input => {
+                    input.disabled = true;
+                    input.required = false;
+                });
+            } else {
+                // Habilita uploads normais
+                sizeWarning.style.display = 'none';
+                driveLinkSection.style.display = 'none';
+                driveLink.required = false;
+                driveLink.value = '';
+                
+                visibleFileInputs.forEach(input => {
+                    input.disabled = false;
+                    const meiosDoGrupo = input.closest('.upload-group').dataset.meio.split(' ');
+                    const meioAtual = meioSelect.value;
+                    if (meioAtual && meiosDoGrupo.includes(meioAtual)) {
+                        input.required = true;
+                    }
+                });
+            }
+        }
+
+        // Monitora mudanças nos campos de arquivo
+        uploadArea.addEventListener('change', function(e) {
+            if (e.target.type === 'file') {
+                checkTotalFileSize();
+            }
+        });
+        
+        function resetPIFields() {
+            const fieldsToReset = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput };
+            for(const key in fieldsToReset) {
+                fieldsToReset[key].value = '';
+            }
+            meioSelect.value = '';
+            atualizarCamposDeAnexo('');
+        }
+
+        function atualizarCamposDeAnexo(meio) {
             let algumCampoVisivel = false;
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
                 const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
+                    if (input) {
+                        input.required = true;
+                        input.disabled = false;
+                    }
                     algumCampoVisivel = true;
                 } else {
                     group.style.display = 'none';
-                    input.required = false; // Garante que campos escondidos não são obrigatórios
-                }
-            });
-            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
-
-            // 2. Calcula o tamanho total dos arquivos
-            let totalSize = 0;
-            let totalFiles = 0;
-            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
-            allFileInputs.forEach(input => {
-                if (input.files) {
-                    for (const file of input.files) {
-                        totalSize += file.size;
-                        totalFiles++;
+                    if (input) {
+                        input.required = false;
+                        input.value = '';
                     }
                 }
             });
-
-            fileCounter.style.display = totalFiles > 0 ? 'block' : 'none';
-            fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
-
-            // 3. Decide qual método de upload usar e ajusta os campos
-            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
             
-            if (totalSize > MAX_SIZE) {
-                // Modo Link do Drive
-                sizeWarning.style.display = 'block';
-                driveLinkSection.style.display = 'block';
-                driveLink.required = true;
-
-                visibleFileInputs.forEach(input => {
-                    input.disabled = true;
-                    input.required = false;
-                });
-            } else {
-                // Modo Upload Direto
-                sizeWarning.style.display = 'none';
-                driveLinkSection.style.display = 'none';
-                driveLink.required = false;
-
-                visibleFileInputs.forEach(input => {
-                    input.disabled = false;
-                    input.required = true;
-                });
-            }
+            // Reseta contadores e avisos
+            fileCounter.style.display = 'none';
+            sizeWarning.style.display = 'none';
+            driveLinkSection.style.display = 'none';
+            driveLink.required = false;
+            driveLink.value = '';
         }
-        
-        // --- Event Listeners ---
-        uploadArea.addEventListener('change', (e) => {
-            if (e.target.type === 'file') {
-                updateFormState(meioSelect.value);
-            }
-        });
 
         async function buscarDadosPI(npi) {
             if (!npi) {
-                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-                updateFormState('');
+                resetPIFields();
                 piStatus.textContent = '';
                 return;
             }
@@ -286,40 +313,47 @@
             piStatus.textContent = 'Buscando...';
             piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
+            resetPIFields();
 
             try {
+                const payload = {
+                    action: 'buscar_pi',
+                    n_pi: npi
+                };
+
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+                    body: JSON.stringify(payload),
                     signal: piFetchController.signal,
                 });
                 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.message || `Erro de rede: ${response.status}`);
+
+                if (!response.ok) {
+                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
+                }
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
                     piStatus.style.color = 'var(--cor-sucesso)';
-                    clienteInput.value = data.cliente || '';
-                    campanhaInput.value = data.campanha || '';
-                    produtoInput.value = data.produto || '';
-                    periodoInput.value = data.periodo || '';
-                    veiculoInput.value = data.veiculo || '';
-                    meioSelect.value = data.meio || '';
-                    updateFormState(data.meio);
+                    const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
+                     for(const key in fieldsToFill) {
+                        if(fieldsToFill[key] && data[key] !== undefined) {
+                            fieldsToFill[key].value = data[key];
+                        }
+                    }
+                    atualizarCamposDeAnexo(data.meio);
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-                    updateFormState('');
+                    resetPIFields();
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-                    updateFormState('');
+                    resetPIFields();
                 }
             }
         }
@@ -328,9 +362,34 @@
             e.preventDefault();
             clearMessages();
 
-            // Usa a validação nativa do navegador que respeita os atributos 'required'
+            // Verifica se é envio por link ou por arquivo
+            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value;
+            
+            if (usandoLink) {
+                // Validação de link
+                if (!driveLink.value.includes('drive.google.com')) {
+                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
+                    return;
+                }
+            } else {
+                // Validação de arquivos
+                let camposAnexoObrigatoriosPreenchidos = true;
+                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
+                
+                camposAnexoVisiveis.forEach(input => {
+                    if (input.required && input.files.length === 0) {
+                        camposAnexoObrigatoriosPreenchidos = false;
+                    }
+                });
+
+                if (!camposAnexoObrigatoriosPreenchidos) {
+                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                    return;
+                }
+            }
+
             if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos corretamente, incluindo os anexos ou o link do Google Drive.');
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*).');
                 return;
             }
 
@@ -339,17 +398,23 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            const usandoLink = driveLinkSection.style.display === 'block';
             
             if (usandoLink) {
+                // Modo link do Drive
                 formData.append('upload_method', 'drive_link');
-                // Remove qualquer dado de arquivo para não confundir o backend
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
-                });
             } else {
+                // Modo upload binário
                 formData.delete('drive_link');
+                
+                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
+                allFileInputs.forEach(input => {
+                    formData.delete(input.name); 
+                    if (input.files.length > 0) {
+                        for (let i = 0; i < input.files.length; i++) {
+                            formData.append(input.name, input.files[i]);
+                        }
+                    }
+                });
                 formData.append('upload_method', 'binary');
             }
 
@@ -360,17 +425,25 @@
                 const result = await response.json();
                 
                 if (!response.ok || !result.success) {
-                    throw new Error(result.message || `Erro no servidor: ${response.statusText}`);
+                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
                 }
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 piStatus.textContent = '';
-                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-                updateFormState('');
+                resetPIFields();
+                fileCounter.style.display = 'none';
                 
             } catch (error) {
-                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
+                let errorMessageText = 'Ocorreu um erro inesperado.';
+                if (error.message.includes('fetch')) {
+                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
+                } else if (error instanceof SyntaxError) {
+                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
+                } else {
+                    errorMessageText = error.message;
+                }
+                showMessage(errorMessage, errorMessageText);
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
