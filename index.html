@@ -207,84 +207,76 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        function checkTotalFileSize() {
-            let totalSize = 0;
-            let totalFiles = 0;
-            
-            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
-            allFileInputs.forEach(input => {
-                if (input.files) {
-                    for (let i = 0; i < input.files.length; i++) {
-                        totalSize += input.files[i].size;
-                        totalFiles++;
-                    }
-                }
-            });
-
-            if (totalFiles > 0) {
-                fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
-                fileCounter.style.display = 'block';
-            } else {
-                fileCounter.style.display = 'none';
-            }
-
-            const allVisibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
-
-            if (totalSize > MAX_SIZE) {
-                sizeWarning.style.display = 'block';
-                driveLinkSection.style.display = 'block';
-                driveLink.required = true;
-                
-                allVisibleFileInputs.forEach(input => {
-                    input.disabled = true;
-                    input.required = false;
-                });
-            } else {
-                sizeWarning.style.display = 'none';
-                driveLinkSection.style.display = 'none';
-                driveLink.required = false;
-                driveLink.value = '';
-                
-                allVisibleFileInputs.forEach(input => {
-                    input.disabled = false;
-                    input.required = true; 
-                });
-            }
-        }
-
-        uploadArea.addEventListener('change', (e) => {
-            if (e.target.type === 'file') {
-                checkTotalFileSize();
-            }
-        });
-        
-        function resetPIFields() {
-            [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput].forEach(input => input.value = '');
-            meioSelect.value = '';
-            atualizarCamposDeAnexo('');
-        }
-
-        function atualizarCamposDeAnexo(meio) {
+        // Função Única para gerenciar o estado do formulário
+        function updateFormState(meio) {
+            // 1. Mostra/esconde campos de anexo baseados no "Meio"
             let algumCampoVisivel = false;
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
                 const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
-                    input.required = true; // Garante que o campo visível seja obrigatório
                     algumCampoVisivel = true;
                 } else {
                     group.style.display = 'none';
-                    input.required = false; // Garante que o campo escondido não seja obrigatório
+                    input.required = false; // Garante que campos escondidos não são obrigatórios
                 }
             });
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
-            checkTotalFileSize(); // Reavalia o tamanho e os requisitos
+
+            // 2. Calcula o tamanho total dos arquivos
+            let totalSize = 0;
+            let totalFiles = 0;
+            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
+            allFileInputs.forEach(input => {
+                if (input.files) {
+                    for (const file of input.files) {
+                        totalSize += file.size;
+                        totalFiles++;
+                    }
+                }
+            });
+
+            fileCounter.style.display = totalFiles > 0 ? 'block' : 'none';
+            fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
+
+            // 3. Decide qual método de upload usar e ajusta os campos
+            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            
+            if (totalSize > MAX_SIZE) {
+                // Modo Link do Drive
+                sizeWarning.style.display = 'block';
+                driveLinkSection.style.display = 'block';
+                driveLink.required = true;
+
+                visibleFileInputs.forEach(input => {
+                    input.disabled = true;
+                    input.required = false;
+                });
+            } else {
+                // Modo Upload Direto
+                sizeWarning.style.display = 'none';
+                driveLinkSection.style.display = 'none';
+                driveLink.required = false;
+
+                visibleFileInputs.forEach(input => {
+                    input.disabled = false;
+                    input.required = true;
+                });
+            }
         }
+        
+        // --- Event Listeners ---
+        uploadArea.addEventListener('change', (e) => {
+            if (e.target.type === 'file') {
+                updateFormState(meioSelect.value);
+            }
+        });
 
         async function buscarDadosPI(npi) {
             if (!npi) {
-                resetPIFields();
+                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+                updateFormState('');
                 piStatus.textContent = '';
                 return;
             }
@@ -294,7 +286,6 @@
             piStatus.textContent = 'Buscando...';
             piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
-            resetPIFields();
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -316,17 +307,19 @@
                     periodoInput.value = data.periodo || '';
                     veiculoInput.value = data.veiculo || '';
                     meioSelect.value = data.meio || '';
-                    atualizarCamposDeAnexo(data.meio);
+                    updateFormState(data.meio);
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
+                    [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+                    updateFormState('');
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
+                    [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+                    updateFormState('');
                 }
             }
         }
@@ -335,55 +328,24 @@
             e.preventDefault();
             clearMessages();
 
-            // Valida campos de texto principais primeiro
-            if (!nomeInput.value || !emailInput.value || !telefoneInput.value || !piInput.value) {
-                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*): Nome, E-mail, Telefone e Número da PI.');
+            // Usa a validação nativa do navegador que respeita os atributos 'required'
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos corretamente, incluindo os anexos ou o link do Google Drive.');
                 return;
             }
 
-            const usandoLink = driveLinkSection.style.display === 'block';
-            
-            if (usandoLink) {
-                // Se estiver usando link, a única outra validação é o próprio link
-                if (!driveLink.value || !driveLink.value.includes('drive.google.com')) {
-                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
-                    return;
-                }
-            } else {
-                // Se estiver usando upload de arquivo, valida os anexos
-                let anexosFaltando = [];
-                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
-                
-                if (camposAnexoVisiveis.length === 0 && meioSelect.value) {
-                     showMessage(errorMessage, 'Nenhum campo de anexo configurado para o "Meio" selecionado.');
-                     return;
-                }
-
-                camposAnexoVisiveis.forEach(input => {
-                    if (input.required && input.files.length === 0) {
-                        const label = input.parentElement.querySelector('label');
-                        anexosFaltando.push(label ? label.textContent.replace('*','').trim() : input.name);
-                    }
-                });
-
-                if (anexosFaltando.length > 0) {
-                    showMessage(errorMessage, `Anexos obrigatórios faltando: ${anexosFaltando.join(', ')}`);
-                    return;
-                }
-            }
-
-            // Se todas as validações passaram, continua com o envio
             const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             
             const formData = new FormData(form);
+            const usandoLink = driveLinkSection.style.display === 'block';
             
             if (usandoLink) {
                 formData.append('upload_method', 'drive_link');
                 // Remove qualquer dado de arquivo para não confundir o backend
-                const allFileInputs = form.querySelectorAll('input[type="file"]');
-                allFileInputs.forEach(input => {
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
                     formData.delete(input.name);
                 });
             } else {
@@ -404,7 +366,8 @@
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 piStatus.textContent = '';
-                resetPIFields();
+                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+                updateFormState('');
                 
             } catch (error) {
                 showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
