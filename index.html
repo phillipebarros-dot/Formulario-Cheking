@@ -61,6 +61,8 @@
         .drive-link-section p { font-size: 0.9rem; margin-bottom: 1rem; color: #856404; }
         .drive-link-section input { background: white; }
         .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
+        .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
+        .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -137,7 +139,12 @@
                         </div>
                     </div>
                     
-                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
+                    <div class="form-group full-width">
+                        <button type="submit">Enviar Checking</button>
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill">0%</div>
+                        </div>
+                    </div>
                 </div>
             </form>
             <div class="message-box" id="successMessage"></div>
@@ -187,9 +194,8 @@
         const driveLinkSection = document.getElementById('driveLinkSection');
         const driveLink = document.getElementById('driveLink');
         const fileCounter = document.getElementById('fileCounter');
-        const nomeInput = document.getElementById('nome');
-        const emailInput = document.getElementById('email');
-        const telefoneInput = document.getElementById('telefone');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
 
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
@@ -277,6 +283,11 @@
                     signal: piFetchController.signal,
                 });
                 
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Erro no servidor. Tente novamente em alguns instantes.');
+                }
+                
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || `Erro de rede: ${response.status}`);
 
@@ -296,6 +307,7 @@
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
+                    console.error('Erro ao buscar PI:', error);
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
                 }
@@ -323,6 +335,9 @@
             const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
+            progressBar.style.display = 'block';
+            progressFill.style.width = '10%';
+            progressFill.textContent = '10%';
             
             const formData = new FormData(form);
             formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
@@ -338,23 +353,70 @@
             }
 
             try {
-                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-                const result = await response.json();
+                progressFill.style.width = '30%';
+                progressFill.textContent = '30%';
                 
-                if (!response.ok || !result.success) {
-                    throw new Error(result.message || `Erro no servidor: ${response.statusText}`);
+                const xhr = new XMLHttpRequest();
+                
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 70) + 30;
+                        progressFill.style.width = percentComplete + '%';
+                        progressFill.textContent = percentComplete + '%';
+                    }
+                });
+                
+                const responsePromise = new Promise((resolve, reject) => {
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                const contentType = xhr.getResponseHeader('content-type');
+                                if (!contentType || !contentType.includes('application/json')) {
+                                    reject(new Error('O servidor retornou uma resposta inválida. Para arquivos muito grandes, use o link do Google Drive.'));
+                                    return;
+                                }
+                                resolve(JSON.parse(xhr.responseText));
+                            } catch (parseError) {
+                                reject(new Error('Erro ao processar resposta do servidor. Para arquivos muito grandes, use o link do Google Drive.'));
+                            }
+                        } else {
+                            reject(new Error(`Erro no servidor (${xhr.status}). Para arquivos muito grandes, use o link do Google Drive.`));
+                        }
+                    };
+                    xhr.onerror = () => reject(new Error('Erro de conexão. Verifique sua internet e tente novamente.'));
+                    xhr.ontimeout = () => reject(new Error('Tempo esgotado. Para arquivos muito grandes, use o link do Google Drive.'));
+                });
+                
+                xhr.open('POST', webhookUrl);
+                xhr.timeout = 3600000; // 60 minutos
+                xhr.send(formData);
+                
+                const result = await responsePromise;
+                
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Erro ao processar o envio.');
                 }
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
-                [piInput, nomeInput, emailInput, telefoneInput].forEach(el => el.value = '');
+                [piInput].forEach(el => el.value = '');
                 piStatus.textContent = '';
                 piStatus.className = '';
                 [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
                 updateFormState('');
                 
+                setTimeout(() => {
+                    progressBar.style.display = 'none';
+                    progressFill.style.width = '0%';
+                }, 2000);
+                
             } catch (error) {
-                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
+                console.error('Erro detalhado:', error);
+                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Para arquivos grandes, use o link do Google Drive.');
+                progressBar.style.display = 'none';
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
