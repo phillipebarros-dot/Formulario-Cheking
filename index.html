@@ -121,13 +121,13 @@
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
-                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                            Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
                         </div>
                     </div>
 
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
-                            <h3>📁 Link do Google Drive</h3>
+                            <h3>Link do Google Drive</h3>
                             <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
                             <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
                             <p style="margin-top: 1rem; font-size: 0.85em;">
@@ -167,6 +167,10 @@
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
+        
+        // TOKEN SECRETO - DEVE SER EXATAMENTE O MESMO DO WORKFLOW N8N
+        const API_TOKEN = 'GrupoOM_Checking2025_SecureToken_X9k2P7mQ';
+        
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -193,8 +197,15 @@
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
-        function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; }
-        function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
+        function showMessage(element, message) { 
+            element.innerHTML = message; 
+            element.style.display = 'block'; 
+        }
+        
+        function clearMessages() { 
+            successMessage.style.display = 'none'; 
+            errorMessage.style.display = 'none'; 
+        }
         
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
@@ -270,7 +281,10 @@
             try {
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-api-token': API_TOKEN
+                    },
                     body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
@@ -313,14 +327,6 @@
                 });
             }
 
-            console.clear();
-            console.log("--- Iniciando Validação ---");
-            console.log("Usando link do Drive?", usandoLink);
-            form.querySelectorAll('[required]').forEach(field => {
-                console.log(`Campo '${field.name}' é obrigatório. Valor/arquivos: ${field.files ? field.files.length : field.value}. Válido? ${field.checkValidity()}`, field);
-            });
-            console.log("--------------------------");
-
             if (!form.checkValidity()) {
                 showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos ou o link do Drive.');
                 return;
@@ -331,7 +337,6 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            
             formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.append('action', 'submissao_form');
 
@@ -345,7 +350,14 @@
             }
 
             try {
-                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const response = await fetch(webhookUrl, { 
+                    method: 'POST',
+                    headers: {
+                        'x-api-token': API_TOKEN
+                    },
+                    body: formData 
+                });
+                
                 const result = await response.json();
                 
                 if (!response.ok || !result.success) {
