@@ -42,6 +42,7 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
         #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; }
+        #piStatus.success { color: var(--cor-sucesso); font-weight: 700; }
         .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
         .footer-gradient-bar { order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
         .footer-content { background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
@@ -53,8 +54,6 @@
         .agency-logos li a:hover { opacity: 0.7; }
         .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
         .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
-        
-        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -123,13 +122,13 @@
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
-                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                            Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
                         </div>
                     </div>
 
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
-                            <h3>📁 Link do Google Drive</h3>
+                            <h3>Link do Google Drive</h3>
                             <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
                             <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
                             <p style="margin-top: 1rem; font-size: 0.85em;">
@@ -168,8 +167,7 @@
 
 <script>
     (function () {
-        const MAX_SIZE = 500 * 1024 * 1024; // 500MB
-        
+        const MAX_SIZE = 500 * 1024 * 1024;
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const piStatus = document.getElementById('piStatus');
@@ -189,6 +187,9 @@
         const driveLinkSection = document.getElementById('driveLinkSection');
         const driveLink = document.getElementById('driveLink');
         const fileCounter = document.getElementById('fileCounter');
+        const nomeInput = document.getElementById('nome');
+        const emailInput = document.getElementById('email');
+        const telefoneInput = document.getElementById('telefone');
 
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
@@ -201,155 +202,102 @@
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        function checkTotalFileSize() {
-            let totalSize = 0;
-            let totalFiles = 0;
-            
-            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
-            visibleFileInputs.forEach(input => {
-                if (input.files) {
-                    for (let i = 0; i < input.files.length; i++) {
-                        totalSize += input.files[i].size;
-                        totalFiles++;
-                    }
-                }
-            });
-
-            if (totalFiles > 0) {
-                fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
-                fileCounter.style.display = 'block';
-            } else {
-                fileCounter.style.display = 'none';
-            }
-
-            if (totalSize > MAX_SIZE) {
-                sizeWarning.style.display = 'block';
-                driveLinkSection.style.display = 'block';
-                driveLink.required = true;
-                
-                visibleFileInputs.forEach(input => {
-                    input.disabled = true;
-                    input.required = false;
-                });
-            } else {
-                sizeWarning.style.display = 'none';
-                driveLinkSection.style.display = 'none';
-                driveLink.required = false;
-                driveLink.value = '';
-                
-                visibleFileInputs.forEach(input => {
-                    input.disabled = false;
-                    const meiosDoGrupo = input.closest('.upload-group').dataset.meio.split(' ');
-                    const meioAtual = meioSelect.value;
-                    if (meioAtual && meiosDoGrupo.includes(meioAtual)) {
-                        input.required = true;
-                    } else {
-                        input.required = false;
-                    }
-                });
-            }
-        }
-
-        uploadArea.addEventListener('change', function(e) {
-            if (e.target.type === 'file') {
-                checkTotalFileSize();
-            }
-        });
-        
-        function resetPIFields() {
-            const fieldsToReset = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput };
-            for(const key in fieldsToReset) {
-                fieldsToReset[key].value = '';
-            }
-            meioSelect.value = '';
-            atualizarCamposDeAnexo('');
-        }
-
-        function atualizarCamposDeAnexo(meio) {
-            let algumCampoVisivel = false;
+        function updateFormState(meio) {
+            let algumCampoAnexoVisivel = false;
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
                 const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
-                    if (input) {
-                        input.required = true;
-                        input.disabled = false;
-                    }
-                    algumCampoVisivel = true;
+                    algumCampoAnexoVisivel = true;
                 } else {
                     group.style.display = 'none';
-                    if (input) {
-                        input.required = false;
-                        input.value = '';
+                    input.required = false;
+                }
+            });
+            uploadPlaceholder.style.display = algumCampoAnexoVisivel ? 'none' : 'block';
+
+            let totalSize = 0;
+            let totalFiles = 0;
+            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
+            allFileInputs.forEach(input => {
+                if (input.files) {
+                    for (const file of input.files) {
+                        totalSize += file.size;
+                        totalFiles++;
                     }
                 }
             });
-            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
-            
-            fileCounter.style.display = 'none';
-            sizeWarning.style.display = 'none';
-            driveLinkSection.style.display = 'none';
-            driveLink.required = false;
-            driveLink.value = '';
+
+            fileCounter.style.display = totalFiles > 0 ? 'block' : 'none';
+            fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
+
+            const isOverSize = totalSize > MAX_SIZE;
+
+            sizeWarning.style.display = isOverSize ? 'block' : 'none';
+            driveLinkSection.style.display = isOverSize ? 'block' : 'none';
+            driveLink.required = isOverSize;
+
+            allUploadGroups.forEach(group => {
+                const input = group.querySelector('input[type="file"]');
+                const isVisible = group.style.display === 'block';
+                if (isOverSize) {
+                    input.disabled = true;
+                    input.required = false;
+                } else {
+                    input.disabled = false;
+                    input.required = isVisible;
+                }
+            });
         }
+        
+        uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
 
         async function buscarDadosPI(npi) {
-            if (!npi) {
-                resetPIFields();
-                piStatus.textContent = '';
-                return;
-            }
+            [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+            updateFormState('');
+            piStatus.textContent = '';
+            piStatus.className = '';
+            if (!npi) return;
+
             if (piFetchController) piFetchController.abort();
-            
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando...';
             piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
-            resetPIFields();
 
             try {
-                const payload = {
-                    action: 'buscar_pi',
-                    n_pi: npi
-                };
-
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
                 
                 const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(data.message || `Erro de rede: ${response.status}`);
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
-                    piStatus.style.color = 'var(--cor-sucesso)';
-                    const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
-                     for(const key in fieldsToFill) {
-                         if(fieldsToFill[key] && data[key] !== undefined) {
-                             fieldsToFill[key].value = data[key];
-                         }
-                     }
-                    atualizarCamposDeAnexo(data.meio);
+                    piStatus.className = 'success';
+                    clienteInput.value = data.cliente || '';
+                    campanhaInput.value = data.campanha || '';
+                    produtoInput.value = data.produto || '';
+                    periodoInput.value = data.periodo || '';
+                    veiculoInput.value = data.veiculo || '';
+                    meioSelect.value = data.meio || '';
+                    updateFormState(data.meio);
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    resetPIFields();
                 }
             }
         }
@@ -358,79 +306,55 @@
             e.preventDefault();
             clearMessages();
 
-            // Lógica de validação principal
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*).');
-                return;
-            }
-
             const usandoLink = driveLinkSection.style.display === 'block';
             
             if (usandoLink) {
-                if (!driveLink.value.includes('drive.google.com')) {
-                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
-                    return;
-                }
-            } else {
-                let camposAnexoObrigatoriosPreenchidos = true;
-                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
-                
-                camposAnexoVisiveis.forEach(input => {
-                    if (input.required && input.files.length === 0) {
-                        camposAnexoObrigatoriosPreenchidos = false;
-                    }
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    input.required = false;
                 });
-
-                if (!camposAnexoObrigatoriosPreenchidos) {
-                    showMessage(errorMessage, 'Anexos obrigatórios faltando: ' + Array.from(camposAnexoVisiveis).map(i => i.name).join(', '));
-                    return;
-                }
             }
 
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos ou o link do Drive.');
+                return;
+            }
 
             const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             
             const formData = new FormData(form);
-            
+            formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
+            formData.append('action', 'submissao_form');
+
             if (usandoLink) {
-                formData.append('upload_method', 'drive_link');
-                const allFileInputs = form.querySelectorAll('input[type="file"]');
-                allFileInputs.forEach(input => {
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
                     formData.delete(input.name);
                 });
             } else {
                 formData.delete('drive_link');
-                formData.append('upload_method', 'binary');
             }
-
-            formData.append('action', 'submissao_form');
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 const result = await response.json();
                 
                 if (!response.ok || !result.success) {
-                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
+                    throw new Error(result.message || `Erro no servidor: ${response.statusText}`);
                 }
                 
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
+                [piInput, nomeInput, emailInput, telefoneInput].forEach(el => el.value = '');
                 piStatus.textContent = '';
-                resetPIFields();
-                fileCounter.style.display = 'none';
+                piStatus.className = '';
+                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+                updateFormState('');
                 
             } catch (error) {
-                let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error.message.includes('fetch')) {
-                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                } else if (error instanceof SyntaxError) {
-                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
-                } else {
-                    errorMessageText = error.message;
-                }
-                showMessage(errorMessage, errorMessageText);
+                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
             } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
