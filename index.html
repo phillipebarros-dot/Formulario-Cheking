@@ -314,115 +314,118 @@
             }
         }
         
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            clearMessages();
+form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearMessages();
 
-            const usandoLink = driveLinkSection.style.display === 'block';
-            
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    input.required = false;
-                });
-            }
+    const usandoLink = driveLinkSection.style.display === 'block';
+    
+    if (usandoLink) {
+        allUploadGroups.forEach(group => {
+            const input = group.querySelector('input[type="file"]');
+            input.required = false;
+        });
+    }
 
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos ou o link do Drive.');
-                return;
-            }
+    if (!form.checkValidity()) {
+        showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos ou o link do Drive.');
+        return;
+    }
 
-            const originalButtonText = submitButton.textContent;
-            submitButton.textContent = 'Enviando...';
-            submitButton.disabled = true;
-            progressBar.style.display = 'block';
-            progressFill.style.width = '10%';
-            progressFill.textContent = '10%';
-            
-            const formData = new FormData(form);
-            formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
-            formData.append('action', 'submissao_form');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Enviando...';
+    submitButton.disabled = true;
+    progressBar.style.display = 'block';
+    progressFill.style.width = '10%';
+    progressFill.textContent = '10%';
+    
+    const formData = new FormData(form);
+    
+    // CORREÇÃO: Remove e adiciona campos únicos para evitar arrays
+    formData.delete('upload_method');
+    formData.delete('action');
+    formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
+    formData.set('action', 'submissao_form');
 
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
-                });
-            } else {
-                formData.delete('drive_link');
-            }
+    if (usandoLink) {
+        allUploadGroups.forEach(group => {
+            const input = group.querySelector('input[type="file"]');
+            formData.delete(input.name);
+        });
+    } else {
+        formData.delete('drive_link');
+    }
 
-            try {
-                progressFill.style.width = '30%';
-                progressFill.textContent = '30%';
-                
-                const xhr = new XMLHttpRequest();
-                
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percentComplete = Math.round((e.loaded / e.total) * 70) + 30;
-                        progressFill.style.width = percentComplete + '%';
-                        progressFill.textContent = percentComplete + '%';
-                    }
-                });
-                
-                const responsePromise = new Promise((resolve, reject) => {
-                    xhr.onload = () => {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            try {
-                                const contentType = xhr.getResponseHeader('content-type');
-                                if (!contentType || !contentType.includes('application/json')) {
-                                    reject(new Error('O servidor retornou uma resposta inválida. Para arquivos muito grandes, use o link do Google Drive.'));
-                                    return;
-                                }
-                                resolve(JSON.parse(xhr.responseText));
-                            } catch (parseError) {
-                                reject(new Error('Erro ao processar resposta do servidor. Para arquivos muito grandes, use o link do Google Drive.'));
-                            }
-                        } else {
-                            reject(new Error(`Erro no servidor (${xhr.status}). Para arquivos muito grandes, use o link do Google Drive.`));
-                        }
-                    };
-                    xhr.onerror = () => reject(new Error('Erro de conexão. Verifique sua internet e tente novamente.'));
-                    xhr.ontimeout = () => reject(new Error('Tempo esgotado. Para arquivos muito grandes, use o link do Google Drive.'));
-                });
-                
-                xhr.open('POST', webhookUrl);
-                xhr.timeout = 1800000; // 30 minutos
-                xhr.send(formData);
-                
-                const result = await responsePromise;
-                
-                progressFill.style.width = '100%';
-                progressFill.textContent = '100%';
-                
-                if (!result.success) {
-                    throw new Error(result.message || 'Erro ao processar o envio.');
-                }
-                
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
-                form.reset();
-                [piInput].forEach(el => el.value = '');
-                piStatus.textContent = '';
-                piStatus.className = '';
-                [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-                updateFormState('');
-                
-                setTimeout(() => {
-                    progressBar.style.display = 'none';
-                    progressFill.style.width = '0%';
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Erro detalhado:', error);
-                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Para arquivos grandes, use o link do Google Drive.');
-                progressBar.style.display = 'none';
-            } finally {
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
+    try {
+        progressFill.style.width = '30%';
+        progressFill.textContent = '30%';
+        
+        const xhr = new XMLHttpRequest();
+        
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percentComplete = Math.round((e.loaded / e.total) * 70) + 30;
+                progressFill.style.width = percentComplete + '%';
+                progressFill.textContent = percentComplete + '%';
             }
         });
         
+        const responsePromise = new Promise((resolve, reject) => {
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const contentType = xhr.getResponseHeader('content-type');
+                        if (!contentType || !contentType.includes('application/json')) {
+                            reject(new Error('O servidor retornou uma resposta inválida. Para arquivos muito grandes, use o link do Google Drive.'));
+                            return;
+                        }
+                        resolve(JSON.parse(xhr.responseText));
+                    } catch (parseError) {
+                        reject(new Error('Erro ao processar resposta do servidor. Para arquivos muito grandes, use o link do Google Drive.'));
+                    }
+                } else {
+                    reject(new Error(`Erro no servidor (${xhr.status}). Para arquivos muito grandes, use o link do Google Drive.`));
+                }
+            };
+            xhr.onerror = () => reject(new Error('Erro de conexão. Verifique sua internet e tente novamente.'));
+            xhr.ontimeout = () => reject(new Error('Tempo esgotado. Para arquivos muito grandes, use o link do Google Drive.'));
+        });
+        
+        xhr.open('POST', webhookUrl);
+        xhr.timeout = 1800000; // 30 minutos
+        xhr.send(formData);
+        
+        const result = await responsePromise;
+        
+        progressFill.style.width = '100%';
+        progressFill.textContent = '100%';
+        
+        if (!result.success) {
+            throw new Error(result.message || 'Erro ao processar o envio.');
+        }
+        
+        showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+        form.reset();
+        [piInput].forEach(el => el.value = '');
+        piStatus.textContent = '';
+        piStatus.className = '';
+        [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+        updateFormState('');
+        
+        setTimeout(() => {
+            progressBar.style.display = 'none';
+            progressFill.style.width = '0%';
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Erro detalhado:', error);
+        showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Para arquivos grandes, use o link do Google Drive.');
+        progressBar.style.display = 'none';
+    } finally {
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+    }
+});
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
