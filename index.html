@@ -20,9 +20,6 @@
         .header { text-align: center; margin-bottom: 2rem; }
         .header img.logo-opusmultipla { max-width: 450px; width: 100%; height: auto; margin-bottom: 0.5rem; }
         .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; }
-        .attention-box { margin-bottom: 2.5rem; text-align: center; }
-        .attention-box .warning-text { background-color: var(--cor-aviso-fundo); border: 1px solid var(--cor-aviso-borda); color: var(--cor-aviso-texto); padding: 1.5rem; border-radius: 8px; font-weight: 700; text-align: center; margin-bottom: 1.5rem; }
-        .attention-box img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
@@ -30,36 +27,16 @@
         input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
-        select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
         .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
         .upload-group { margin-bottom: 1.5rem; }
-        .upload-group:last-child { margin-bottom: 0; }
-        input[type="file"] { font-size: 0.9rem; }
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
-        button[type="submit"]:hover { background-color: #00226e; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; }
-        #piStatus.success { color: var(--cor-sucesso); font-weight: 700; }
-        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
-        .footer-gradient-bar { order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .footer-content { background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
-        .main-logo-block { display: flex; flex-direction: column; align-items: center; color: white; text-align: center; }
-        .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
-        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
-        .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
-        .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
-        .agency-logos li a:hover { opacity: 0.7; }
-        .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
-        .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
-        .drive-link-section h3 { color: #856404; margin-bottom: 1rem; font-size: 1.1rem; }
-        .drive-link-section p { font-size: 0.9rem; margin-bottom: 1rem; color: #856404; }
-        .drive-link-section input { background: white; }
         .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
         .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
         .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
@@ -72,21 +49,13 @@
                 <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
-            <div class="attention-box">
-                <div class="warning-text">
-                    ARQUIVOS ATÉ 500MB: Envie diretamente pelo formulário.<br>
-                    ARQUIVOS ACIMA DE 500MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
-                    O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
-                </div>
-                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
-            </div>
-
+            
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
                     <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
                     <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
                     <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
-                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required><div id="piStatus"></div></div>
+                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required></div>
                     <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
                     <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
                     <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
@@ -96,7 +65,7 @@
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RF">Rádio Frequência</option><option value="RV">Revista</option><option value="TV">TV</option>
+                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RV">Revista</option><option value="TV">TV</option>
                         </select>
                     </div>
                     <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
@@ -106,22 +75,8 @@
                         <div class="size-info">Limite: 500MB total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
-                            
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos *</label><input type="file" name="relatorio_fotografico_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório de Exibições Automatizado *</label><input type="file" name="relatorio_exibicoes_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Vídeo Diurno *</label><input type="file" name="video_diurno_do" multiple></div>
-
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Relatório com Endereço dos Pontos *</label><input type="file" name="relatorio_enderecos_me" multiple></div>
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label><input type="file" name="fotos_pontos_me" multiple></div>
-
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Relatório com Listagem de Estações/Linhas/Carros *</label><input type="file" name="relatorio_estacoes_mo" multiple></div>
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Fotos ou Vídeos (Amostrais) *</label><input type="file" name="fotos_videos_mo" multiple></div>
-
-                            <div class="upload-group" data-meio="BD" style="display: none;"><label>Relatório Fotográfico de Todos os Ônibus/Carros *</label><input type="file" name="comprovante_bd" multiple></div>
-                            <div class="upload-group" data-meio="OD FL" style="display: none;"><label>Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label><input type="file" name="comprovante_od_fl" multiple></div>
-                            <div class="upload-group" data-meio="MI" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label><input type="file" name="comprovante_mi" multiple></div>
-                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
-                        </div>
+                            <div class="upload-group" data-meio="TV AT CI IN JO RD RV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                            </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
                             Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
@@ -133,9 +88,6 @@
                             <h3>Link do Google Drive</h3>
                             <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
                             <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
-                            <p style="margin-top: 1rem; font-size: 0.85em;">
-                                <strong>Importante:</strong> Configure a pasta como "Qualquer pessoa com o link pode visualizar"
-                            </p>
                         </div>
                     </div>
                     
@@ -152,32 +104,11 @@
         </div>
     </div>
     
-    <footer class="footer-wrapper">
-        <div class="footer-gradient-bar"></div>
-        <div class="footer-content">
-            <div class="main-logo-block">
-                <span class="main-logo-grupo">GRUPO OM</span>
-                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
-            </div>
-            <nav class="agency-logos">
-                <ul>
-                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
-                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
-                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
-                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
-                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
-                </ul>
-            </nav>
-        </div>
-    </footer>
-
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
-        const piStatus = document.getElementById('piStatus');
         const clienteInput = document.getElementById('cliente');
         const campanhaInput = document.getElementById('campanha');
         const produtoInput = document.getElementById('produto');
@@ -238,9 +169,7 @@
                 }
             });
 
-            fileCounter.style.display = totalFiles > 0 ? 'block' : 'none';
-            fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
-
+            fileCounter.textContent = totalFiles > 0 ? `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}` : '';
             const isOverSize = totalSize > MAX_SIZE;
 
             sizeWarning.style.display = isOverSize ? 'block' : 'none';
@@ -265,14 +194,10 @@
         async function buscarDadosPI(npi) {
             [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
             updateFormState('');
-            piStatus.textContent = '';
-            piStatus.className = '';
             if (!npi) return;
 
             if (piFetchController) piFetchController.abort();
             piFetchController = new AbortController();
-            piStatus.textContent = 'Buscando...';
-            piStatus.style.color = 'var(--cor-texto-claro)';
             clearMessages();
 
             try {
@@ -283,17 +208,10 @@
                     signal: piFetchController.signal,
                 });
                 
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Erro no servidor. Tente novamente em alguns instantes.');
-                }
-                
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.message || `Erro de rede: ${response.status}`);
+                if (!response.ok) throw new Error(data.message || 'Erro de rede');
 
                 if (data.success) {
-                    piStatus.textContent = 'Dados carregados com sucesso.';
-                    piStatus.className = 'success';
                     clienteInput.value = data.cliente || '';
                     campanhaInput.value = data.campanha || '';
                     produtoInput.value = data.produto || '';
@@ -302,130 +220,99 @@
                     meioSelect.value = data.meio || '';
                     updateFormState(data.meio);
                 } else {
-                    piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
-                    piStatus.style.color = 'var(--cor-erro)';
+                    // Tratar PI não encontrada
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    console.error('Erro ao buscar PI:', error);
-                    piStatus.textContent = 'Falha na comunicação ou PI inválida.';
-                    piStatus.style.color = 'var(--cor-erro)';
+                    // Tratar erro de comunicação
                 }
             }
         }
         
-form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    clearMessages();
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearMessages();
 
-    const usandoLink = driveLinkSection.style.display === 'block';
-    
-    if (usandoLink) {
-        allUploadGroups.forEach(group => {
-            const input = group.querySelector('input[type="file"]');
-            input.required = false;
-        });
-    }
-
-    if (!form.checkValidity()) {
-        showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos ou o link do Drive.');
-        return;
-    }
-
-    const originalButtonText = submitButton.textContent;
-    submitButton.textContent = 'Enviando...';
-    submitButton.disabled = true;
-    progressBar.style.display = 'block';
-    progressFill.style.width = '10%';
-    progressFill.textContent = '10%';
-    
-    const formData = new FormData(form);
-    
-    // CORREÇÃO: Remove e adiciona campos únicos para evitar arrays
-    formData.delete('upload_method');
-    formData.delete('action');
-    formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
-    formData.set('action', 'submissao_form');
-
-    if (usandoLink) {
-        allUploadGroups.forEach(group => {
-            const input = group.querySelector('input[type="file"]');
-            formData.delete(input.name);
-        });
-    } else {
-        formData.delete('drive_link');
-    }
-
-    try {
-        progressFill.style.width = '30%';
-        progressFill.textContent = '30%';
-        
-        const xhr = new XMLHttpRequest();
-        
-        xhr.upload.addEventListener('progress', (e) => {
-            if (e.lengthComputable) {
-                const percentComplete = Math.round((e.loaded / e.total) * 70) + 30;
-                progressFill.style.width = percentComplete + '%';
-                progressFill.textContent = percentComplete + '%';
+            const usandoLink = driveLinkSection.style.display === 'block';
+            
+            if (usandoLink) {
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    input.required = false;
+                });
             }
-        });
-        
-        const responsePromise = new Promise((resolve, reject) => {
-            xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        const contentType = xhr.getResponseHeader('content-type');
-                        if (!contentType || !contentType.includes('application/json')) {
-                            reject(new Error('O servidor retornou uma resposta inválida. Para arquivos muito grandes, use o link do Google Drive.'));
-                            return;
-                        }
-                        resolve(JSON.parse(xhr.responseText));
-                    } catch (parseError) {
-                        reject(new Error('Erro ao processar resposta do servidor. Para arquivos muito grandes, use o link do Google Drive.'));
+
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
+                return;
+            }
+
+            submitButton.textContent = 'Enviando...';
+            submitButton.disabled = true;
+            progressBar.style.display = 'block';
+            progressFill.style.width = '10%';
+            
+            const formData = new FormData(form);
+            formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
+            formData.append('action', 'submissao_form');
+
+            if (usandoLink) {
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    formData.delete(input.name);
+                });
+            } else {
+                formData.delete('drive_link');
+            }
+
+            try {
+                const xhr = new XMLHttpRequest();
+                
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 90) + 10;
+                        progressFill.style.width = percentComplete + '%';
                     }
-                } else {
-                    reject(new Error(`Erro no servidor (${xhr.status}). Para arquivos muito grandes, use o link do Google Drive.`));
+                });
+                
+                const responsePromise = new Promise((resolve, reject) => {
+                    xhr.onload = () => {
+                        try {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                resolve(JSON.parse(xhr.responseText));
+                            } else {
+                                reject(new Error(`Erro no servidor (${xhr.status}).`));
+                            }
+                        } catch (parseError) {
+                            reject(new Error('Resposta inválida do servidor.'));
+                        }
+                    };
+                    xhr.onerror = () => reject(new Error('Erro de conexão.'));
+                });
+                
+                xhr.open('POST', webhookUrl);
+                xhr.send(formData);
+                
+                const result = await responsePromise;
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Erro no processamento.');
                 }
-            };
-            xhr.onerror = () => reject(new Error('Erro de conexão. Verifique sua internet e tente novamente.'));
-            xhr.ontimeout = () => reject(new Error('Tempo esgotado. Para arquivos muito grandes, use o link do Google Drive.'));
+                
+                showMessage(successMessage, result.message || 'Enviado com sucesso!');
+                form.reset();
+                updateFormState('');
+                
+            } catch (error) {
+                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
+            } finally {
+                submitButton.textContent = 'Enviar Checking';
+                submitButton.disabled = false;
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }
         });
         
-        xhr.open('POST', webhookUrl);
-        xhr.timeout = 1800000; // 30 minutos
-        xhr.send(formData);
-        
-        const result = await responsePromise;
-        
-        progressFill.style.width = '100%';
-        progressFill.textContent = '100%';
-        
-        if (!result.success) {
-            throw new Error(result.message || 'Erro ao processar o envio.');
-        }
-        
-        showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
-        form.reset();
-        [piInput].forEach(el => el.value = '');
-        piStatus.textContent = '';
-        piStatus.className = '';
-        [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
-        updateFormState('');
-        
-        setTimeout(() => {
-            progressBar.style.display = 'none';
-            progressFill.style.width = '0%';
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Erro detalhado:', error);
-        showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Para arquivos grandes, use o link do Google Drive.');
-        progressBar.style.display = 'none';
-    } finally {
-        submitButton.textContent = originalButtonText;
-        submitButton.disabled = false;
-    }
-});
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
