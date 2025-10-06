@@ -99,6 +99,11 @@
             background-size: 200% 100%;
             animation: gradientMove 8s linear infinite;
         }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
         footer .footer-content {
             padding: 2rem 1rem;
         }
@@ -567,7 +572,7 @@
                 const meio = meioSelect.value;
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
-                    const meiosDoGrupo = group.dataset.mei.split(' ');
+                    const meiosDoGrupo = group.dataset.meio.split(' ');
                     const isVisible = meio && meiosDoGrupo.includes(meio);
                     input.required = isVisible;
                 });
