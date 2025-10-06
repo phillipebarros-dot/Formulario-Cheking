@@ -29,7 +29,9 @@
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
         .upload-group { margin-bottom: 1.5rem; }
+        .upload-group:last-child { margin-bottom: 0; }
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
+        button[type="submit"]:hover { background-color: #002880; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
@@ -52,31 +54,148 @@
             
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
-                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
-                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
-                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required></div>
-                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
-                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
-                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
-                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" readonly></div>
-                    <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" readonly></div>
+                    <div class="form-group full-width">
+                        <label for="nome">Seu Nome *</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Seu E-mail *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Seu Telefone *</label>
+                        <input type="tel" id="telefone" name="telefone" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="pi">Número da PI *</label>
+                        <input type="text" id="pi" name="n_pi" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cliente">Cliente</label>
+                        <input type="text" id="cliente" name="cliente" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campanha">Campanha</label>
+                        <input type="text" id="campanha" name="campanha" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto">Produto</label>
+                        <input type="text" id="produto" name="produto" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="periodo">Período</label>
+                        <input type="text" id="periodo" name="periodo" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="veiculo">Veículo</label>
+                        <input type="text" id="veiculo" name="veiculo" readonly>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RV">Revista</option><option value="TV">TV</option>
+                            <option value="AT">Ativacao</option>
+                            <option value="BD">Busdoor</option>
+                            <option value="CI">Cinema</option>
+                            <option value="DO">Digital Out of Home</option>
+                            <option value="FL">Frontlight</option>
+                            <option value="IN">Internet</option>
+                            <option value="JO">Jornal</option>
+                            <option value="MO">Metro</option>
+                            <option value="ME">Midia Externa</option>
+                            <option value="MI">Midia Interna</option>
+                            <option value="OD">Outdoor</option>
+                            <option value="TP">Patrocinios</option>
+                            <option value="RD">Radio</option>
+                            <option value="RV">Revista</option>
+                            <option value="TV">TV</option>
                         </select>
                     </div>
-                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
+                    
+                    <div class="form-group full-width">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+                    </div>
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
                         <div class="size-info">Limite: 500MB total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
-                            <div class="upload-group" data-meio="TV AT CI IN JO RD RV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                            
+                            <!-- DO - DOOH (3 campos) -->
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>1. Relatório Fotográfico de Todos os Pontos *</label>
+                                <input type="file" name="relatorio_fotografico_do" multiple>
                             </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>2. Relatório de Exibições Automatizado *</label>
+                                <input type="file" name="relatorio_exibicoes_do" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>3. Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno_do" multiple>
+                            </div>
+                            
+                            <!-- ME - Mídia Exterior MUB (2 campos) -->
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label>1. Relatório com Endereços dos Pontos *</label>
+                                <input type="file" name="relatorio_enderecos_me" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label>2. Fotos Diurnas dos Pontos (Amostrais) - Se iluminado: incluir foto noturna *</label>
+                                <input type="file" name="fotos_pontos_me" multiple>
+                            </div>
+                            
+                            <!-- MO - Metrô (2 campos) -->
+                            <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label>1. Relatório: Listagem de Estações, Linhas e Carros *</label>
+                                <input type="file" name="relatorio_estacoes_mo" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label>2. Fotos ou Vídeos (Amostrais) *</label>
+                                <input type="file" name="fotos_videos_mo" multiple>
+                            </div>
+                            
+                            <!-- BD - Busdoor (1 campo) -->
+                            <div class="upload-group" data-meio="BD" style="display: none;">
+                                <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
+                                <input type="file" name="comprovante_bd" multiple>
+                            </div>
+                            
+                            <!-- OD/FL - Outdoor/Fronts (1 campo) -->
+                            <div class="upload-group" data-meio="OD FL" style="display: none;">
+                                <label>Relatório Fotográfico com Endereço de Todos os Pontos - Se iluminado: incluir foto noturna *</label>
+                                <input type="file" name="comprovante_od_fl" multiple>
+                            </div>
+                            
+                            <!-- MI - Mídia Interna (1 campo) -->
+                            <div class="upload-group" data-meio="MI" style="display: none;">
+                                <label>Relatório Fotográfico de Todos os Pontos + Relação de Locais *</label>
+                                <input type="file" name="comprovante_mi" multiple>
+                            </div>
+                            
+                            <!-- RD/TP - Rádio (1 campo) -->
+                            <div class="upload-group" data-meio="RD TP" style="display: none;">
+                                <label>Relatório de Veiculação Automatizado (se ação ao vivo: enviar gravação ou relatório com ações e horários) *</label>
+                                <input type="file" name="comprovante_rd_tp" multiple>
+                            </div>
+                            
+                            <!-- Outros meios com 1 campo -->
+                            <div class="upload-group" data-meio="TV AT CI IN JO RV" style="display: none;">
+                                <label>Relatório / Comprovante *</label>
+                                <input type="file" name="comprovante_geral" multiple>
+                            </div>
+                        </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
                             Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
@@ -147,12 +266,16 @@
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
                 const input = group.querySelector('input[type="file"]');
-                if (meio && meiosDoGrupo.includes(meio)) {
+                const isVisible = meio && meiosDoGrupo.includes(meio);
+                
+                if (isVisible) {
                     group.style.display = 'block';
                     algumCampoAnexoVisivel = true;
+                    input.required = true;
                 } else {
                     group.style.display = 'none';
                     input.required = false;
+                    input.value = '';
                 }
             });
             uploadPlaceholder.style.display = algumCampoAnexoVisivel ? 'none' : 'block';
@@ -178,7 +301,9 @@
 
             allUploadGroups.forEach(group => {
                 const input = group.querySelector('input[type="file"]');
-                const isVisible = group.style.display === 'block';
+                const meiosDoGrupo = group.dataset.meio.split(' ');
+                const isVisible = meio && meiosDoGrupo.includes(meio);
+                
                 if (isOverSize) {
                     input.disabled = true;
                     input.required = false;
@@ -219,12 +344,10 @@
                     veiculoInput.value = data.veiculo || '';
                     meioSelect.value = data.meio || '';
                     updateFormState(data.meio);
-                } else {
-                    // Tratar PI não encontrada
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    // Tratar erro de comunicação
+                    console.error('Erro ao buscar PI:', error);
                 }
             }
         }
@@ -239,6 +362,14 @@
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
                     input.required = false;
+                });
+            } else {
+                const meio = meioSelect.value;
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    const meiosDoGrupo = group.dataset.meio.split(' ');
+                    const isVisible = meio && meiosDoGrupo.includes(meio);
+                    input.required = isVisible;
                 });
             }
 
@@ -272,6 +403,7 @@
                     if (e.lengthComputable) {
                         const percentComplete = Math.round((e.loaded / e.total) * 90) + 10;
                         progressFill.style.width = percentComplete + '%';
+                        progressFill.textContent = percentComplete + '%';
                     }
                 });
                 
@@ -293,6 +425,9 @@
                 xhr.open('POST', webhookUrl);
                 xhr.send(formData);
                 
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
+                
                 const result = await responsePromise;
                 
                 if (!result.success) {
@@ -310,6 +445,7 @@
                 submitButton.disabled = false;
                 progressBar.style.display = 'none';
                 progressFill.style.width = '0%';
+                progressFill.textContent = '0%';
             }
         });
         
