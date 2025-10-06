@@ -10,19 +10,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-fundo: #fefcbf; --cor-aviso-texto: #9f580a; --cor-aviso-borda: #fce18a;
+            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-fundo: #fff9e2; --cor-aviso-texto: #7a6300; --cor-aviso-borda: #ffecb3;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; line-height: 1.6; }
-        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
-        
-        /* Largura ajustada aqui */
-        .container { max-width: 870px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); position: relative; overflow: hidden; padding: 2.5rem 3rem; }
-        
-        .container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header img.logo-opusmultipla { max-width: 450px; width: 100%; height: auto; margin-bottom: 0.5rem; }
-        .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; }
+        html { height: 100%; }
+        body {
+            font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria);
+            display: flex; flex-direction: column; min-height: 100%; line-height: 1.6;
+        }
+        .page-header {
+            width: 100%; height: 8px;
+            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+        .main-content {
+            width: 100%; display: flex; justify-content: center;
+            padding: 2rem 1rem; flex-grow: 1; align-items: center;
+        }
+        .container {
+            max-width: 870px; width: 100%; background: var(--cor-fundo-secao);
+            border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra);
+            border: 1px solid var(--cor-borda); position: relative; overflow: hidden;
+            padding: 2.5rem 3rem; margin-top: 2rem; margin-bottom: 2rem;
+        }
+        .container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%;
+            height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
+        }
+        .header { text-align: center; margin-bottom: 1.5rem; }
+        .header img.logo-opusmultipla { max-width: 300px; width: 100%; height: auto; margin-bottom: 0.5rem; }
+        .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; text-transform: uppercase; }
+
+        .comunicado {
+            background-color: var(--cor-aviso-fundo); border: 1px solid var(--cor-aviso-borda);
+            color: var(--cor-aviso-texto); padding: 1rem; border-radius: 8px;
+            margin-bottom: 2rem; text-align: center; font-size: 0.9rem;
+        }
+        .comunicado img { max-width: 100%; margin-top: 1rem; }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
@@ -30,29 +54,48 @@
         input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
-        .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
-        .upload-group { margin-bottom: 1.5rem; }
-        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
+        .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; text-align: center; }
+        .upload-group { margin-bottom: 1.5rem; text-align: left; }
+        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; text-transform: uppercase; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
+        .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; text-align: left;}
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
-        .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
+        .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; text-align: left;}
         .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
         .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
+
+        .page-footer {
+            background-color: #4a4a4a; color: white; padding: 2rem 1rem;
+            width: 100%; text-align: center;
+        }
+        .footer-content { max-width: 1100px; margin: 0 auto; }
+        .footer-logo { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: 2px; }
+        .footer-subtitle { font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 2rem; opacity: 0.7; }
+        .footer-brands { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; }
+        .footer-brands img { height: 25px; max-width: 150px; opacity: 0.8; }
     </style>
 </head>
 <body>
+    <div class="page-header"></div>
+
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
+                <img src="https://i.imgur.com/k4g3oBv.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
             
+            <div class="comunicado">
+                ARQUIVOS ATÉ 200MB: Envie diretamente pelo formulário.<br>
+                ARQUIVOS ACIMA DE 200MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
+                O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
+                <img src="https://i.imgur.com/zJd9VRA.png" alt="Comunicado sobre relatórios de veiculação">
+            </div>
+
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
                     <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
@@ -79,7 +122,7 @@
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             <div class="upload-group" data-meio="TV AT CI IN JO RD RV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
-                            </div>
+                        </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
                             Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
@@ -107,6 +150,20 @@
         </div>
     </div>
     
+    <footer class="page-footer">
+        <div class="footer-content">
+            <div class="footer-logo">GRUPO OM</div>
+            <div class="footer-subtitle">COMUNICAÇÃO INTEGRADA</div>
+            <div class="footer-brands">
+                <img src="https://i.imgur.com/GZ5g2rB.png" alt="OpusMúltipla">
+                <img src="https://i.imgur.com/uR43xGe.png" alt="Brainbox">
+                <img src="https://i.imgur.com/g886fFR.png" alt="HouseCricket">
+                <img src="https://i.imgur.com/LChA0mG.png" alt="Senso">
+                <img src="https://i.imgur.com/4Q1b2bQ.png" alt="Tailor Media">
+                <img src="https://i.imgur.com/tYx4lC1.png" alt="D'OM">
+            </div>
+        </div>
+    </footer>
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
@@ -145,22 +202,15 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Função para resetar o formulário ao estado inicial
         function resetarFormularioCompleto() {
             form.reset();
-            
-            // Limpa campos readonly e reseta o select
             [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput].forEach(el => el.value = '');
             meioSelect.value = '';
-
-            // Reseta a área de upload
             allUploadGroups.forEach(group => {
                 group.style.display = 'none';
                 group.querySelector('input[type="file"]').required = false;
             });
             uploadPlaceholder.style.display = 'block';
-            
-            // Limpa contadores e avisos
             fileCounter.textContent = '';
             sizeWarning.style.display = 'none';
             driveLinkSection.style.display = 'none';
@@ -217,8 +267,8 @@
         uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
 
         async function buscarDadosPI(npi) {
-            resetarFormularioCompleto(); // Reseta tudo antes de buscar novos dados
-            piInput.value = npi; // Devolve o valor digitado pelo usuário ao campo
+            resetarFormularioCompleto();
+            piInput.value = npi;
 
             if (!npi) return;
 
@@ -246,11 +296,9 @@
                     meioSelect.value = data.meio || '';
                     updateFormState(data.meio);
                 } else {
-                    // Tratar PI não encontrada
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    // Tratar erro de comunicação
                 }
             }
         }
@@ -326,8 +374,6 @@
                 }
                 
                 showMessage(successMessage, result.message || 'Enviado com sucesso!');
-                
-                // Chamando a função de reset completo após sucesso
                 resetarFormularioCompleto();
                 
             } catch (error) {
