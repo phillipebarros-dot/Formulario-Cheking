@@ -367,7 +367,7 @@
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
         const RATE_LIMIT_KEY = 'checking_last_submit';
-        const RATE_LIMIT_MS = 30000; // 30 segundos entre submissões
+        const RATE_LIMIT_MS = 30000;
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -389,10 +389,8 @@
         const fileCounter = document.getElementById('fileCounter');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
-        const honeypot = form.querySelector('input[name="website"]');
 
         let piFetchController = null;
-        let formStartTime = Date.now();
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
         function showMessage(element, message) { 
@@ -430,21 +428,6 @@
         
         function setRateLimit() {
             localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
-        }
-        
-        function validateHuman() {
-            // Anti-bot: verifica se honeypot está vazio
-            if (honeypot.value !== '') {
-                return false;
-            }
-            
-            // Anti-bot: verifica tempo mínimo de preenchimento (3 segundos)
-            const timeTaken = Date.now() - formStartTime;
-            if (timeTaken < 3000) {
-                return false;
-            }
-            
-            return true;
         }
 
         function updateFormState(meio) {
@@ -517,8 +500,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         action: 'buscar_pi', 
-                        n_pi: npi,
-                        timestamp: Date.now()
+                        n_pi: npi
                     }),
                     signal: piFetchController.signal,
                 });
@@ -547,19 +529,6 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             clearMessages();
-            
-            // Validação anti-bot
-            if (!validateHuman()) {
-                showMessage(errorMessage, 'Erro de validação. Por favor, recarregue a página e tente novamente.');
-                return;
-            }
-            
-            // Rate limiting
-            const rateLimitCheck = checkRateLimit();
-            if (!rateLimitCheck.allowed) {
-                showMessage(errorMessage, `Aguarde ${rateLimitCheck.waitTime} segundos antes de enviar novamente.`);
-                return;
-            }
 
             const usandoLink = driveLinkSection.style.display === 'block';
             
@@ -592,8 +561,6 @@
             const formData = new FormData(form);
             formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.append('action', 'submissao_form');
-            formData.append('timestamp', Date.now());
-            formData.append('form_duration', Date.now() - formStartTime);
             
             // Remove honeypot do envio
             formData.delete('website');
@@ -647,11 +614,10 @@
                     throw new Error(result.message || 'Erro no processamento.');
                 }
                 
-                setRateLimit(); // Marca timestamp do envio bem-sucedido
+                setRateLimit();
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 updateFormState('');
-                formStartTime = Date.now(); // Reset timer
                 
             } catch (error) {
                 showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Tente novamente.');
