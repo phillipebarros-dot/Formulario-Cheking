@@ -26,20 +26,23 @@
             padding: 1.5rem; 
             border-radius: 8px; 
             margin-bottom: 2rem;
-            text-align: center;
         }
         .aviso-importante p {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #000;
             margin: 0 0 1rem 0;
             text-transform: uppercase;
+            text-align: center;
         }
         .aviso-importante img {
-            max-width: 100%;
+            max-width: 600px;
+            width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto;
         }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -53,6 +56,7 @@
         .upload-group { margin-bottom: 1.5rem; }
         .upload-group:last-child { margin-bottom: 0; }
         .upload-group label { color: var(--cor-primaria); }
+        .honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
         button[type="submit"]:hover { background-color: #002880; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -116,6 +120,7 @@
             .container { padding: 1.5rem; }
             footer { margin-top: 2rem; padding: 1.5rem 1rem; }
             footer .footer-logo { font-size: 1.5rem; }
+            .aviso-importante p { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -133,6 +138,9 @@
             </div>
             
             <form id="checkingForm" novalidate>
+                <!-- Honeypot Field (anti-bot) -->
+                <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+                
                 <div class="form-grid">
                     <div class="form-group full-width">
                         <label for="nome">Seu Nome *</label>
@@ -302,19 +310,19 @@
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
-                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                            Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
                         </div>
                     </div>
 
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
-                            <h3>📁 Link do Google Drive (Arquivos Grandes)</h3>
+                            <h3>Link do Google Drive (Arquivos Grandes)</h3>
                             <p><strong>Como seus arquivos ultrapassam 500MB, siga os passos abaixo:</strong></p>
                             <div class="instrucoes-drive">
                                 <ol>
                                     <li>Faça upload dos arquivos para o <strong>Google Drive</strong></li>
                                     <li>Crie uma pasta com o nome: <strong>PI [Número] - [Cliente] - [Veículo]</strong></li>
-                                    <li>Clique com botão direito na pasta → <strong>Compartilhar</strong></li>
+                                    <li>Clique com botão direito na pasta e selecione <strong>Compartilhar</strong></li>
                                     <li>Configure como: <strong>"Qualquer pessoa com o link pode visualizar"</strong></li>
                                     <li>Copie o link e cole abaixo</li>
                                 </ol>
@@ -347,6 +355,9 @@
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
+        const RATE_LIMIT_KEY = 'checking_last_submit';
+        const RATE_LIMIT_MS = 30000; // 30 segundos entre submissões
+        
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const clienteInput = document.getElementById('cliente');
@@ -367,12 +378,24 @@
         const fileCounter = document.getElementById('fileCounter');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
+        const honeypot = form.querySelector('input[name="website"]');
 
         let piFetchController = null;
+        let formStartTime = Date.now();
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
 
-        function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 100); }
-        function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
+        function showMessage(element, message) { 
+            element.innerHTML = message; 
+            element.style.display = 'block'; 
+            setTimeout(() => { 
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); 
+            }, 100); 
+        }
+        
+        function clearMessages() { 
+            successMessage.style.display = 'none'; 
+            errorMessage.style.display = 'none'; 
+        }
         
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
@@ -380,6 +403,37 @@
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function checkRateLimit() {
+            const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
+            if (lastSubmit) {
+                const timeSince = Date.now() - parseInt(lastSubmit);
+                if (timeSince < RATE_LIMIT_MS) {
+                    const waitTime = Math.ceil((RATE_LIMIT_MS - timeSince) / 1000);
+                    return { allowed: false, waitTime };
+                }
+            }
+            return { allowed: true };
+        }
+        
+        function setRateLimit() {
+            localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
+        }
+        
+        function validateHuman() {
+            // Anti-bot: verifica se honeypot está vazio
+            if (honeypot.value !== '') {
+                return false;
+            }
+            
+            // Anti-bot: verifica tempo mínimo de preenchimento (3 segundos)
+            const timeTaken = Date.now() - formStartTime;
+            if (timeTaken < 3000) {
+                return false;
+            }
+            
+            return true;
         }
 
         function updateFormState(meio) {
@@ -450,7 +504,11 @@
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
+                    body: JSON.stringify({ 
+                        action: 'buscar_pi', 
+                        n_pi: npi,
+                        timestamp: Date.now()
+                    }),
                     signal: piFetchController.signal,
                 });
                 
@@ -478,6 +536,19 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             clearMessages();
+            
+            // Validação anti-bot
+            if (!validateHuman()) {
+                showMessage(errorMessage, 'Erro de validação. Por favor, recarregue a página e tente novamente.');
+                return;
+            }
+            
+            // Rate limiting
+            const rateLimitCheck = checkRateLimit();
+            if (!rateLimitCheck.allowed) {
+                showMessage(errorMessage, `Aguarde ${rateLimitCheck.waitTime} segundos antes de enviar novamente.`);
+                return;
+            }
 
             const usandoLink = driveLinkSection.style.display === 'block';
             
@@ -490,7 +561,7 @@
                 const meio = meioSelect.value;
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
-                    const meiosDoGrupo = group.dataset.meio.split(' ');
+                    const meiosDoGrupo = group.dataset.mei.split(' ');
                     const isVisible = meio && meiosDoGrupo.includes(meio);
                     input.required = isVisible;
                 });
@@ -510,6 +581,11 @@
             const formData = new FormData(form);
             formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.append('action', 'submissao_form');
+            formData.append('timestamp', Date.now());
+            formData.append('form_duration', Date.now() - formStartTime);
+            
+            // Remove honeypot do envio
+            formData.delete('website');
 
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
@@ -560,9 +636,11 @@
                     throw new Error(result.message || 'Erro no processamento.');
                 }
                 
+                setRateLimit(); // Marca timestamp do envio bem-sucedido
                 showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
                 form.reset();
                 updateFormState('');
+                formStartTime = Date.now(); // Reset timer
                 
             } catch (error) {
                 showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Tente novamente.');
