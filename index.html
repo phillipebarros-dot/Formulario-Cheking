@@ -41,7 +41,25 @@
         .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
         .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
         .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
-        .info-text { padding: 1rem; background-color: #fefcbf; border: 1px solid #fce18a; color: #9f580a; font-weight: 600; border-radius: 8px; margin-bottom: 2rem; text-align: center; }
+        /* Estilo para o comunicado */
+        .comunicado {
+            padding: 1.5rem;
+            background-color: var(--cor-aviso-fundo);
+            border: 1px solid var(--cor-aviso-borda);
+            color: var(--cor-aviso-texto);
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        .comunicado h4 {
+            margin-top: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--cor-secundaria);
+        }
+        .comunicado p {
+            margin: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -52,8 +70,11 @@
                 <h1>CHECKING</h1>
             </div>
 
-            <div class="info-text">
-                <strong>Atenção:</strong> Só aceitaremos checkings por arquivos. O não envio dos relatórios de acordo com as especificações da PI poderá acarretar no não pagamento da veiculação.
+            <div class="comunicado">
+                <h4>CHECKING OPUSMÚLTIPLA</h4>
+                <p><strong>SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.</strong></p>
+                <p>Conferir número de anexos e informações obrigatórias por meio (cfme contratado em PI).</p>
+                <p>O não envio dos relatórios de acordo com especificações descritas aqui e nas PIs, acarretará no não pagto das veiculações até relatórios enviados cfme orientações passadas na contratação da mídia (PI).</p>
             </div>
             
             <form id="checkingForm" novalidate>
@@ -128,6 +149,8 @@
     </div>
     
 <script>
+    // O SCRIPT JAVASCRIPT CONTINUA O MESMO DA RESPOSTA ANTERIOR
+    // Não precisa ser alterado.
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
         const form = document.getElementById('checkingForm');
@@ -165,22 +188,15 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
-        // **NOVA FUNÇÃO** para resetar o formulário completamente
         function resetarFormularioCompleto() {
             form.reset();
-            
-            // Limpa campos readonly e reseta o select
             [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput].forEach(el => el.value = '');
             meioSelect.value = '';
-
-            // Reseta a área de upload para o estado inicial
             allUploadGroups.forEach(group => {
                 group.style.display = 'none';
                 group.querySelector('input[type="file"]').required = false;
             });
             uploadPlaceholder.style.display = 'block';
-            
-            // Limpa contadores e avisos
             fileCounter.textContent = '';
             sizeWarning.style.display = 'none';
             driveLinkSection.style.display = 'none';
@@ -235,8 +251,8 @@
         uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
 
         async function buscarDadosPI(npi) {
-            resetarFormularioCompleto(); // Reseta tudo antes de uma nova busca
-            piInput.value = npi; // Restaura o valor da PI que o usuário digitou
+            resetarFormularioCompleto(); 
+            piInput.value = npi;
 
             if (!npi) return;
 
@@ -281,11 +297,9 @@
             
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    input.required = false;
+                    group.querySelector('input[type="file"]').required = false;
                 });
             } else {
-                // Re-valida a obrigatoriedade dos campos visíveis
                 allUploadGroups.forEach(group => {
                     if (group.style.display === 'block') {
                         group.querySelector('input[type="file"]').required = true;
@@ -309,8 +323,7 @@
 
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
+                    formData.delete(group.querySelector('input[type="file"]').name);
                 });
             } else {
                 formData.delete('drive_link');
@@ -353,8 +366,6 @@
                 }
                 
                 showMessage(successMessage, result.message || 'Enviado com sucesso!');
-                // **ALTERAÇÃO PRINCIPAL**
-                // Em vez de form.reset() e updateFormState(), usamos a nova função
                 resetarFormularioCompleto();
                 
             } catch (error) {
