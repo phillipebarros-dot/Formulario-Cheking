@@ -29,7 +29,6 @@
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
         .upload-group { margin-bottom: 1.5rem; }
-        .upload-group:last-of-type { margin-bottom: 0; }
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
@@ -41,7 +40,6 @@
         .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
         .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
         .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
-        .info-text { padding: 1rem; background-color: #fefcbf; border: 1px solid #fce18a; color: #9f580a; font-weight: 600; border-radius: 8px; margin-bottom: 2rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -50,10 +48,6 @@
             <div class="header">
                 <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
-            </div>
-
-            <div class="info-text">
-                <strong>Atenção:</strong> Só aceitaremos checkings por arquivos. O não envio dos relatórios de acordo com as especificações da PI poderá acarretar no não pagamento da veiculação.
             </div>
             
             <form id="checkingForm" novalidate>
@@ -78,28 +72,11 @@
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
-                        <div class="size-info">Limite: 500MB total por envio. Cada campo de anexo aceita múltiplos arquivos.</div>
+                        <div class="size-info">Limite: 500MB total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
-
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos *</label><input type="file" name="relatorio_fotografico_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório de Exibições Automatizado *</label><input type="file" name="relatorio_exibicoes_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Vídeo Diurno *</label><input type="file" name="video_diurno_do" multiple></div>
-                            
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Relatório com Endereço dos Pontos *</label><input type="file" name="relatorio_enderecos_me" multiple></div>
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Fotos Diurnas/Noturnas (se iluminado) *</label><input type="file" name="fotos_pontos_me" multiple></div>
-
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Relatório com Listagem de Estações/Linhas *</label><input type="file" name="relatorio_estacoes_mo" multiple></div>
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Fotos ou Vídeos Amostrais *</label><input type="file" name="fotos_videos_mo" multiple></div>
-
-                            <div class="upload-group" data-meio="BD" style="display: none;"><label>Relatório Fotográfico de todos os Veículos *</label><input type="file" name="comprovante_bd" multiple></div>
-
-                            <div class="upload-group" data-meio="OD FL" style="display: none;"><label>Relatório Fotográfico com Endereço (e Noturna se iluminado) *</label><input type="file" name="comprovante_od_fl" multiple></div>
-                            
-                            <div class="upload-group" data-meio="MI" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos e Locais *</label><input type="file" name="comprovante_mi" multiple></div>
-
-                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
-                        </div>
+                            <div class="upload-group" data-meio="TV AT CI IN JO RD RV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                            </div>
                         <div class="file-counter" id="fileCounter"></div>
                         <div class="size-warning" id="sizeWarning">
                             Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
@@ -164,38 +141,18 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-        
-        // **NOVA FUNÇÃO** para resetar o formulário completamente
-        function resetarFormularioCompleto() {
-            form.reset();
-            
-            // Limpa campos readonly e reseta o select
-            [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput].forEach(el => el.value = '');
-            meioSelect.value = '';
-
-            // Reseta a área de upload para o estado inicial
-            allUploadGroups.forEach(group => {
-                group.style.display = 'none';
-                group.querySelector('input[type="file"]').required = false;
-            });
-            uploadPlaceholder.style.display = 'block';
-            
-            // Limpa contadores e avisos
-            fileCounter.textContent = '';
-            sizeWarning.style.display = 'none';
-            driveLinkSection.style.display = 'none';
-            driveLink.required = false;
-        }
 
         function updateFormState(meio) {
             let algumCampoAnexoVisivel = false;
             allUploadGroups.forEach(group => {
                 const meiosDoGrupo = group.dataset.meio.split(' ');
+                const input = group.querySelector('input[type="file"]');
                 if (meio && meiosDoGrupo.includes(meio)) {
                     group.style.display = 'block';
                     algumCampoAnexoVisivel = true;
                 } else {
                     group.style.display = 'none';
+                    input.required = false;
                 }
             });
             uploadPlaceholder.style.display = algumCampoAnexoVisivel ? 'none' : 'block';
@@ -235,9 +192,8 @@
         uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
 
         async function buscarDadosPI(npi) {
-            resetarFormularioCompleto(); // Reseta tudo antes de uma nova busca
-            piInput.value = npi; // Restaura o valor da PI que o usuário digitou
-
+            [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+            updateFormState('');
             if (!npi) return;
 
             if (piFetchController) piFetchController.abort();
@@ -264,11 +220,11 @@
                     meioSelect.value = data.meio || '';
                     updateFormState(data.meio);
                 } else {
-                    showMessage(errorMessage, data.error || 'PI não encontrada.');
+                    // Tratar PI não encontrada
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
-                    showMessage(errorMessage, 'Não foi possível buscar os dados da PI. Verifique sua conexão.');
+                    // Tratar erro de comunicação
                 }
             }
         }
@@ -284,17 +240,10 @@
                     const input = group.querySelector('input[type="file"]');
                     input.required = false;
                 });
-            } else {
-                // Re-valida a obrigatoriedade dos campos visíveis
-                allUploadGroups.forEach(group => {
-                    if (group.style.display === 'block') {
-                        group.querySelector('input[type="file"]').required = true;
-                    }
-                });
             }
 
             if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos, incluindo os anexos necessários para o "Meio" selecionado.');
+                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
                 return;
             }
 
@@ -323,7 +272,6 @@
                     if (e.lengthComputable) {
                         const percentComplete = Math.round((e.loaded / e.total) * 90) + 10;
                         progressFill.style.width = percentComplete + '%';
-                        progressFill.textContent = percentComplete + '%';
                     }
                 });
                 
@@ -333,8 +281,7 @@
                             if (xhr.status >= 200 && xhr.status < 300) {
                                 resolve(JSON.parse(xhr.responseText));
                             } else {
-                                const errorData = JSON.parse(xhr.responseText);
-                                reject(new Error(errorData.message || `Erro no servidor (${xhr.status}).`));
+                                reject(new Error(`Erro no servidor (${xhr.status}).`));
                             }
                         } catch (parseError) {
                             reject(new Error('Resposta inválida do servidor.'));
@@ -353,9 +300,8 @@
                 }
                 
                 showMessage(successMessage, result.message || 'Enviado com sucesso!');
-                // **ALTERAÇÃO PRINCIPAL**
-                // Em vez de form.reset() e updateFormState(), usamos a nova função
-                resetarFormularioCompleto();
+                form.reset();
+                updateFormState('');
                 
             } catch (error) {
                 showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado.');
@@ -364,7 +310,6 @@
                 submitButton.disabled = false;
                 progressBar.style.display = 'none';
                 progressFill.style.width = '0%';
-                progressFill.textContent = '0%';
             }
         });
         
