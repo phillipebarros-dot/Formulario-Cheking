@@ -76,7 +76,7 @@
         .footer-logo { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: 2px; }
         .footer-subtitle { font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 2rem; opacity: 0.7; }
         .footer-brands { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; }
-        .footer-brands img { height: 25px; max-width: 150px; opacity: 0.8; }
+        .footer-brands img { height: 25px; max-width: 150px; opacity: 0.8; filter: invert(1) grayscale(1) brightness(2); }
     </style>
 </head>
 <body>
@@ -85,7 +85,7 @@
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <img src="https://i.imgur.com/k4g3oBv.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
+                <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
             
@@ -93,7 +93,7 @@
                 ARQUIVOS ATÉ 200MB: Envie diretamente pelo formulário.<br>
                 ARQUIVOS ACIMA DE 200MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
                 O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
-                <img src="https://i.imgur.com/zJd9VRA.png" alt="Comunicado sobre relatórios de veiculação">
+                <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
             </div>
 
             <form id="checkingForm" novalidate>
@@ -164,7 +164,9 @@
             </div>
         </div>
     </footer>
+
 <script>
+    // SEU SCRIPT JAVASCRIPT CONTINUA O MESMO, SEM ALTERAÇÕES
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
         const form = document.getElementById('checkingForm');
