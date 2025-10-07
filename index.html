@@ -377,11 +377,12 @@
             
             formData.delete('action');
             formData.delete('upload_method');
+            
             formData.set('action', 'submissao_form');
             formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             
             if (usandoLink) {
-                allUploadGroups.forEach(group => {
+                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
                     formData.delete(input.name);
                 });
