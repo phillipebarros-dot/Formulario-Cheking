@@ -498,12 +498,17 @@
             }
         }
         
-        form.addEventListener('submit', async function (e) {
+        // =================================================================
+        // CORREÇÃO APLICADA AQUI
+        // =================================================================
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             clearMessages();
 
-            // Re-valida os campos de anexo antes de submeter
+            // Declara a variável 'usandoLink' UMA ÚNICA VEZ no início da função.
             const usandoLink = driveLinkSection.style.display === 'block';
+
+            // Re-valida os campos de anexo antes de submeter
             if (!usandoLink) {
                  const meio = meioSelect.value;
                  allUploadGroups.forEach(group => {
@@ -511,7 +516,9 @@
                      const meiosDoGrupo = group.dataset.meio.split(' ');
                      const isVisible = meio && meiosDoGrupo.includes(meio);
                      // Garante que apenas os campos visíveis sejam obrigatórios
-                     input.required = isVisible && input.files.length === 0;
+                     if (isVisible && input.files.length === 0) {
+                         input.required = true;
+                     }
                  });
             } else {
                 driveLink.required = true;
@@ -519,8 +526,7 @@
 
             if (!form.checkValidity()) {
                 showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
-                // Força o navegador a mostrar suas próprias mensagens de validação
-                form.reportValidity();
+                form.reportValidity(); // Força o navegador a mostrar suas próprias mensagens de validação
                 return;
             }
 
@@ -530,23 +536,18 @@
             progressFill.style.width = '10%';
             progressFill.textContent = '10%';
             
-                // Localize este trecho no seu código de submit
-                const formData = new FormData(form);
-
-                // --- CORREÇÃO CRÍTICA ---
-                // Remova valores que possam ter sido adicionados por engano ou em duplicidade
+            const formData = new FormData(form);
+            
+            // Limpa campos de controle para evitar duplicidade
             formData.delete('upload_method');
             formData.delete('action');
-
-                // Use .set() para garantir um valor único (string), em vez de .append()
-            const usandoLink = driveLinkSection.style.display === 'block';
+            formData.delete('website'); // Remove honeypot
+            
+            // Usa .set() para garantir um valor único (string), reutilizando a variável 'usandoLink'
             formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.set('action', 'submissao_form');
-
-            // O restante do seu código de envio (xhr.send(formData)) continua igual
-            xhr.send(formData);
             
-            // Limpa campos desnecessários
+            // Limpa campos desnecessários com base no método de envio
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
@@ -575,7 +576,7 @@
                 } catch (err) {
                     showMessage(errorMessage, 'Ocorreu um erro inesperado. Resposta inválida do servidor.');
                     console.error("Resposta não-JSON:", xhr.responseText);
-                    return; // Finaliza o finally abaixo
+                    return;
                 }
 
                 if (xhr.status >= 200 && xhr.status < 300 && responseData.success) {
@@ -583,7 +584,6 @@
                     form.reset();
                     updateFormState('');
                 } else {
-                    // Exibe a mensagem de erro específica vinda do n8n
                     showMessage(errorMessage, responseData.message || `Erro no servidor (${xhr.status}). Tente novamente.`);
                 }
             };
@@ -597,7 +597,6 @@
             };
             
             xhr.onloadend = () => {
-                 // Este bloco sempre será executado, sucedendo onload, onerror, ontimeout
                 submitButton.textContent = 'Enviar Checking';
                 submitButton.disabled = false;
                 progressBar.style.display = 'none';
