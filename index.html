@@ -42,19 +42,10 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
         #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; }
-        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
-        .footer-gradient-bar { order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .footer-content { background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
-        .main-logo-block { display: flex; flex-direction: column; align-items: center; color: white; text-align: center; }
-        .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
-        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
-        .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
-        .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
-        .agency-logos li a:hover { opacity: 0.7; }
-        .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
-        .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
-        
-        /* NOVOS ESTILOS PARA SOLUÇÃO HÍBRIDA */
+        .footer-final { width: 100%; background-color: #1a202c; color: #e2e8f0; padding: 3rem 1rem; text-align: center; font-family: 'Montserrat', sans-serif; margin-top: auto; }
+        .footer-final .logo-principal { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; letter-spacing: 3px; color: #ffffff; margin-bottom: 0.5rem; }
+        .footer-final .subtitulo { font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2rem; }
+        .footer-final .copyright { font-size: 0.85rem; color: #a0aec0; margin-top: 1rem; }
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -127,7 +118,6 @@
                         </div>
                     </div>
 
-                    <!-- Seção de Link do Google Drive (aparece quando > 200MB) -->
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
                             <h3>📁 Link do Google Drive</h3>
@@ -147,29 +137,15 @@
         </div>
     </div>
     
-    <footer class="footer-wrapper">
-        <div class="footer-gradient-bar"></div>
-        <div class="footer-content">
-            <div class="main-logo-block">
-                <span class="main-logo-grupo">GRUPO OM</span>
-                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
-            </div>
-            <nav class="agency-logos">
-                <ul>
-                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
-                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
-                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
-                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
-                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
-                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
-                </ul>
-            </nav>
-        </div>
+    <footer class="footer-final">
+        <div class="logo-principal">GRUPO OM</div>
+        <div class="subtitulo">COMUNICAÇÃO INTEGRADA</div>
+        <p class="copyright">&copy; 2025 OpusMúltipla - Todos os direitos reservados</p>
     </footer>
 
 <script>
     (function () {
-        const MAX_SIZE = 200 * 1024 * 1024; // 200MB
+        const MAX_SIZE = 200 * 1024 * 1024;
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -227,18 +203,15 @@
             }
 
             if (totalSize > MAX_SIZE) {
-                // Desabilita uploads e mostra seção de link
                 sizeWarning.style.display = 'block';
                 driveLinkSection.style.display = 'block';
                 driveLink.required = true;
                 
-                // Desabilita todos os inputs de arquivo
                 visibleFileInputs.forEach(input => {
                     input.disabled = true;
                     input.required = false;
                 });
             } else {
-                // Habilita uploads normais
                 sizeWarning.style.display = 'none';
                 driveLinkSection.style.display = 'none';
                 driveLink.required = false;
@@ -255,7 +228,6 @@
             }
         }
 
-        // Monitora mudanças nos campos de arquivo
         uploadArea.addEventListener('change', function(e) {
             if (e.target.type === 'file') {
                 checkTotalFileSize();
@@ -293,7 +265,6 @@
             });
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
             
-            // Reseta contadores e avisos
             fileCounter.style.display = 'none';
             sizeWarning.style.display = 'none';
             driveLinkSection.style.display = 'none';
@@ -339,9 +310,9 @@
                     piStatus.style.color = 'var(--cor-sucesso)';
                     const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
                      for(const key in fieldsToFill) {
-                        if(fieldsToFill[key] && data[key] !== undefined) {
-                            fieldsToFill[key].value = data[key];
-                        }
+                         if(fieldsToFill[key] && data[key] !== undefined) {
+                             fieldsToFill[key].value = data[key];
+                         }
                     }
                     atualizarCamposDeAnexo(data.meio);
                 } else {
@@ -362,17 +333,14 @@
             e.preventDefault();
             clearMessages();
 
-            // Verifica se é envio por link ou por arquivo
             const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value;
             
             if (usandoLink) {
-                // Validação de link
                 if (!driveLink.value.includes('drive.google.com')) {
                     showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
                     return;
                 }
             } else {
-                // Validação de arquivos
                 let camposAnexoObrigatoriosPreenchidos = true;
                 const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
                 
@@ -400,10 +368,8 @@
             const formData = new FormData(form);
             
             if (usandoLink) {
-                // Modo link do Drive
                 formData.append('upload_method', 'drive_link');
             } else {
-                // Modo upload binário
                 formData.delete('drive_link');
                 
                 const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
