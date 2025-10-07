@@ -242,16 +242,14 @@
                                 <label>3. Vídeo Diurno *</label>
                                 <input type="file" name="video_diurno_do" multiple accept=".mp4,.avi,.mov,.zip">
                             </div>
-                            
                             <div class="upload-group" data-meio="ME" style="display: none;">
                                 <label>1. Relatório com Endereços dos Pontos *</label>
                                 <input type="file" name="relatorio_enderecos_me" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
                             </div>
                             <div class="upload-group" data-meio="ME" style="display: none;">
-                                <label>2. Fotos Diurnas dos Pontos (Amostrais) - Se iluminado: incluir foto noturna *</label>
+                                <label>2. Fotos Diurnas dos Pontos (Amostrais) *</label>
                                 <input type="file" name="fotos_pontos_me" multiple accept=".jpg,.jpeg,.png,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="MO" style="display: none;">
                                 <label>1. Relatório: Listagem de Estações, Linhas e Carros *</label>
                                 <input type="file" name="relatorio_estacoes_mo" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
@@ -260,75 +258,50 @@
                                 <label>2. Fotos ou Vídeos (Amostrais) *</label>
                                 <input type="file" name="fotos_videos_mo" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="BD" style="display: none;">
                                 <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
                                 <input type="file" name="comprovante_bd" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="OD FL" style="display: none;">
-                                <label>Relatório Fotográfico com Endereço de Todos os Pontos - Se iluminado: incluir foto noturna *</label>
+                                <label>Relatório Fotográfico com Endereço *</label>
                                 <input type="file" name="comprovante_od_fl" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="MI" style="display: none;">
-                                <label>Relatório Fotográfico de Todos os Pontos + Relação de Locais *</label>
+                                <label>Relatório Fotográfico de Todos os Pontos *</label>
                                 <input type="file" name="comprovante_mi" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="RD TP" style="display: none;">
-                                <label>Relatório de Veiculação Automatizado (se ação ao vivo: enviar gravação ou relatório com ações e horários) *</label>
+                                <label>Relatório de Veiculação Automatizado *</label>
                                 <input type="file" name="comprovante_rd_tp" multiple accept=".pdf,.xls,.xlsx,.mp3,.wav,.zip">
                             </div>
-                            
                             <div class="upload-group" data-meio="CI" style="display: none;">
-                                <label>Relatório de Exibição (complexo, número de salas, praça) *</label>
+                                <label>Relatório de Exibição *</label>
                                 <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
                             </div>
-                            
                             <div class="upload-group" data-meio="JO RV" style="display: none;">
-                                <label>Material Físico (preferencialmente) + PDF/Foto do Título com Material Veiculado *</label>
+                                <label>Material Físico + PDF/Foto *</label>
                                 <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
                             </div>
-                            
                             <div class="upload-group" data-meio="AT" style="display: none;">
-                                <label>Relatório Fotográfico ou Vídeos + Detalhamento das Ações *</label>
+                                <label>Relatório Fotográfico ou Vídeos *</label>
                                 <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
-                            
                             <div class="upload-group" data-meio="TV" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado *</label>
                                 <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv">
                             </div>
-                            
                             <div class="upload-group" data-meio="IN" style="display: none;">
-                                <label>Relatório de Veiculação + Prints das Peças *</label>
+                                <label>Relatório de Veiculação + Prints *</label>
                                 <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
                             </div>
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
-                        <div class="size-warning" id="sizeWarning">
-                            Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
-                        </div>
+                        <div class="size-warning" id="sizeWarning"></div>
                     </div>
-
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
-                            <h3>Link do Google Drive (Arquivos Grandes)</h3>
-                            <p><strong>Como seus arquivos ultrapassam 500MB, siga os passos abaixo:</strong></p>
-                            <div class="instrucoes-drive">
-                                <ol>
-                                    <li>Faça upload dos arquivos para o <strong>Google Drive</strong></li>
-                                    <li>Crie uma pasta com o nome: <strong>PI [Número] - [Cliente] - [Veículo]</strong></li>
-                                    <li>Clique com botão direito na pasta e selecione <strong>Compartilhar</strong></li>
-                                    <li>Configure como: <strong>"Qualquer pessoa com o link pode visualizar"</strong></li>
-                                    <li>Copie o link e cole abaixo</li>
-                                </ol>
                             </div>
-                            <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
-                        </div>
                     </div>
-                    
                     <div class="form-group full-width">
                         <button type="submit">Enviar Checking</button>
                         <div class="progress-bar" id="progressBar">
@@ -353,9 +326,6 @@
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
-        const RATE_LIMIT_KEY = 'checking_last_submit';
-        const RATE_LIMIT_MS = 30000;
-        
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
         const clienteInput = document.getElementById('cliente');
@@ -376,16 +346,13 @@
         const fileCounter = document.getElementById('fileCounter');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
-
-        let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+        let piFetchController = null;
 
         function showMessage(element, message) { 
             element.innerHTML = message; 
             element.style.display = 'block'; 
-            setTimeout(() => { 
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); 
-            }, 100); 
+            setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 100); 
         }
         
         function clearMessages() { 
@@ -400,22 +367,6 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-        
-        function checkRateLimit() {
-            const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
-            if (lastSubmit) {
-                const timeSince = Date.now() - parseInt(lastSubmit);
-                if (timeSince < RATE_LIMIT_MS) {
-                    const waitTime = Math.ceil((RATE_LIMIT_MS - timeSince) / 1000);
-                    return { allowed: false, waitTime };
-                }
-            }
-            return { allowed: true };
-        }
-        
-        function setRateLimit() {
-            localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
-        }
 
         function updateFormState(meio) {
             let algumCampoAnexoVisivel = false;
@@ -424,22 +375,16 @@
                 const input = group.querySelector('input[type="file"]');
                 const isVisible = meio && meiosDoGrupo.includes(meio);
                 
-                if (isVisible) {
-                    group.style.display = 'block';
-                    algumCampoAnexoVisivel = true;
-                    input.required = true;
-                } else {
-                    group.style.display = 'none';
-                    input.required = false;
-                    input.value = '';
-                }
+                group.style.display = isVisible ? 'block' : 'none';
+                input.required = isVisible;
+                if (!isVisible) input.value = '';
+                if (isVisible) algumCampoAnexoVisivel = true;
             });
             uploadPlaceholder.style.display = algumCampoAnexoVisivel ? 'none' : 'block';
 
             let totalSize = 0;
             let totalFiles = 0;
-            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
-            allFileInputs.forEach(input => {
+            uploadArea.querySelectorAll('input[type="file"]').forEach(input => {
                 if (input.files) {
                     for (const file of input.files) {
                         totalSize += file.size;
@@ -450,23 +395,16 @@
 
             fileCounter.textContent = totalFiles > 0 ? `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}` : '';
             const isOverSize = totalSize > MAX_SIZE;
-
+            
             sizeWarning.style.display = isOverSize ? 'block' : 'none';
+            sizeWarning.textContent = `Tamanho total excede ${formatFileSize(MAX_SIZE)}! Use o link do Google Drive abaixo.`;
             driveLinkSection.style.display = isOverSize ? 'block' : 'none';
-            driveLink.required = isOverSize;
+            if (driveLink) driveLink.required = isOverSize;
 
             allUploadGroups.forEach(group => {
                 const input = group.querySelector('input[type="file"]');
-                const meiosDoGrupo = group.dataset.meio.split(' ');
-                const isVisible = meio && meiosDoGrupo.includes(meio);
-                
-                if (isOverSize) {
-                    input.disabled = true;
-                    input.required = false;
-                } else {
-                    input.disabled = false;
-                    input.required = isVisible;
-                }
+                input.disabled = isOverSize;
+                if(isOverSize) input.required = false;
             });
         }
         
@@ -476,7 +414,6 @@
             [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
             updateFormState('');
             if (!npi) return;
-
             if (piFetchController) piFetchController.abort();
             piFetchController = new AbortController();
             clearMessages();
@@ -485,10 +422,7 @@
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'buscar_pi', 
-                        n_pi: npi
-                    }),
+                    body: JSON.stringify({ action: 'buscar_pi', n_pi: npi }),
                     signal: piFetchController.signal,
                 });
                 
@@ -507,9 +441,7 @@
                     showMessage(errorMessage, 'PI não encontrada. Verifique o número digitado.');
                 }
             } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Erro ao buscar PI:', error);
-                }
+                if (error.name !== 'AbortError') console.error('Erro ao buscar PI:', error);
             }
         }
         
@@ -517,22 +449,7 @@
             e.preventDefault();
             clearMessages();
 
-            const usandoLink = driveLinkSection.style.display === 'block';
-            
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    input.required = false;
-                });
-            } else {
-                const meio = meioSelect.value;
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    const meiosDoGrupo = group.dataset.meio.split(' ');
-                    const isVisible = meio && meiosDoGrupo.includes(meio);
-                    input.required = isVisible;
-                });
-            }
+            const isDriveLinkUpload = driveLinkSection.style.display === 'block';
 
             if (!form.checkValidity()) {
                 showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
@@ -542,100 +459,105 @@
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             progressBar.style.display = 'block';
-            progressFill.style.width = '10%';
-            progressFill.textContent = '10%';
+            progressFill.style.width = '0%';
+            progressFill.textContent = '0%';
             
-            const formData = new FormData(form);
-            formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
-            formData.append('action', 'submissao_form');
-            
-            // Remove honeypot do envio
-            formData.delete('website');
-            
-            // Debug - ver o que está sendo enviado
-            console.log('Meio selecionado:', meioSelect.value);
-            console.log('Upload method:', usandoLink ? 'drive_link' : 'binary');
-            
-            // Verificar arquivos enviados
-            for (let pair of formData.entries()) {
-                if (pair[1] instanceof File) {
-                    console.log('Arquivo:', pair[0], '=', pair[1].name);
-                } else {
-                    console.log('Campo:', pair[0], '=', pair[1]);
-                }
-            }
+            const payload = {
+                action: 'submissao_form',
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                n_pi: piInput.value,
+                cliente: clienteInput.value,
+                campanha: campanhaInput.value,
+                produto: produtoInput.value,
+                periodo: periodoInput.value,
+                veiculo: veiculoInput.value,
+                meio: meioSelect.value,
+                observacoes: document.getElementById('observacoes').value,
+                upload_method: isDriveLinkUpload ? 'drive_link' : 'binary'
+            };
 
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
-                });
+            if (isDriveLinkUpload) {
+                payload.drive_link = driveLink.value;
+                sendPayload(payload);
             } else {
-                formData.delete('drive_link');
-            }
-
-            try {
-                const xhr = new XMLHttpRequest();
+                const fileInput = Array.from(allUploadGroups).find(g => g.style.display === 'block')?.querySelector('input[type="file"]');
+                if (!fileInput || fileInput.files.length === 0) {
+                    showMessage(errorMessage, 'Por favor, selecione um arquivo.');
+                    resetSubmitButton();
+                    return;
+                }
                 
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percentComplete = Math.round((e.loaded / e.total) * 90) + 10;
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    payload.fileData = event.target.result; // Base64 Data URL
+                    payload.fileName = file.name;
+                    sendPayload(payload);
+                };
+                
+                reader.onerror = () => {
+                    showMessage(errorMessage, 'Erro ao ler o arquivo.');
+                    resetSubmitButton();
+                };
+
+                reader.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 50); // Reading is 50%
                         progressFill.style.width = percentComplete + '%';
                         progressFill.textContent = percentComplete + '%';
                     }
-                });
-                
-                const responsePromise = new Promise((resolve, reject) => {
-                    xhr.onload = () => {
-                        try {
-                            if (xhr.status >= 200 && xhr.status < 300) {
-                                resolve(JSON.parse(xhr.responseText));
-                            } else {
-                                reject(new Error(`Erro no servidor (${xhr.status}).`));
-                            }
-                        } catch (parseError) {
-                            reject(new Error('Resposta inválida do servidor.'));
-                        }
-                    };
-                    xhr.onerror = () => reject(new Error('Erro de conexão.'));
-                    xhr.ontimeout = () => reject(new Error('Tempo de resposta esgotado.'));
-                });
-                
-                xhr.open('POST', webhookUrl);
-                xhr.timeout = 300000; // 5 minutos
-                xhr.send(formData);
-                
-                progressFill.style.width = '100%';
-                progressFill.textContent = '100%';
-                
-                const result = await responsePromise;
-                
-                if (!result.success) {
-                    throw new Error(result.message || 'Erro no processamento.');
-                }
-                
-                setRateLimit();
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
-                form.reset();
-                updateFormState('');
-                
-            } catch (error) {
-                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Tente novamente.');
-            } finally {
-                submitButton.textContent = 'Enviar Checking';
-                submitButton.disabled = false;
-                progressBar.style.display = 'none';
-                progressFill.style.width = '0%';
-                progressFill.textContent = '0%';
+                };
+
+                reader.readAsDataURL(file);
             }
         });
+
+        async function sendPayload(payload) {
+             try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Simulating upload progress since JSON is sent at once
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Erro no servidor (${response.status})`);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                    form.reset();
+                    updateFormState('');
+                } else {
+                    throw new Error(result.message || 'Ocorreu um erro no processamento.');
+                }
+            } catch (error) {
+                showMessage(errorMessage, error.message);
+            } finally {
+                resetSubmitButton();
+            }
+        }
         
+        function resetSubmitButton() {
+            submitButton.textContent = 'Enviar Checking';
+            submitButton.disabled = false;
+            progressBar.style.display = 'none';
+        }
+
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
         });
-
     })();
 </script>
 </body>
