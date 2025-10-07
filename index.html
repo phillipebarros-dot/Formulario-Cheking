@@ -10,50 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-amarelo: #ffc107;
+            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; line-height: 1.6; }
         .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
         .container { max-width: 1100px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); position: relative; overflow: hidden; padding: 2.5rem 3rem; }
-        .container::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 8px; 
-            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
-        }
+        .container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
         .header { text-align: center; margin-bottom: 2rem; }
         .header img.logo-opusmultipla { max-width: 450px; width: 100%; height: auto; margin-bottom: 0.5rem; }
         .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; }
-        
-        .aviso-importante { 
-            padding: 0 0 1.5rem 0; 
-            margin-bottom: 2rem;
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .aviso-importante p {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #856404;
-            margin: 1rem 1rem;
-            text-transform: uppercase;
-        }
-        .aviso-importante img {
-            max-width: 100%;
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-        
+        .aviso-importante { padding: 0 0 1.5rem 0; margin-bottom: 2rem; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; text-align: center; }
+        .aviso-importante p { font-weight: 700; font-size: 1rem; color: #856404; margin: 1rem 1rem; text-transform: uppercase; }
+        .aviso-importante img { max-width: 100%; width: 100%; height: auto; display: block; margin: 0 auto; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
@@ -65,79 +34,15 @@
         .upload-group { margin-bottom: 1.5rem; }
         .upload-group:last-child { margin-bottom: 0; }
         .upload-group label { color: var(--cor-primaria); }
-        .honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+        .honeypot { display: none; }
         button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
-        button[type="submit"]:hover { background-color: #002880; }
         button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
-        .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
-        .drive-link-section h3 { margin-bottom: 0.5rem; color: #856404; }
-        .drive-link-section p { margin-bottom: 1rem; color: #856404; font-size: 0.95rem; }
-        .drive-link-section .instrucoes-drive { background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; }
-        .drive-link-section .instrucoes-drive ol { margin-left: 1.5rem; }
-        .drive-link-section .instrucoes-drive li { margin-bottom: 0.5rem; }
-        .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
-        .progress-bar { display: none; width: 100%; height: 30px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
-        .progress-fill { height: 100%; background: linear-gradient(to right, #0033a0, #43aa8b); transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; }
-        
-        footer {
-            width: 100%;
-            background-color: #1a202c;
-            color: #ffffff;
-            text-align: center;
-            padding: 0;
-            margin-top: 3rem;
-            position: relative;
-        }
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 8px;
-            background: linear-gradient(90deg, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a, #d90429, #fca311, #90be6d);
-            background-size: 200% 100%;
-            animation: gradientMove 8s linear infinite;
-        }
-        
-        @keyframes gradientMove {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 200% 0%; }
-        }
-        footer .footer-content {
-            padding: 2rem 1rem;
-        }
-        footer .footer-logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-        footer .footer-subtitle {
-            font-size: 0.9rem;
-            color: #cbd5e0;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-        footer p {
-            margin: 0.5rem 0;
-            font-size: 0.85rem;
-            color: #a0aec0;
-        }
-        
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .container { padding: 1.5rem; }
-            footer { margin-top: 2rem; padding: 1.5rem 1rem; }
-            footer .footer-logo { font-size: 1.5rem; }
-            .aviso-importante p { font-size: 0.9rem; }
-        }
+        footer { width: 100%; background-color: #1a202c; color: #ffffff; text-align: center; padding: 2rem 1rem; margin-top: 3rem; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .container { padding: 1.5rem; } }
     </style>
 </head>
 <body>
@@ -147,473 +52,148 @@
                 <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
                 <h1>CHECKING</h1>
             </div>
-            
             <div class="aviso-importante">
                 <p>SÓ ACEITAREMOS CHECKINGS POR ARQUIVOS, LINKS NÃO SERÃO PERMITIDOS.</p>
                 <img src="comunicado.jpg" alt="Informações sobre envio de checking">
             </div>
-            
             <form id="checkingForm" novalidate>
-                <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
-                
                 <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="nome">Seu Nome *</label>
-                        <input type="text" id="nome" name="nome" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Seu E-mail *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="telefone">Seu Telefone *</label>
-                        <input type="tel" id="telefone" name="telefone" required>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="pi">Número da PI *</label>
-                        <input type="text" id="pi" name="n_pi" required placeholder="Digite o número da PI">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cliente">Cliente</label>
-                        <input type="text" id="cliente" name="cliente" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="campanha">Campanha</label>
-                        <input type="text" id="campanha" name="campanha" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="produto">Produto</label>
-                        <input type="text" id="produto" name="produto" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="periodo">Período</label>
-                        <input type="text" id="periodo" name="periodo" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="veiculo">Veículo</label>
-                        <input type="text" id="veiculo" name="veiculo" readonly>
-                    </div>
-                    
+                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
+                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
+                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required placeholder="Digite o número da PI"></div>
+                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
+                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
+                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
+                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" readonly></div>
+                    <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" readonly></div>
                     <div class="form-group">
                         <label for="meio">Meio</label>
                         <select id="meio" name="meio" class="campo-bloqueado">
                             <option value="">Aguardando PI...</option>
-                            <option value="AT">Ativacao</option>
-                            <option value="BD">Busdoor</option>
-                            <option value="CI">Cinema</option>
-                            <option value="DO">Digital Out of Home</option>
-                            <option value="FL">Frontlight</option>
-                            <option value="IN">Internet</option>
-                            <option value="JO">Jornal</option>
-                            <option value="MO">Metro</option>
-                            <option value="ME">Midia Externa</option>
-                            <option value="MI">Midia Interna</option>
-                            <option value="OD">Outdoor</option>
-                            <option value="TP">Patrocinios</option>
-                            <option value="RD">Radio</option>
-                            <option value="RV">Revista</option>
-                            <option value="TV">TV</option>
+                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option>
+                            <option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option>
+                            <option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option>
+                            <option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option>
+                            <option value="RD">Radio</option><option value="RV">Revista</option><option value="TV">TV</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="observacoes">Observações</label>
-                        <textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais sobre o checking"></textarea>
-                    </div>
-                    
+                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" placeholder="Observações adicionais"></textarea></div>
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
-                        <div class="size-info">Limite: 500MB total por envio. Para arquivos maiores, use o link do Google Drive.</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
-                            
-                            <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label>1. Relatório Fotográfico de Todos os Pontos *</label>
-                                <input type="file" name="relatorio_fotografico_do" multiple accept=".pdf,.jpg,.jpeg,.png,.zip,.rar">
+                            <div class="upload-group" data-meio="TV" style="display: none;"><label>Relatório de Veiculação Automatizado *</label><input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv"></div>
                             </div>
-                            <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label>2. Relatório de Exibições Automatizado *</label>
-                                <input type="file" name="relatorio_exibicoes_do" multiple accept=".pdf,.xls,.xlsx,.csv,.zip">
-                            </div>
-                            <div class="upload-group" data-meio="DO" style="display: none;">
-                                <label>3. Vídeo Diurno *</label>
-                                <input type="file" name="video_diurno_do" multiple accept=".mp4,.avi,.mov,.zip">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="ME" style="display: none;">
-                                <label>1. Relatório com Endereços dos Pontos *</label>
-                                <input type="file" name="relatorio_enderecos_me" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
-                            </div>
-                            <div class="upload-group" data-meio="ME" style="display: none;">
-                                <label>2. Fotos Diurnas dos Pontos (Amostrais) - Se iluminado: incluir foto noturna *</label>
-                                <input type="file" name="fotos_pontos_me" multiple accept=".jpg,.jpeg,.png,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="MO" style="display: none;">
-                                <label>1. Relatório: Listagem de Estações, Linhas e Carros *</label>
-                                <input type="file" name="relatorio_estacoes_mo" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
-                            </div>
-                            <div class="upload-group" data-meio="MO" style="display: none;">
-                                <label>2. Fotos ou Vídeos (Amostrais) *</label>
-                                <input type="file" name="fotos_videos_mo" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="BD" style="display: none;">
-                                <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
-                                <input type="file" name="comprovante_bd" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="OD FL" style="display: none;">
-                                <label>Relatório Fotográfico com Endereço de Todos os Pontos - Se iluminado: incluir foto noturna *</label>
-                                <input type="file" name="comprovante_od_fl" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="MI" style="display: none;">
-                                <label>Relatório Fotográfico de Todos os Pontos + Relação de Locais *</label>
-                                <input type="file" name="comprovante_mi" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="RD TP" style="display: none;">
-                                <label>Relatório de Veiculação Automatizado (se ação ao vivo: enviar gravação ou relatório com ações e horários) *</label>
-                                <input type="file" name="comprovante_rd_tp" multiple accept=".pdf,.xls,.xlsx,.mp3,.wav,.zip">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="CI" style="display: none;">
-                                <label>Relatório de Exibição (complexo, número de salas, praça) *</label>
-                                <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="JO RV" style="display: none;">
-                                <label>Material Físico (preferencialmente) + PDF/Foto do Título com Material Veiculado *</label>
-                                <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="AT" style="display: none;">
-                                <label>Relatório Fotográfico ou Vídeos + Detalhamento das Ações *</label>
-                                <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="TV" style="display: none;">
-                                <label>Relatório de Veiculação Automatizado *</label>
-                                <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv">
-                            </div>
-                            
-                            <div class="upload-group" data-meio="IN" style="display: none;">
-                                <label>Relatório de Veiculação + Prints das Peças *</label>
-                                <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
-                            </div>
-                        </div>
-                        <div class="file-counter" id="fileCounter"></div>
-                        <div class="size-warning" id="sizeWarning">
-                            Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
-                        </div>
                     </div>
-
-                    <div class="form-group full-width">
-                        <div class="drive-link-section" id="driveLinkSection">
-                            <h3>Link do Google Drive (Arquivos Grandes)</h3>
-                            <p><strong>Como seus arquivos ultrapassam 500MB, siga os passos abaixo:</strong></p>
-                            <div class="instrucoes-drive">
-                                <ol>
-                                    <li>Faça upload dos arquivos para o <strong>Google Drive</strong></li>
-                                    <li>Crie uma pasta com o nome: <strong>PI [Número] - [Cliente] - [Veículo]</strong></li>
-                                    <li>Clique com botão direito na pasta e selecione <strong>Compartilhar</strong></li>
-                                    <li>Configure como: <strong>"Qualquer pessoa com o link pode visualizar"</strong></li>
-                                    <li>Copie o link e cole abaixo</li>
-                                </ol>
-                            </div>
-                            <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <button type="submit">Enviar Checking</button>
-                        <div class="progress-bar" id="progressBar">
-                            <div class="progress-fill" id="progressFill">0%</div>
-                        </div>
-                    </div>
+                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
                 </div>
             </form>
             <div class="message-box" id="successMessage"></div>
             <div class="message-box" id="errorMessage"></div>
         </div>
     </div>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">GRUPO OM</div>
-            <div class="footer-subtitle">Comunicação Integrada</div>
-            <p>&copy; 2025 OpusMúltipla - Todos os direitos reservados</p>
-        </div>
-    </footer>
-    
+    <footer><p>&copy; 2025 OpusMúltipla</p></footer>
 <script>
-    (function () {
-        const MAX_SIZE = 500 * 1024 * 1024;
-        const form = document.getElementById('checkingForm');
-        const piInput = document.getElementById('pi');
-        const meioSelect = document.getElementById('meio');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
-        const submitButton = form.querySelector('button[type="submit"]');
-        const uploadArea = document.getElementById('upload-area-dinamica');
-        const uploadPlaceholder = document.getElementById('upload-placeholder');
-        const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
-        const sizeWarning = document.getElementById('sizeWarning');
-        const driveLinkSection = document.getElementById('driveLinkSection');
-        const driveLink = document.getElementById('driveLink');
-        const fileCounter = document.getElementById('fileCounter');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('checkingForm');
+    const piInput = document.getElementById('pi');
+    const meioSelect = document.getElementById('meio');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const uploadGroups = document.querySelectorAll('.upload-group');
+    const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+    
+    function showMessage(element, message) {
+        element.innerHTML = message;
+        element.style.display = 'block';
+    }
 
-        let piFetchController = null;
-        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+    function clearMessages() {
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+    }
 
-        function showMessage(element, message) { 
-            element.innerHTML = message; 
-            element.style.display = 'block'; 
-            setTimeout(() => { 
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); 
-            }, 100); 
-        }
+    function updateFormState(meio) {
+        uploadGroups.forEach(group => {
+            const isVisible = meio && group.dataset.meio.split(' ').includes(meio);
+            group.style.display = isVisible ? 'block' : 'none';
+            group.querySelector('input[type="file"]').required = isVisible;
+        });
+    }
+
+    piInput.addEventListener('input', async () => {
+        const npi = piInput.value.trim();
+        if (!npi) return;
         
-        function clearMessages() { 
-            successMessage.style.display = 'none'; 
-            errorMessage.style.display = 'none'; 
-        }
-        
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        function updateFormState(meio) {
-            let algumCampoAnexoVisivel = false;
-            allUploadGroups.forEach(group => {
-                const meiosDoGrupo = group.dataset.meio.split(' ');
-                const input = group.querySelector('input[type="file"]');
-                const isVisible = meio && meiosDoGrupo.includes(meio);
-                
-                if (isVisible) {
-                    group.style.display = 'block';
-                    algumCampoAnexoVisivel = true;
-                    input.required = true;
-                } else {
-                    group.style.display = 'none';
-                    input.required = false;
-                    input.value = '';
-                }
+        try {
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'buscar_pi', n_pi: npi })
             });
-            uploadPlaceholder.style.display = algumCampoAnexoVisivel ? 'none' : 'block';
-
-            let totalSize = 0;
-            let totalFiles = 0;
-            const allFileInputs = uploadArea.querySelectorAll('input[type="file"]');
-            allFileInputs.forEach(input => {
-                if (input.files) {
-                    for (const file of input.files) {
-                        totalSize += file.size;
-                        totalFiles++;
-                    }
-                }
-            });
-
-            fileCounter.textContent = totalFiles > 0 ? `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}` : '';
-            const isOverSize = totalSize > MAX_SIZE;
-
-            sizeWarning.style.display = isOverSize ? 'block' : 'none';
-            driveLinkSection.style.display = isOverSize ? 'block' : 'none';
-            driveLink.required = isOverSize;
-
-            allUploadGroups.forEach(group => {
-                const input = group.querySelector('input[type="file"]');
-                const meiosDoGrupo = group.dataset.meio.split(' ');
-                const isVisible = meio && meiosDoGrupo.includes(meio);
-                
-                if (isOverSize) {
-                    input.disabled = true;
-                    input.required = false;
-                } else {
-                    input.disabled = false;
-                    input.required = isVisible;
-                }
-            });
-        }
-        
-        uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
-
-        async function buscarDadosPI(npi) {
-            const fieldsToReset = [
-                'cliente', 'campanha', 'produto', 'periodo', 'veiculo', 'meio'
-            ].map(id => document.getElementById(id));
-
-            fieldsToReset.forEach(el => el.value = '');
-            updateFormState('');
-            if (!npi) return;
-
-            if (piFetchController) piFetchController.abort();
-            piFetchController = new AbortController();
-            clearMessages();
-
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'buscar_pi', 
-                        n_pi: npi
-                    }),
-                    signal: piFetchController.signal,
-                });
-                
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Erro de rede');
-
-                if (data.success) {
-                    document.getElementById('cliente').value = data.cliente || '';
-                    document.getElementById('campanha').value = data.campanha || '';
-                    document.getElementById('produto').value = data.produto || '';
-                    document.getElementById('periodo').value = data.periodo || '';
-                    document.getElementById('veiculo').value = data.veiculo || '';
-                    meioSelect.value = data.meio || '';
-                    updateFormState(data.meio);
-                } else {
-                    showMessage(errorMessage, 'PI não encontrada. Verifique o número digitado.');
-                }
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Erro ao buscar PI:', error);
-                }
-            }
-        }
-        
-        // =================================================================
-        // CORREÇÃO APLICADA AQUI
-        // =================================================================
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            clearMessages();
-
-            // Declara a variável 'usandoLink' UMA ÚNICA VEZ no início da função.
-            const usandoLink = driveLinkSection.style.display === 'block';
-
-            // Re-valida os campos de anexo antes de submeter
-            if (!usandoLink) {
-                 const meio = meioSelect.value;
-                 allUploadGroups.forEach(group => {
-                     const input = group.querySelector('input[type="file"]');
-                     const meiosDoGrupo = group.dataset.meio.split(' ');
-                     const isVisible = meio && meiosDoGrupo.includes(meio);
-                     // Garante que apenas os campos visíveis sejam obrigatórios
-                     if (isVisible && input.files.length === 0) {
-                         input.required = true;
-                     }
-                 });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('cliente').value = data.cliente || '';
+                document.getElementById('campanha').value = data.campanha || '';
+                document.getElementById('produto').value = data.produto || '';
+                document.getElementById('periodo').value = data.periodo || '';
+                document.getElementById('veiculo').value = data.veiculo || '';
+                meioSelect.value = data.meio || '';
+                updateFormState(data.meio);
             } else {
-                driveLink.required = true;
+                showMessage(errorMessage, 'PI não encontrada.');
             }
+        } catch (error) {
+            console.error('Erro ao buscar PI:', error);
+        }
+    });
 
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
-                form.reportValidity(); // Força o navegador a mostrar suas próprias mensagens de validação
-                return;
-            }
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearMessages();
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
 
-            submitButton.textContent = 'Enviando...';
-            submitButton.disabled = true;
-            progressBar.style.display = 'block';
-            progressFill.style.width = '10%';
-            progressFill.textContent = '10%';
-            
-            const formData = new FormData(form);
-            
-            // Limpa campos de controle para evitar duplicidade
-            formData.delete('upload_method');
-            formData.delete('action');
-            formData.delete('website'); // Remove honeypot
-            
-            // Usa .set() para garantir um valor único (string), reutilizando a variável 'usandoLink'
-            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
-            formData.set('action', 'submissao_form');
-            
-            // Limpa campos desnecessários com base no método de envio
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
-                });
-            } else {
-                formData.delete('drive_link');
-            }
+        const formData = new FormData(form);
+        formData.set('action', 'submissao_form');
+        formData.set('upload_method', 'binary'); // Simplificado para este exemplo
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', webhookUrl);
-            xhr.timeout = 300000; // 5 minutos
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', webhookUrl, true);
 
-            xhr.upload.addEventListener('progress', (ev) => {
-                if (ev.lengthComputable) {
-                    const percentComplete = Math.round((ev.loaded / ev.total) * 90) + 10;
-                    progressFill.style.width = percentComplete + '%';
-                    progressFill.textContent = percentComplete + '%';
-                }
-            });
-
-            xhr.onload = () => {
-                let responseData;
-                try {
-                    responseData = JSON.parse(xhr.responseText);
-                } catch (err) {
-                    showMessage(errorMessage, 'Ocorreu um erro inesperado. Resposta inválida do servidor.');
-                    console.error("Resposta não-JSON:", xhr.responseText);
-                    return;
-                }
-
-                if (xhr.status >= 200 && xhr.status < 300 && responseData.success) {
-                    showMessage(successMessage, responseData.message || 'Checking enviado com sucesso!');
+        xhr.onload = function () {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Enviar Checking';
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+                if(response.success){
+                    showMessage(successMessage, response.message);
                     form.reset();
                     updateFormState('');
                 } else {
-                    showMessage(errorMessage, responseData.message || `Erro no servidor (${xhr.status}). Tente novamente.`);
+                    showMessage(errorMessage, response.message);
                 }
-            };
+            } else {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    showMessage(errorMessage, response.message || 'Erro no servidor.');
+                } catch {
+                    showMessage(errorMessage, `Erro ${xhr.status}: ${xhr.statusText}`);
+                }
+            }
+        };
 
-            xhr.onerror = () => {
-                showMessage(errorMessage, 'Erro de conexão. Verifique sua rede e tente novamente.');
-            };
-
-            xhr.ontimeout = () => {
-                showMessage(errorMessage, 'O envio demorou muito para responder (timeout). Tente novamente.');
-            };
-            
-            xhr.onloadend = () => {
-                submitButton.textContent = 'Enviar Checking';
-                submitButton.disabled = false;
-                progressBar.style.display = 'none';
-                progressFill.style.width = '0%';
-                progressFill.textContent = '0%';
-            };
-
-            xhr.send(formData);
-        });
+        xhr.onerror = function () {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Enviar Checking';
+            showMessage(errorMessage, 'Erro de rede ao tentar enviar.');
+        };
         
-        let debounceTimeout;
-        piInput.addEventListener('input', () => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
-        });
-
-    })();
+        xhr.send(formData);
+    });
+});
 </script>
 </body>
 </html>
