@@ -32,14 +32,17 @@
         .aviso-importante { 
             padding: 0 0 1.5rem 0; 
             margin-bottom: 2rem;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            text-align: center;
         }
         .aviso-importante p {
             font-weight: 700;
             font-size: 1rem;
-            color: #000;
-            margin: 0 0 1rem 0;
+            color: #856404;
+            margin: 1rem 1rem;
             text-transform: uppercase;
-            text-align: center;
         }
         .aviso-importante img {
             max-width: 100%;
@@ -47,6 +50,8 @@
             height: auto;
             display: block;
             margin: 0 auto;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
         }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -149,7 +154,6 @@
             </div>
             
             <form id="checkingForm" novalidate>
-                <!-- Honeypot Field (anti-bot) -->
                 <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
                 
                 <div class="form-grid">
@@ -231,7 +235,6 @@
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
-                            <!-- DO - DOOH (3 campos) -->
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label>1. Relatório Fotográfico de Todos os Pontos *</label>
                                 <input type="file" name="relatorio_fotografico_do" multiple accept=".pdf,.jpg,.jpeg,.png,.zip,.rar">
@@ -245,7 +248,6 @@
                                 <input type="file" name="video_diurno_do" multiple accept=".mp4,.avi,.mov,.zip">
                             </div>
                             
-                            <!-- ME - Mídia Exterior MUB (2 campos) -->
                             <div class="upload-group" data-meio="ME" style="display: none;">
                                 <label>1. Relatório com Endereços dos Pontos *</label>
                                 <input type="file" name="relatorio_enderecos_me" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
@@ -255,7 +257,6 @@
                                 <input type="file" name="fotos_pontos_me" multiple accept=".jpg,.jpeg,.png,.zip,.rar">
                             </div>
                             
-                            <!-- MO - Metrô (2 campos) -->
                             <div class="upload-group" data-meio="MO" style="display: none;">
                                 <label>1. Relatório: Listagem de Estações, Linhas e Carros *</label>
                                 <input type="file" name="relatorio_estacoes_mo" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
@@ -265,55 +266,46 @@
                                 <input type="file" name="fotos_videos_mo" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
                             
-                            <!-- BD - Busdoor (1 campo) -->
                             <div class="upload-group" data-meio="BD" style="display: none;">
                                 <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
                                 <input type="file" name="comprovante_bd" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- OD/FL - Outdoor/Fronts (1 campo) -->
                             <div class="upload-group" data-meio="OD FL" style="display: none;">
                                 <label>Relatório Fotográfico com Endereço de Todos os Pontos - Se iluminado: incluir foto noturna *</label>
                                 <input type="file" name="comprovante_od_fl" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- MI - Mídia Interna (1 campo) -->
                             <div class="upload-group" data-meio="MI" style="display: none;">
                                 <label>Relatório Fotográfico de Todos os Pontos + Relação de Locais *</label>
                                 <input type="file" name="comprovante_mi" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- RD/TP - Rádio/Patrocínios -->
                             <div class="upload-group" data-meio="RD TP" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado (se ação ao vivo: enviar gravação ou relatório com ações e horários) *</label>
                                 <input type="file" name="comprovante_rd_tp" multiple accept=".pdf,.xls,.xlsx,.mp3,.wav,.zip">
                             </div>
                             
-                            <!-- CI - Cinema -->
                             <div class="upload-group" data-meio="CI" style="display: none;">
                                 <label>Relatório de Exibição (complexo, número de salas, praça) *</label>
                                 <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
                             </div>
                             
-                            <!-- JO/RV - Mídia Impressa -->
                             <div class="upload-group" data-meio="JO RV" style="display: none;">
                                 <label>Material Físico (preferencialmente) + PDF/Foto do Título com Material Veiculado *</label>
                                 <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
                             </div>
                             
-                            <!-- AT - Projetos Especiais -->
                             <div class="upload-group" data-meio="AT" style="display: none;">
                                 <label>Relatório Fotográfico ou Vídeos + Detalhamento das Ações *</label>
                                 <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
                             
-                            <!-- TV - Televisão -->
                             <div class="upload-group" data-meio="TV" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado *</label>
                                 <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv">
                             </div>
                             
-                            <!-- IN - Internet -->
                             <div class="upload-group" data-meio="IN" style="display: none;">
                                 <label>Relatório de Veiculação + Prints das Peças *</label>
                                 <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
@@ -366,16 +358,8 @@
 <script>
     (function () {
         const MAX_SIZE = 500 * 1024 * 1024;
-        const RATE_LIMIT_KEY = 'checking_last_submit';
-        const RATE_LIMIT_MS = 30000;
-        
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
-        const clienteInput = document.getElementById('cliente');
-        const campanhaInput = document.getElementById('campanha');
-        const produtoInput = document.getElementById('produto');
-        const periodoInput = document.getElementById('periodo');
-        const veiculoInput = document.getElementById('veiculo');
         const meioSelect = document.getElementById('meio');
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
@@ -412,22 +396,6 @@
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        function checkRateLimit() {
-            const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
-            if (lastSubmit) {
-                const timeSince = Date.now() - parseInt(lastSubmit);
-                if (timeSince < RATE_LIMIT_MS) {
-                    const waitTime = Math.ceil((RATE_LIMIT_MS - timeSince) / 1000);
-                    return { allowed: false, waitTime };
-                }
-            }
-            return { allowed: true };
-        }
-        
-        function setRateLimit() {
-            localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
         }
 
         function updateFormState(meio) {
@@ -486,7 +454,11 @@
         uploadArea.addEventListener('change', () => updateFormState(meioSelect.value));
 
         async function buscarDadosPI(npi) {
-            [clienteInput, campanhaInput, produtoInput, periodoInput, veiculoInput, meioSelect].forEach(el => el.value = '');
+            const fieldsToReset = [
+                'cliente', 'campanha', 'produto', 'periodo', 'veiculo', 'meio'
+            ].map(id => document.getElementById(id));
+
+            fieldsToReset.forEach(el => el.value = '');
             updateFormState('');
             if (!npi) return;
 
@@ -509,11 +481,11 @@
                 if (!response.ok) throw new Error(data.message || 'Erro de rede');
 
                 if (data.success) {
-                    clienteInput.value = data.cliente || '';
-                    campanhaInput.value = data.campanha || '';
-                    produtoInput.value = data.produto || '';
-                    periodoInput.value = data.periodo || '';
-                    veiculoInput.value = data.veiculo || '';
+                    document.getElementById('cliente').value = data.cliente || '';
+                    document.getElementById('campanha').value = data.campanha || '';
+                    document.getElementById('produto').value = data.produto || '';
+                    document.getElementById('periodo').value = data.periodo || '';
+                    document.getElementById('veiculo').value = data.veiculo || '';
                     meioSelect.value = data.meio || '';
                     updateFormState(data.meio);
                 } else {
@@ -530,25 +502,25 @@
             e.preventDefault();
             clearMessages();
 
+            // Re-valida os campos de anexo antes de submeter
             const usandoLink = driveLinkSection.style.display === 'block';
-            
-            if (usandoLink) {
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    input.required = false;
-                });
+            if (!usandoLink) {
+                 const meio = meioSelect.value;
+                 allUploadGroups.forEach(group => {
+                     const input = group.querySelector('input[type="file"]');
+                     const meiosDoGrupo = group.dataset.meio.split(' ');
+                     const isVisible = meio && meiosDoGrupo.includes(meio);
+                     // Garante que apenas os campos visíveis sejam obrigatórios
+                     input.required = isVisible && input.files.length === 0;
+                 });
             } else {
-                const meio = meioSelect.value;
-                allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    const meiosDoGrupo = group.dataset.meio.split(' ');
-                    const isVisible = meio && meiosDoGrupo.includes(meio);
-                    input.required = isVisible;
-                });
+                driveLink.required = true;
             }
 
             if (!form.checkValidity()) {
                 showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
+                // Força o navegador a mostrar suas próprias mensagens de validação
+                form.reportValidity();
                 return;
             }
 
@@ -560,27 +532,17 @@
             
             const formData = new FormData(form);
             
-            // CORREÇÃO CRÍTICA: Remove duplicatas e define valores únicos
+            // --- CORREÇÃO CRÍTICA ---
+            // Remove valores que possam ter sido adicionados por engano
             formData.delete('upload_method');
             formData.delete('action');
             formData.delete('website'); // Remove honeypot
             
-            // Adiciona como strings simples (não arrays)
+            // Usa .set() para garantir um valor único (string)
             formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.set('action', 'submissao_form');
             
-            console.log('Meio selecionado:', meioSelect.value);
-            console.log('Upload method:', usandoLink ? 'drive_link' : 'binary');
-            
-            // Verificar arquivos enviados
-            for (let pair of formData.entries()) {
-                if (pair[1] instanceof File) {
-                    console.log('Arquivo:', pair[0], '=', pair[1].name);
-                } else {
-                    console.log('Campo:', pair[0], '=', pair[1]);
-                }
-            }
-
+            // Limpa campos desnecessários
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
@@ -590,71 +552,56 @@
                 formData.delete('drive_link');
             }
 
-            try {
-                const xhr = new XMLHttpRequest();
-                
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percentComplete = Math.round((e.loaded / e.total) * 90) + 10;
-                        progressFill.style.width = percentComplete + '%';
-                        progressFill.textContent = percentComplete + '%';
-                    }
-                });
-                
-                const responsePromise = new Promise((resolve, reject) => {
-                    xhr.onload = () => {
-                        try {
-                            if (xhr.status >= 200 && xhr.status < 300) {
-                                resolve(JSON.parse(xhr.responseText));
-                            } else {
-                                // MOSTRA O ERRO DETALHADO DO SERVIDOR
-                                let errorMsg = `Erro no servidor (${xhr.status}).`;
-                                try {
-                                    const errorData = JSON.parse(xhr.responseText);
-                                    errorMsg = errorData.message || errorMsg;
-                                    console.error('Erro do servidor:', errorData);
-                                } catch (e) {
-                                    console.error('Resposta do servidor:', xhr.responseText);
-                                }
-                                reject(new Error(errorMsg));
-                            }
-                        } catch (parseError) {
-                            console.error('Erro ao parsear resposta:', parseError);
-                            reject(new Error('Resposta inválida do servidor.'));
-                        }
-                    };
-                    xhr.onerror = () => reject(new Error('Erro de conexão.'));
-                    xhr.ontimeout = () => reject(new Error('Tempo de resposta esgotado.'));
-                });
-                
-                xhr.open('POST', webhookUrl);
-                xhr.timeout = 300000; // 5 minutos
-                xhr.send(formData);
-                
-                progressFill.style.width = '100%';
-                progressFill.textContent = '100%';
-                
-                const result = await responsePromise;
-                
-                if (!result.success) {
-                    throw new Error(result.message || 'Erro no processamento.');
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', webhookUrl);
+            xhr.timeout = 300000; // 5 minutos
+
+            xhr.upload.addEventListener('progress', (ev) => {
+                if (ev.lengthComputable) {
+                    const percentComplete = Math.round((ev.loaded / ev.total) * 90) + 10;
+                    progressFill.style.width = percentComplete + '%';
+                    progressFill.textContent = percentComplete + '%';
                 }
-                
-                setRateLimit();
-                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
-                form.reset();
-                updateFormState('');
-                
-            } catch (error) {
-                console.error('Erro completo:', error);
-                showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Tente novamente.');
-            } finally {
+            });
+
+            xhr.onload = () => {
+                let responseData;
+                try {
+                    responseData = JSON.parse(xhr.responseText);
+                } catch (err) {
+                    showMessage(errorMessage, 'Ocorreu um erro inesperado. Resposta inválida do servidor.');
+                    console.error("Resposta não-JSON:", xhr.responseText);
+                    return; // Finaliza o finally abaixo
+                }
+
+                if (xhr.status >= 200 && xhr.status < 300 && responseData.success) {
+                    showMessage(successMessage, responseData.message || 'Checking enviado com sucesso!');
+                    form.reset();
+                    updateFormState('');
+                } else {
+                    // Exibe a mensagem de erro específica vinda do n8n
+                    showMessage(errorMessage, responseData.message || `Erro no servidor (${xhr.status}). Tente novamente.`);
+                }
+            };
+
+            xhr.onerror = () => {
+                showMessage(errorMessage, 'Erro de conexão. Verifique sua rede e tente novamente.');
+            };
+
+            xhr.ontimeout = () => {
+                showMessage(errorMessage, 'O envio demorou muito para responder (timeout). Tente novamente.');
+            };
+            
+            xhr.onloadend = () => {
+                 // Este bloco sempre será executado, sucedendo onload, onerror, ontimeout
                 submitButton.textContent = 'Enviar Checking';
                 submitButton.disabled = false;
                 progressBar.style.display = 'none';
                 progressFill.style.width = '0%';
                 progressFill.textContent = '0%';
-            }
+            };
+
+            xhr.send(formData);
         });
         
         let debounceTimeout;
