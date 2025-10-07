@@ -292,31 +292,31 @@
                             <!-- CI - Cinema -->
                             <div class="upload-group" data-meio="CI" style="display: none;">
                                 <label>Relatório de Exibição (complexo, número de salas, praça) *</label>
-                                <input type="file" name="comprovante_geral" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
+                                <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
                             </div>
                             
                             <!-- JO/RV - Mídia Impressa -->
                             <div class="upload-group" data-meio="JO RV" style="display: none;">
                                 <label>Material Físico (preferencialmente) + PDF/Foto do Título com Material Veiculado *</label>
-                                <input type="file" name="comprovante_geral" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
+                                <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
                             </div>
                             
                             <!-- AT - Projetos Especiais -->
                             <div class="upload-group" data-meio="AT" style="display: none;">
                                 <label>Relatório Fotográfico ou Vídeos + Detalhamento das Ações *</label>
-                                <input type="file" name="comprovante_geral" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
+                                <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
                             
                             <!-- TV - Televisão -->
                             <div class="upload-group" data-meio="TV" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado *</label>
-                                <input type="file" name="comprovante_geral" multiple accept=".pdf,.xls,.xlsx,.csv">
+                                <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv">
                             </div>
                             
                             <!-- IN - Internet -->
                             <div class="upload-group" data-meio="IN" style="display: none;">
                                 <label>Relatório de Veiculação + Prints das Peças *</label>
-                                <input type="file" name="comprovante_geral" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
+                                <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
                             </div>
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
@@ -559,13 +559,16 @@
             progressFill.textContent = '10%';
             
             const formData = new FormData(form);
-            formData.append('upload_method', usandoLink ? 'drive_link' : 'binary');
-            formData.append('action', 'submissao_form');
             
-            // Remove honeypot do envio
-            formData.delete('website');
+            // CORREÇÃO CRÍTICA: Remove duplicatas e define valores únicos
+            formData.delete('upload_method');
+            formData.delete('action');
+            formData.delete('website'); // Remove honeypot
             
-            // Debug - ver o que está sendo enviado
+            // Adiciona como strings simples (não arrays)
+            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
+            formData.set('action', 'submissao_form');
+            
             console.log('Meio selecionado:', meioSelect.value);
             console.log('Upload method:', usandoLink ? 'drive_link' : 'binary');
             
@@ -604,9 +607,19 @@
                             if (xhr.status >= 200 && xhr.status < 300) {
                                 resolve(JSON.parse(xhr.responseText));
                             } else {
-                                reject(new Error(`Erro no servidor (${xhr.status}).`));
+                                // MOSTRA O ERRO DETALHADO DO SERVIDOR
+                                let errorMsg = `Erro no servidor (${xhr.status}).`;
+                                try {
+                                    const errorData = JSON.parse(xhr.responseText);
+                                    errorMsg = errorData.message || errorMsg;
+                                    console.error('Erro do servidor:', errorData);
+                                } catch (e) {
+                                    console.error('Resposta do servidor:', xhr.responseText);
+                                }
+                                reject(new Error(errorMsg));
                             }
                         } catch (parseError) {
+                            console.error('Erro ao parsear resposta:', parseError);
                             reject(new Error('Resposta inválida do servidor.'));
                         }
                     };
@@ -633,6 +646,7 @@
                 updateFormState('');
                 
             } catch (error) {
+                console.error('Erro completo:', error);
                 showMessage(errorMessage, error.message || 'Ocorreu um erro inesperado. Tente novamente.');
             } finally {
                 submitButton.textContent = 'Enviar Checking';
