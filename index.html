@@ -26,8 +26,8 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
-        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem; color: var(--cor-secundaria); }
-        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1.05rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--cor-secundaria); }
+        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1.15rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
@@ -301,11 +301,13 @@
                     signal: piFetchController.signal,
                 });
                 
-                const data = await response.json();
-
                 if (!response.ok) {
-                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error("Resposta de erro do servidor:", errorText);
+                    throw new Error(`Erro ${response.status} ao buscar PI.`);
                 }
+                
+                const data = await response.json();
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
@@ -326,6 +328,10 @@
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
+                    console.error("Erro detalhado ao buscar PI:", error);
+                    if (error instanceof SyntaxError) {
+                        showMessage(errorMessage, 'Erro de comunicação com o servidor ao buscar a PI.');
+                    }
                     resetPIFields();
                 }
             }
@@ -368,25 +374,21 @@
             submitButton.disabled = true;
             
             const formData = new FormData(form);
+
+            formData.delete('action');
+            formData.delete('upload_method');
+
+            formData.set('action', 'submissao_form');
+            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             
             if (usandoLink) {
-                formData.append('upload_method', 'drive_link');
+                 allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    formData.delete(input.name);
+                });
             } else {
                 formData.delete('drive_link');
-                
-                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
-                allFileInputs.forEach(input => {
-                    formData.delete(input.name); 
-                    if (input.files.length > 0) {
-                        for (let i = 0; i < input.files.length; i++) {
-                            formData.append(input.name, input.files[i]);
-                        }
-                    }
-                });
-                formData.append('upload_method', 'binary');
             }
-
-            formData.append('action', 'submissao_form');
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
@@ -404,9 +406,7 @@
                 
             } catch (error) {
                 let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error.message.includes('fetch')) {
-                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                } else if (error instanceof SyntaxError) {
+                if (error instanceof SyntaxError) {
                     errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                 } else {
                     errorMessageText = error.message;
@@ -421,7 +421,7 @@
         let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()), 500);
         });
 
     })();
