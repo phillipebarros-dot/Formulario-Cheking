@@ -564,6 +564,19 @@
             
             // Remove honeypot do envio
             formData.delete('website');
+            
+            // Debug - ver o que está sendo enviado
+            console.log('Meio selecionado:', meioSelect.value);
+            console.log('Upload method:', usandoLink ? 'drive_link' : 'binary');
+            
+            // Verificar arquivos enviados
+            for (let pair of formData.entries()) {
+                if (pair[1] instanceof File) {
+                    console.log('Arquivo:', pair[0], '=', pair[1].name);
+                } else {
+                    console.log('Campo:', pair[0], '=', pair[1]);
+                }
+            }
 
             if (usandoLink) {
                 allUploadGroups.forEach(group => {
