@@ -13,8 +13,8 @@
             --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-fundo: #fefcbf; --cor-aviso-texto: #9f580a; --cor-aviso-borda: #fce18a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; align-items: center; min-height: 100vh; line-height: 1.6; }
-        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; flex-grow: 1; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; line-height: 1.6; }
+        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
         .container { max-width: 1100px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); position: relative; overflow: hidden; padding: 2.5rem 3rem; }
         .container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
         .header { text-align: center; margin-bottom: 2rem; }
@@ -26,8 +26,8 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .full-width { grid-column: 1 / -1; }
-        label { font-weight: 700; margin-bottom: 0.5rem; font-size: 1rem; color: var(--cor-secundaria); }
-        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1.1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
+        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
+        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
         select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
@@ -41,12 +41,18 @@
         .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        #piStatus { font-size: 0.9rem; font-weight: 700; margin-top: 0.3rem; height: 1.2em; }
-        .footer-final { width: 100%; background-color: #555555; text-align: center; padding: 3rem 1rem; position: relative; margin-top: 2rem; }
-        .footer-final::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .footer-final .logo-principal { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; letter-spacing: 3px; color: #FFFFFF; margin-bottom: 0.5rem; }
-        .footer-final .subtitulo { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: #FFFFFF; margin-bottom: 2rem; }
-        .footer-final .copyright { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #E2E8F0; margin-top: 1rem; }
+        #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; font-weight: 600; }
+        .footer-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
+        .footer-gradient-bar { order: -1; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
+        .footer-content { background-color: #585858; width: 100%; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
+        .main-logo-block { display: flex; flex-direction: column; align-items: center; color: white; text-align: center; }
+        .main-logo-grupo { font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: 2px; }
+        .main-logo-tagline { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 2.5px; margin-top: 0.2rem; }
+        .agency-logos ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 2.5rem; list-style: none; }
+        .agency-logos li a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: opacity 0.2s; }
+        .agency-logos li a:hover { opacity: 0.7; }
+        .agency-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .agency-tagline { font-size: 0.6rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #ccc; }
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -65,8 +71,8 @@
             </div>
             <div class="attention-box">
                 <div class="warning-text">
-                    ARQUIVOS ATÉ 500MB: Envie diretamente pelo formulário.<br>
-                    ARQUIVOS ACIMA DE 500MB: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
+                    ARQUIVOS ATÉ <strong>500MB</strong>: Envie diretamente pelo formulário.<br>
+                    ARQUIVOS ACIMA DE <strong>500MB</strong>: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
                     O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
                 </div>
                 <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
@@ -94,7 +100,7 @@
                     
                     <div class="form-group full-width">
                         <label>Comprovantes *</label>
-                        <div class="size-info">Limite: 500MB total por envio</div>
+                        <div class="size-info">Limite: <strong>500MB</strong> total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
@@ -138,15 +144,29 @@
         </div>
     </div>
     
-    <footer class="footer-final">
-        <div class="logo-principal">GRUPO OM</div>
-        <div class="subtitulo">COMUNICAÇÃO INTEGRADA</div>
-        <p class="copyright">&copy; 2025 OpusMúltipla - Todos os direitos reservados</p>
+    <footer class="footer-wrapper">
+        <div class="footer-gradient-bar"></div>
+        <div class="footer-content">
+            <div class="main-logo-block">
+                <span class="main-logo-grupo">GRUPO OM</span>
+                <span class="main-logo-tagline">COMUNICAÇÃO INTEGRADA</span>
+            </div>
+            <nav class="agency-logos">
+                <ul>
+                    <li><a href="https://grupoom.com.br/opus-multipla/" target="_blank"><span class="agency-name">OpusMúltipla</span><span class="agency-tagline">Ideias que transformam</span></a></li>
+                    <li><a href="https://grupoom.com.br/brainbox/" target="_blank"><span class="agency-name">Brainbox</span><span class="agency-tagline">Design for Business</span></a></li>
+                    <li><a href="https://grupoom.com.br/housecricket/" target="_blank"><span class="agency-name">HouseCricket</span><span class="agency-tagline">Digital Direct</span></a></li>
+                    <li><a href="https://grupoom.com.br/senso/" target="_blank"><span class="agency-name">Senso</span><span class="agency-tagline">Performance</span></a></li>
+                    <li><a href="https://grupoom.com.br/tailormedia/" target="_blank"><span class="agency-name">Tailor Media</span><span class="agency-tagline">Inteligência de Mídia</span></a></li>
+                    <li><a href="https://grupoom.com.br/dom/" target="_blank"><span class="agency-name">D'Om</span><span class="agency-tagline">Soluções Improváveis</span></a></li>
+                </ul>
+            </nav>
+        </div>
     </footer>
 
 <script>
     (function () {
-        const MAX_SIZE = 500 * 1024 * 1024;
+        const MAX_SIZE = 500 * 1024 * 1024; // 500MB
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -211,7 +231,6 @@
                 visibleFileInputs.forEach(input => {
                     input.disabled = true;
                     input.required = false;
-                    input.value = '';
                 });
             } else {
                 sizeWarning.style.display = 'none';
@@ -301,22 +320,20 @@
                     signal: piFetchController.signal,
                 });
                 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error("Resposta de erro do servidor:", errorText);
-                    throw new Error(`Erro ${response.status} ao buscar PI.`);
-                }
-                
                 const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || `Erro de rede ao buscar PI: ${response.status}`);
+                }
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
                     piStatus.style.color = 'var(--cor-sucesso)';
                     const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
                      for(const key in fieldsToFill) {
-                         if(fieldsToFill[key] && data[key] !== undefined) {
-                             fieldsToFill[key].value = data[key];
-                         }
+                        if(fieldsToFill[key] && data[key] !== undefined) {
+                            fieldsToFill[key].value = data[key];
+                        }
                     }
                     atualizarCamposDeAnexo(data.meio);
                 } else {
@@ -328,10 +345,6 @@
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
                     piStatus.style.color = 'var(--cor-erro)';
-                    console.error("Erro detalhado ao buscar PI:", error);
-                    if (error instanceof SyntaxError) {
-                        showMessage(errorMessage, 'Erro de comunicação com o servidor ao buscar a PI.');
-                    }
                     resetPIFields();
                 }
             }
@@ -341,7 +354,7 @@
             e.preventDefault();
             clearMessages();
 
-            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value.trim() !== '';
+            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value.trim();
             
             if (usandoLink) {
                 if (!driveLink.value.includes('drive.google.com')) {
@@ -373,21 +386,36 @@
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
             
-            const formData = new FormData(form);
+            const formData = new FormData();
             
-            formData.delete('action');
-            formData.delete('upload_method');
-            
-            formData.set('action', 'submissao_form');
-            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
+            // Adicionar campos básicos
+            formData.append('action', 'submissao_form');
+            formData.append('nome', document.getElementById('nome').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('telefone', document.getElementById('telefone').value);
+            formData.append('n_pi', document.getElementById('pi').value);
+            formData.append('cliente', document.getElementById('cliente').value);
+            formData.append('campanha', document.getElementById('campanha').value);
+            formData.append('produto', document.getElementById('produto').value);
+            formData.append('periodo', document.getElementById('periodo').value);
+            formData.append('veiculo', document.getElementById('veiculo').value);
+            formData.append('meio', document.getElementById('meio').value);
+            formData.append('observacoes', document.getElementById('observacoes').value);
             
             if (usandoLink) {
-                 allUploadGroups.forEach(group => {
-                    const input = group.querySelector('input[type="file"]');
-                    formData.delete(input.name);
-                });
+                formData.append('upload_method', 'drive_link');
+                formData.append('drive_link', driveLink.value.trim());
             } else {
-                formData.delete('drive_link');
+                formData.append('upload_method', 'binary');
+                
+                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
+                allFileInputs.forEach(input => {
+                    if (input.files.length > 0) {
+                        for (let i = 0; i < input.files.length; i++) {
+                            formData.append(input.name, input.files[i]);
+                        }
+                    }
+                });
             }
 
             try {
@@ -406,7 +434,9 @@
                 
             } catch (error) {
                 let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error instanceof SyntaxError) {
+                if (error.message.includes('fetch')) {
+                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
+                } else if (error instanceof SyntaxError) {
                     errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                 } else {
                     errorMessageText = error.message;
