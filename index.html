@@ -149,7 +149,6 @@
             </div>
             
             <form id="checkingForm" novalidate>
-                <!-- Honeypot Field (anti-bot) -->
                 <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
                 
                 <div class="form-grid">
@@ -231,7 +230,6 @@
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
-                            <!-- DO - DOOH (3 campos) -->
                             <div class="upload-group" data-meio="DO" style="display: none;">
                                 <label>1. Relatório Fotográfico de Todos os Pontos *</label>
                                 <input type="file" name="relatorio_fotografico_do" multiple accept=".pdf,.jpg,.jpeg,.png,.zip,.rar">
@@ -245,7 +243,6 @@
                                 <input type="file" name="video_diurno_do" multiple accept=".mp4,.avi,.mov,.zip">
                             </div>
                             
-                            <!-- ME - Mídia Exterior MUB (2 campos) -->
                             <div class="upload-group" data-meio="ME" style="display: none;">
                                 <label>1. Relatório com Endereços dos Pontos *</label>
                                 <input type="file" name="relatorio_enderecos_me" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
@@ -255,7 +252,6 @@
                                 <input type="file" name="fotos_pontos_me" multiple accept=".jpg,.jpeg,.png,.zip,.rar">
                             </div>
                             
-                            <!-- MO - Metrô (2 campos) -->
                             <div class="upload-group" data-meio="MO" style="display: none;">
                                 <label>1. Relatório: Listagem de Estações, Linhas e Carros *</label>
                                 <input type="file" name="relatorio_estacoes_mo" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
@@ -265,58 +261,49 @@
                                 <input type="file" name="fotos_videos_mo" multiple accept=".jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
                             
-                            <!-- BD - Busdoor (1 campo) -->
                             <div class="upload-group" data-meio="BD" style="display: none;">
                                 <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
                                 <input type="file" name="comprovante_bd" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- OD/FL - Outdoor/Fronts (1 campo) -->
                             <div class="upload-group" data-meio="OD FL" style="display: none;">
                                 <label>Relatório Fotográfico com Endereço de Todos os Pontos - Se iluminado: incluir foto noturna *</label>
                                 <input type="file" name="comprovante_od_fl" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- MI - Mídia Interna (1 campo) -->
                             <div class="upload-group" data-meio="MI" style="display: none;">
                                 <label>Relatório Fotográfico de Todos os Pontos + Relação de Locais *</label>
                                 <input type="file" name="comprovante_mi" multiple accept=".jpg,.jpeg,.png,.pdf,.zip,.rar">
                             </div>
                             
-                            <!-- RD/TP - Rádio (1 campo) -->
                             <div class="upload-group" data-meio="RD TP" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado (se ação ao vivo: enviar gravação ou relatório com ações e horários) *</label>
                                 <input type="file" name="comprovante_rd_tp" multiple accept=".pdf,.xls,.xlsx,.mp3,.wav,.zip">
                             </div>
                             
-                            <!-- CI - Cinema -->
                             <div class="upload-group" data-meio="CI" style="display: none;">
                                 <label>Relatório de Exibição (complexo, número de salas, praça) *</label>
-                                <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx" data-canonical="comprovante_geral">
+                                <input type="file" name="comprovante_ci" multiple accept=".pdf,.xls,.xlsx,.doc,.docx">
                             </div>
                             
-                            <!-- JO/RV - Mídia Impressa -->
                             <div class="upload-group" data-meio="JO RV" style="display: none;">
                                 <label>Material Físico (preferencialmente) + PDF/Foto do Título com Material Veiculado *</label>
-                                <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip" data-canonical="comprovante_geral">
+                                <input type="file" name="comprovante_jo_rv" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
                             </div>
                             
-                            <!-- AT - Projetos Especiais -->
                             <div class="upload-group" data-meio="AT" style="display: none;">
                                 <label>Relatório Fotográfico ou Vídeos + Detalhamento das Ações *</label>
-                                <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar" data-canonical="comprovante_geral">
+                                <input type="file" name="comprovante_at" multiple accept=".pdf,.jpg,.jpeg,.png,.mp4,.avi,.mov,.zip,.rar">
                             </div>
                             
-                            <!-- TV - Televisão -->
                             <div class="upload-group" data-meio="TV" style="display: none;">
                                 <label>Relatório de Veiculação Automatizado *</label>
-                                <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv" data-canonical="comprovante_geral">
+                                <input type="file" name="comprovante_tv" multiple accept=".pdf,.xls,.xlsx,.csv">
                             </div>
                             
-                            <!-- IN - Internet -->
                             <div class="upload-group" data-meio="IN" style="display: none;">
                                 <label>Relatório de Veiculação + Prints das Peças *</label>
-                                <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip" data-canonical="comprovante_geral">
+                                <input type="file" name="comprovante_in" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.zip">
                             </div>
                         </div>
                         <div class="file-counter" id="fileCounter"></div>
