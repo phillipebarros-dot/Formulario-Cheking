@@ -109,4 +109,322 @@
                             <div class="upload-group" data-meio="MO" style="display: none;"><label>Fotos ou Vídeos (Amostrais) *</label><input type="file" name="fotos_videos_mo" multiple></div>
 
                             <div class="upload-group" data-meio="BD" style="display: none;"><label>Relatório Fotográfico de Todos os Ônibus/Carros *</label><input type="file" name="comprovante_bd" multiple></div>
-                            <div
+                            <div class="upload-group" data-meio="OD FL" style="display: none;"><label>Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label><input type="file" name="comprovante_od_fl" multiple></div>
+                            <div class="upload-group" data-meio="MI" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label><input type="file" name="comprovante_mi" multiple></div>
+                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                        </div>
+                        <div class="file-counter" id="fileCounter"></div>
+                        <div class="size-warning" id="sizeWarning">
+                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <div class="drive-link-section" id="driveLinkSection">
+                            <h3>📁 Link do Google Drive</h3>
+                            <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
+                            <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
+                            <p style="margin-top: 1rem; font-size: 0.85em;">
+                                <strong>Importante:</strong> Configure a pasta como "Qualquer pessoa com o link pode visualizar"
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
+                </div>
+            </form>
+            <div class="message-box" id="successMessage"></div>
+            <div class="message-box" id="errorMessage"></div>
+        </div>
+    </div>
+    
+    <footer class="footer-final">
+        <div class="logo-principal">GRUPO OM</div>
+        <div class="subtitulo">COMUNICAÇÃO INTEGRADA</div>
+        <p class="copyright">&copy; 2025 OpusMúltipla - Todos os direitos reservados</p>
+    </footer>
+
+<script>
+    (function () {
+        const MAX_SIZE = 500 * 1024 * 1024;
+        
+        const form = document.getElementById('checkingForm');
+        const piInput = document.getElementById('pi');
+        const piStatus = document.getElementById('piStatus');
+        const clienteInput = document.getElementById('cliente');
+        const campanhaInput = document.getElementById('campanha');
+        const produtoInput = document.getElementById('produto');
+        const periodoInput = document.getElementById('periodo');
+        const veiculoInput = document.getElementById('veiculo');
+        const meioSelect = document.getElementById('meio');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const uploadArea = document.getElementById('upload-area-dinamica');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
+        const sizeWarning = document.getElementById('sizeWarning');
+        const driveLinkSection = document.getElementById('driveLinkSection');
+        const driveLink = document.getElementById('driveLink');
+        const fileCounter = document.getElementById('fileCounter');
+
+        let piFetchController = null;
+        const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
+
+        function showMessage(element, message) { element.innerHTML = message; element.style.display = 'block'; }
+        function clearMessages() { successMessage.style.display = 'none'; errorMessage.style.display = 'none'; }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function checkTotalFileSize() {
+            let totalSize = 0;
+            let totalFiles = 0;
+            
+            const visibleFileInputs = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
+            visibleFileInputs.forEach(input => {
+                if (input.files) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        totalSize += input.files[i].size;
+                        totalFiles++;
+                    }
+                }
+            });
+
+            if (totalFiles > 0) {
+                fileCounter.textContent = `${totalFiles} arquivo(s) selecionado(s) - ${formatFileSize(totalSize)}`;
+                fileCounter.style.display = 'block';
+            } else {
+                fileCounter.style.display = 'none';
+            }
+
+            if (totalSize > MAX_SIZE) {
+                sizeWarning.style.display = 'block';
+                driveLinkSection.style.display = 'block';
+                driveLink.required = true;
+                
+                visibleFileInputs.forEach(input => {
+                    input.disabled = true;
+                    input.required = false;
+                    input.value = '';
+                });
+            } else {
+                sizeWarning.style.display = 'none';
+                driveLinkSection.style.display = 'none';
+                driveLink.required = false;
+                driveLink.value = '';
+                
+                visibleFileInputs.forEach(input => {
+                    input.disabled = false;
+                    const meiosDoGrupo = input.closest('.upload-group').dataset.meio.split(' ');
+                    const meioAtual = meioSelect.value;
+                    if (meioAtual && meiosDoGrupo.includes(meioAtual)) {
+                        input.required = true;
+                    }
+                });
+            }
+        }
+
+        uploadArea.addEventListener('change', function(e) {
+            if (e.target.type === 'file') {
+                checkTotalFileSize();
+            }
+        });
+        
+        function resetPIFields() {
+            const fieldsToReset = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput };
+            for(const key in fieldsToReset) {
+                fieldsToReset[key].value = '';
+            }
+            meioSelect.value = '';
+            atualizarCamposDeAnexo('');
+        }
+
+        function atualizarCamposDeAnexo(meio) {
+            let algumCampoVisivel = false;
+            allUploadGroups.forEach(group => {
+                const meiosDoGrupo = group.dataset.meio.split(' ');
+                const input = group.querySelector('input[type="file"]');
+                if (meio && meiosDoGrupo.includes(meio)) {
+                    group.style.display = 'block';
+                    if (input) {
+                        input.required = true;
+                        input.disabled = false;
+                    }
+                    algumCampoVisivel = true;
+                } else {
+                    group.style.display = 'none';
+                    if (input) {
+                        input.required = false;
+                        input.value = '';
+                    }
+                }
+            });
+            uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
+            
+            fileCounter.style.display = 'none';
+            sizeWarning.style.display = 'none';
+            driveLinkSection.style.display = 'none';
+            driveLink.required = false;
+            driveLink.value = '';
+        }
+
+        async function buscarDadosPI(npi) {
+            if (!npi) {
+                resetPIFields();
+                piStatus.textContent = '';
+                return;
+            }
+            if (piFetchController) piFetchController.abort();
+            
+            piFetchController = new AbortController();
+            piStatus.textContent = 'Buscando...';
+            piStatus.style.color = 'var(--cor-texto-claro)';
+            clearMessages();
+            resetPIFields();
+
+            try {
+                const payload = {
+                    action: 'buscar_pi',
+                    n_pi: npi
+                };
+
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: piFetchController.signal,
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Resposta de erro do servidor:", errorText);
+                    throw new Error(`Erro ${response.status} ao buscar PI.`);
+                }
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    piStatus.textContent = 'Dados carregados com sucesso.';
+                    piStatus.style.color = 'var(--cor-sucesso)';
+                    const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
+                     for(const key in fieldsToFill) {
+                         if(fieldsToFill[key] && data[key] !== undefined) {
+                             fieldsToFill[key].value = data[key];
+                         }
+                    }
+                    atualizarCamposDeAnexo(data.meio);
+                } else {
+                    piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
+                    piStatus.style.color = 'var(--cor-erro)';
+                    resetPIFields();
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    piStatus.textContent = 'Falha na comunicação ou PI inválida.';
+                    piStatus.style.color = 'var(--cor-erro)';
+                    console.error("Erro detalhado ao buscar PI:", error);
+                    if (error instanceof SyntaxError) {
+                        showMessage(errorMessage, 'Erro de comunicação com o servidor ao buscar a PI.');
+                    }
+                    resetPIFields();
+                }
+            }
+        }
+        
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearMessages();
+
+            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value.trim() !== '';
+            
+            if (usandoLink) {
+                if (!driveLink.value.includes('drive.google.com')) {
+                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
+                    return;
+                }
+            } else {
+                let camposAnexoObrigatoriosPreenchidos = true;
+                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
+                
+                camposAnexoVisiveis.forEach(input => {
+                    if (input.required && input.files.length === 0) {
+                        camposAnexoObrigatoriosPreenchidos = false;
+                    }
+                });
+
+                if (!camposAnexoObrigatoriosPreenchidos) {
+                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                    return;
+                }
+            }
+
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*).');
+                return;
+            }
+
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Enviando...';
+            submitButton.disabled = true;
+            
+            const formData = new FormData(form);
+            
+            formData.delete('action');
+            formData.delete('upload_method');
+            
+            formData.set('action', 'submissao_form');
+            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
+            
+            if (usandoLink) {
+                 allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    formData.delete(input.name);
+                });
+            } else {
+                formData.delete('drive_link');
+            }
+
+            try {
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
+                }
+                
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                form.reset();
+                piStatus.textContent = '';
+                resetPIFields();
+                fileCounter.style.display = 'none';
+                
+            } catch (error) {
+                let errorMessageText = 'Ocorreu um erro inesperado.';
+                if (error instanceof SyntaxError) {
+                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
+                } else {
+                    errorMessageText = error.message;
+                }
+                showMessage(errorMessage, errorMessageText);
+            } finally {
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+            }
+        });
+        
+        let debounceTimeout;
+        piInput.addEventListener('input', () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
+        });
+
+    })();
+</script>
+</body>
+</html>
