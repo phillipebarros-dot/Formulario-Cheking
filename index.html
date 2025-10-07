@@ -42,6 +42,11 @@
         #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
         #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
         #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; }
+        .footer-final { width: 100%; background-color: #555555; text-align: center; padding: 3rem 1rem; position: relative; margin-top: auto; }
+        .footer-final::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
+        .footer-final .logo-principal { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; letter-spacing: 3px; color: #FFFFFF; margin-bottom: 0.5rem; }
+        .footer-final .subtitulo { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: #FFFFFF; margin-bottom: 2rem; }
+        .footer-final .copyright { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #E2E8F0; margin-top: 1rem; }
         .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
         .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
@@ -49,47 +54,6 @@
         .drive-link-section p { font-size: 0.9rem; margin-bottom: 1rem; color: #856404; }
         .drive-link-section input { background: white; }
         .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
-
-        .footer-final {
-            width: 100%;
-            background-color: #555555;
-            text-align: center;
-            padding: 3rem 1rem;
-            position: relative;
-            margin-top: auto;
-        }
-        .footer-final::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 8px;
-            background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a);
-        }
-        .footer-final .logo-principal {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            color: #FFFFFF;
-            margin-bottom: 0.5rem;
-        }
-        .footer-final .subtitulo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #FFFFFF;
-            margin-bottom: 2rem;
-        }
-        .footer-final .copyright {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            color: #E2E8F0;
-            margin-top: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -247,6 +211,7 @@
                 visibleFileInputs.forEach(input => {
                     input.disabled = true;
                     input.required = false;
+                    input.value = ''; // ESTA É A LINHA QUE RESOLVE O PROBLEMA
                 });
             } else {
                 sizeWarning.style.display = 'none';
@@ -370,10 +335,10 @@
             e.preventDefault();
             clearMessages();
 
-            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value;
+            const usandoLink = driveLinkSection.style.display === 'block';
             
             if (usandoLink) {
-                if (!driveLink.value.includes('drive.google.com')) {
+                if (!driveLink.value || !driveLink.value.includes('drive.google.com')) {
                     showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
                     return;
                 }
@@ -381,6 +346,11 @@
                 let camposAnexoObrigatoriosPreenchidos = true;
                 const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
                 
+                if (camposAnexoVisiveis.length === 0 && meioSelect.value) {
+                     showMessage(errorMessage, 'Não há campos de anexo definidos para este "Meio".');
+                     return;
+                }
+
                 camposAnexoVisiveis.forEach(input => {
                     if (input.required && input.files.length === 0) {
                         camposAnexoObrigatoriosPreenchidos = false;
@@ -388,7 +358,7 @@
                 });
 
                 if (!camposAnexoObrigatoriosPreenchidos) {
-                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                    showMessage(errorMessage, 'É necessário anexar pelo menos um arquivo em cada campo de comprovante solicitado.');
                     return;
                 }
             }
@@ -404,24 +374,20 @@
             
             const formData = new FormData(form);
             
+            formData.delete('action');
+            formData.delete('upload_method');
+            
+            formData.set('action', 'submissao_form');
+            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
+            
             if (usandoLink) {
-                formData.append('upload_method', 'drive_link');
+                allUploadGroups.forEach(group => {
+                    const input = group.querySelector('input[type="file"]');
+                    formData.delete(input.name);
+                });
             } else {
                 formData.delete('drive_link');
-                
-                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
-                allFileInputs.forEach(input => {
-                    formData.delete(input.name); 
-                    if (input.files.length > 0) {
-                        for (let i = 0; i < input.files.length; i++) {
-                            formData.append(input.name, input.files[i]);
-                        }
-                    }
-                });
-                formData.append('upload_method', 'binary');
             }
-
-            formData.append('action', 'submissao_form');
 
             try {
                 const response = await fetch(webhookUrl, { method: 'POST', body: formData });
@@ -439,9 +405,7 @@
                 
             } catch (error) {
                 let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error.message.includes('fetch')) {
-                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                } else if (error instanceof SyntaxError) {
+                if (error instanceof SyntaxError) {
                     errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                 } else {
                     errorMessageText = error.message;
