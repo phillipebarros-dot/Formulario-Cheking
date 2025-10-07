@@ -530,17 +530,21 @@
             progressFill.style.width = '10%';
             progressFill.textContent = '10%';
             
-            const formData = new FormData(form);
-            
-            // --- CORREÇÃO CRÍTICA ---
-            // Remove valores que possam ter sido adicionados por engano
+                // Localize este trecho no seu código de submit
+                const formData = new FormData(form);
+
+                // --- CORREÇÃO CRÍTICA ---
+                // Remova valores que possam ter sido adicionados por engano ou em duplicidade
             formData.delete('upload_method');
             formData.delete('action');
-            formData.delete('website'); // Remove honeypot
-            
-            // Usa .set() para garantir um valor único (string)
+
+                // Use .set() para garantir um valor único (string), em vez de .append()
+            const usandoLink = driveLinkSection.style.display === 'block';
             formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             formData.set('action', 'submissao_form');
+
+            // O restante do seu código de envio (xhr.send(formData)) continua igual
+            xhr.send(formData);
             
             // Limpa campos desnecessários
             if (usandoLink) {
