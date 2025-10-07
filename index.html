@@ -167,8 +167,6 @@
         const driveLinkSection = document.getElementById('driveLinkSection');
         const driveLink = document.getElementById('driveLink');
         const fileCounter = document.getElementById('fileCounter');
-        const progressBar = document.querySelector('.progress-bar');
-        const progressFill = document.querySelector('.progress-fill');
 
         let piFetchController = null;
         const webhookUrl = 'https://n8n.grupoom.com.br/webhook/CheckingForm';
@@ -339,57 +337,50 @@
             }
         }
         
-        const handleFormSubmit = (e) => {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
             clearMessages();
-        
-            const isDriveLinkUpload = driveLinkSection.style.display === 'block';
-        
-            if (!form.checkValidity()) {
-                showMessage(errorMessage, 'Verifique se todos os campos obrigatórios (*) foram preenchidos.');
-                form.reportValidity();
-                return;
-            }
-        
-            if (isDriveLinkUpload) {
-                if (!driveLink.value || !driveLink.value.includes('drive.google.com')) {
+
+            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value.trim() !== '';
+            
+            if (usandoLink) {
+                if (!driveLink.value.includes('drive.google.com')) {
                     showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
                     return;
                 }
             } else {
-                let anexoFaltando = false;
-                const camposVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
-                if (camposVisiveis.length === 0 && meioSelect.value) {
-                    showMessage(errorMessage, 'Não há campos de anexo definidos para este "Meio".');
-                    return;
-                }
-                camposVisiveis.forEach(input => {
+                let camposAnexoObrigatoriosPreenchidos = true;
+                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
+                
+                camposAnexoVisiveis.forEach(input => {
                     if (input.required && input.files.length === 0) {
-                        anexoFaltando = true;
+                        camposAnexoObrigatoriosPreenchidos = false;
                     }
                 });
-                if (anexoFaltando) {
-                    showMessage(errorMessage, 'É necessário anexar pelo menos um arquivo em cada campo de comprovante solicitado.');
+
+                if (!camposAnexoObrigatoriosPreenchidos) {
+                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
                     return;
                 }
             }
-        
+
+            if (!form.checkValidity()) {
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*).');
+                return;
+            }
+
             const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
-            if(progressBar) progressBar.style.display = 'block';
-            if(progressFill) {
-                progressFill.style.width = '0%';
-                progressFill.textContent = '0%';
-            }
             
             const formData = new FormData(form);
             
-            formData.delete('website');
+            formData.delete('action');
+            formData.delete('upload_method');
             formData.set('action', 'submissao_form');
-            formData.set('upload_method', isDriveLinkUpload ? 'drive_link' : 'binary');
+            formData.set('upload_method', usandoLink ? 'drive_link' : 'binary');
             
-            if (isDriveLinkUpload) {
+            if (usandoLink) {
                 allUploadGroups.forEach(group => {
                     const input = group.querySelector('input[type="file"]');
                     formData.delete(input.name);
@@ -397,57 +388,41 @@
             } else {
                 formData.delete('drive_link');
             }
-        
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', webhookUrl);
-            xhr.timeout = 600000;
-        
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable && progressFill) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressFill.style.width = `${percentComplete}%`;
-                    progressFill.textContent = `${percentComplete}%`;
+
+            try {
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || `Erro no servidor: ${response.status}`);
                 }
-            };
-        
-            xhr.onload = () => {
-                let responseData;
-                try {
-                    responseData = JSON.parse(xhr.responseText);
-                } catch {
-                    showMessage(errorMessage, 'Ocorreu um erro inesperado. A resposta do servidor não é válida.');
-                    console.error("Resposta não-JSON do servidor:", xhr.responseText);
-                    return;
-                }
-        
-                if (xhr.status >= 200 && xhr.status < 400 && responseData.success) {
-                    showMessage(successMessage, responseData.message || 'Checking enviado com sucesso!');
-                    form.reset();
-                    atualizarCamposDeAnexo('');
-                    piStatus.textContent = '';
+                
+                showMessage(successMessage, result.message || 'Checking enviado com sucesso!');
+                form.reset();
+                piStatus.textContent = '';
+                resetPIFields();
+                fileCounter.style.display = 'none';
+                
+            } catch (error) {
+                let errorMessageText = 'Ocorreu um erro inesperado.';
+                if (error instanceof SyntaxError) {
+                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                 } else {
-                    showMessage(errorMessage, responseData.message || `Erro no servidor (${xhr.status}). Tente novamente.`);
+                    errorMessageText = error.message;
                 }
-            };
-        
-            xhr.onerror = () => showMessage(errorMessage, 'Erro de conexão. Verifique sua rede e tente novamente.');
-            xhr.ontimeout = () => showMessage(errorMessage, 'O envio demorou muito para responder (timeout). Tente com uma conexão melhor ou arquivos menores.');
-            
-            xhr.onloadend = () => {
+                showMessage(errorMessage, errorMessageText);
+            } finally {
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
-                if(progressBar) progressBar.style.display = 'none';
-            };
+            }
+        });
         
-            xhr.send(formData);
-        };
-        
-        uploadArea.addEventListener('change', checkTotalFileSize);
+        let debounceTimeout;
         piInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(() => { buscarDadosPI(piInput.value.trim()); }, 500);
         });
-        form.addEventListener('submit', handleFormSubmit);
+
     })();
 </script>
 </body>
