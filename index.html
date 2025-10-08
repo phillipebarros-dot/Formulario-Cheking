@@ -7,53 +7,445 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cor-primaria: #0033a0; --cor-secundaria: #1a202c; --cor-texto-claro: #4a5568; --cor-fundo-claro: #f7fafc; --cor-fundo-secao: #ffffff; --cor-borda: #e2e8f0; --cor-borda-foco: #0033a0; --cor-sombra: rgba(0, 0, 0, 0.05); --cor-sucesso: #2d8a5b; --cor-erro: #c53030; --cor-desabilitado: #edf2f7; --cor-aviso-fundo: #fefcbf; --cor-aviso-texto: #9f580a; --cor-aviso-borda: #fce18a;
+            --azul-om: #0033a0;
+            --cinza-escuro: #2d3748;
+            --cinza-medio: #4a5568;
+            --cinza-claro: #cbd5e0;
+            --cinza-bg: #f7fafc;
+            --branco: #ffffff;
+            --borda: #e2e8f0;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--cor-fundo-claro); color: var(--cor-secundaria); display: flex; flex-direction: column; justify-content: space-between; align-items: center; min-height: 100vh; line-height: 1.6; }
-        .main-content { width: 100%; display: flex; justify-content: center; padding: 2rem 1rem; }
-        .container { max-width: 1100px; width: 100%; background: var(--cor-fundo-secao); border-radius: 12px; box-shadow: 0 10px 25px var(--cor-sombra); border: 1px solid var(--cor-borda); position: relative; overflow: hidden; padding: 2.5rem 3rem; }
-        .container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .header { text-align: center; margin-bottom: 2rem; }
-        .header img.logo-opusmultipla { max-width: 450px; width: 100%; height: auto; margin-bottom: 0.5rem; }
-        .header h1 { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--cor-secundaria); letter-spacing: 1px; margin-top: 0; line-height: 1.2; }
-        .attention-box { margin-bottom: 2.5rem; text-align: center; }
-        .attention-box .warning-text { background-color: var(--cor-aviso-fundo); border: 1px solid var(--cor-aviso-borda); color: var(--cor-aviso-texto); padding: 1.5rem; border-radius: 8px; font-weight: 700; text-align: center; margin-bottom: 1.5rem; }
-        .attention-box img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .form-group { display: flex; flex-direction: column; }
-        .full-width { grid-column: 1 / -1; }
-        label { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--cor-secundaria); }
-        input, select, textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: 8px; font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-borda-foco); box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
-        input[readonly], .campo-bloqueado { background-color: var(--cor-desabilitado); cursor: not-allowed; pointer-events: none; }
-        select.campo-bloqueado { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-        .upload-container { border: 2px dashed var(--cor-borda); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
-        .upload-group { margin-bottom: 1.5rem; }
-        .upload-group:last-child { margin-bottom: 0; }
-        input[type="file"] { font-size: 0.9rem; }
-        button[type="submit"] { width: 100%; padding: 1rem; background-color: var(--cor-primaria); color: white; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem; }
-        button[type="submit"]:hover { background-color: #00226e; }
-        button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
-        .message-box { padding: 1rem; border-radius: 8px; margin-top: 1.5rem; display: none; text-align: center; font-weight: 500; }
-        #successMessage { background-color: #e6f7f0; color: var(--cor-sucesso); border: 1px solid var(--cor-sucesso); }
-        #errorMessage { background-color: #fde8e8; color: var(--cor-erro); border: 1px solid var(--cor-erro); }
-        #piStatus { font-size: 0.8rem; margin-top: 0.3rem; height: 1.2em; font-weight: 600; }
-        .footer-final { width: 100%; background-color: #555555; text-align: center; padding: 3rem 1rem; position: relative; margin-top: auto; }
-        .footer-final::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #d90429, #fca311, #90be6d, #43aa8b, #0033a0, #5a189a); }
-        .footer-final .logo-principal { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; letter-spacing: 3px; color: #FFFFFF; margin-bottom: 0.5rem; }
-        .footer-final .subtitulo { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: #FFFFFF; margin-bottom: 2rem; }
-        .footer-final .copyright { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #E2E8F0; margin-top: 1rem; }
-        .size-info { font-size: 0.8rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
-        .size-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; font-weight: 600; }
-        .drive-link-section { display: none; margin-top: 1.5rem; padding: 1.5rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; }
-        .drive-link-section h3 { color: #856404; margin-bottom: 1rem; font-size: 1.1rem; }
-        .drive-link-section p { font-size: 0.9rem; margin-bottom: 1rem; color: #856404; }
-        .drive-link-section input { background: white; }
-        .file-counter { font-size: 0.85rem; color: var(--cor-primaria); font-weight: 600; margin-top: 0.5rem; }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cinza-bg);
+            color: var(--cinza-escuro);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        
+        .main-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+            flex: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: var(--branco);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            padding: 3rem 4rem;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                #ef4444 0%, 
+                #f59e0b 20%, 
+                #10b981 40%, 
+                #3b82f6 60%, 
+                #8b5cf6 80%, 
+                #ec4899 100%
+            );
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--borda);
+        }
+        
+        .header img.logo-opusmultipla {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--cinza-escuro);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        
+        .attention-box {
+            margin-bottom: 3rem;
+        }
+        
+        .warning-text {
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            padding: 1.5rem 2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        
+        .warning-text strong {
+            font-weight: 700;
+        }
+        
+        .attention-box img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+            border: 1px solid var(--borda);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--cinza-escuro);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        label svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--cinza-medio);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--cinza-escuro);
+            transition: all 0.2s ease;
+            font-weight: 400;
+        }
+        
+        input:hover, select:hover, textarea:hover {
+            border-color: var(--cinza-claro);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--azul-om);
+            box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #a0aec0;
+        }
+        
+        input[readonly], .campo-bloqueado {
+            background: var(--cinza-bg);
+            border-color: var(--borda);
+            cursor: not-allowed;
+            pointer-events: none;
+            color: var(--cinza-medio);
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px;
+            padding-right: 2.5rem;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .upload-container {
+            border: 2px dashed var(--borda);
+            padding: 2rem;
+            border-radius: 4px;
+            margin-top: 0.75rem;
+            background: var(--cinza-bg);
+            transition: all 0.2s ease;
+        }
+        
+        .upload-container:hover {
+            border-color: var(--cinza-claro);
+        }
+        
+        #upload-placeholder {
+            color: var(--cinza-medio);
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .upload-group {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--branco);
+            border-radius: 4px;
+            border: 1px solid var(--borda);
+        }
+        
+        .upload-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .upload-group label {
+            margin-bottom: 0.75rem;
+        }
+        
+        input[type="file"] {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: var(--azul-om);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 0.75rem;
+            transition: background 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background: #00226e;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--azul-om);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        button[type="submit"]:hover {
+            background: #00226e;
+        }
+        
+        button[type="submit"]:disabled {
+            background: var(--cinza-claro);
+            cursor: not-allowed;
+        }
+        
+        .message-box {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid;
+        }
+        
+        #successMessage {
+            background: #ecfdf5;
+            color: #065f46;
+            border-color: #10b981;
+        }
+        
+        #errorMessage {
+            background: #fef2f2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+        
+        #piStatus {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .size-info {
+            font-size: 0.85rem;
+            color: var(--cinza-medio);
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .size-info strong {
+            color: var(--azul-om);
+            font-weight: 700;
+        }
+        
+        .size-warning {
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .drive-link-section {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 4px;
+        }
+        
+        .drive-link-section h3 {
+            color: #78350f;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .drive-link-section p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #92400e;
+            line-height: 1.6;
+        }
+        
+        .file-counter {
+            font-size: 0.875rem;
+            color: var(--azul-om);
+            font-weight: 600;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--cinza-bg);
+            border-radius: 4px;
+            border: 1px solid var(--borda);
+        }
+        
+        .footer-final {
+            width: 100%;
+            background: var(--cinza-escuro);
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: auto;
+        }
+        
+        .footer-final::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                #ef4444 0%, 
+                #f59e0b 20%, 
+                #10b981 40%, 
+                #3b82f6 60%, 
+                #8b5cf6 80%, 
+                #ec4899 100%
+            );
+            top: 0;
+            left: 0;
+        }
+        
+        .footer-final {
+            position: relative;
+        }
+        
+        .footer-final .logo-principal {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--branco);
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+        
+        .footer-final .subtitulo {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+        
+        .footer-final .copyright {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .footer-final .logo-principal {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -61,8 +453,9 @@
         <div class="container">
             <div class="header">
                 <img src="logo-opus.png" alt="Logo OpusMúltipla" class="logo-opusmultipla">
-                <h1>CHECKING</h1>
+                <h1>Checking</h1>
             </div>
+            
             <div class="attention-box">
                 <div class="warning-text">
                     ARQUIVOS ATÉ <strong>500MB</strong>: Envie diretamente pelo formulário.<br>
@@ -74,46 +467,171 @@
 
             <form id="checkingForm" novalidate>
                 <div class="form-grid">
-                    <div class="form-group full-width"><label for="nome">Seu Nome *</label><input type="text" id="nome" name="nome" required></div>
-                    <div class="form-group"><label for="email">Seu E-mail *</label><input type="email" id="email" name="email" required></div>
-                    <div class="form-group"><label for="telefone">Seu Telefone *</label><input type="tel" id="telefone" name="telefone" required></div>
-                    <div class="form-group full-width"><label for="pi">Número da PI *</label><input type="text" id="pi" name="n_pi" required><div id="piStatus"></div></div>
-                    <div class="form-group"><label for="cliente">Cliente</label><input type="text" id="cliente" name="cliente" readonly></div>
-                    <div class="form-group"><label for="campanha">Campanha</label><input type="text" id="campanha" name="campanha" readonly></div>
-                    <div class="form-group"><label for="produto">Produto</label><input type="text" id="produto" name="produto" readonly></div>
-                    <div class="form-group"><label for="periodo">Período</label><input type="text" id="periodo" name="periodo" readonly></div>
-                    <div class="form-group"><label for="veiculo">Veículo</label><input type="text" id="veiculo" name="veiculo" readonly></div>
-                    <div class="form-group">
-                        <label for="meio">Meio</label>
-                        <select id="meio" name="meio" class="campo-bloqueado">
-                            <option value="">Aguardando PI...</option>
-                            <option value="AT">Ativacao</option><option value="BD">Busdoor</option><option value="CI">Cinema</option><option value="DO">Digital Out of Home</option><option value="FL">Frontlight</option><option value="IN">Internet</option><option value="JO">Jornal</option><option value="MO">Metro</option><option value="ME">Midia Externa</option><option value="MI">Midia Interna</option><option value="OD">Outdoor</option><option value="TP">Patrocinios</option><option value="RD">Radio</option><option value="RF">Rádio Frequência</option><option value="RV">Revista</option><option value="TV">TV</option>
-                        </select>
+                    <div class="form-group full-width">
+                        <label for="nome">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            Seu Nome *
+                        </label>
+                        <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
                     </div>
-                    <div class="form-group full-width"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4"></textarea></div>
+                    
+                    <div class="form-group">
+                        <label for="email">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            Seu E-mail *
+                        </label>
+                        <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            Seu Telefone *
+                        </label>
+                        <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000">
+                    </div>
                     
                     <div class="form-group full-width">
-                        <label>Comprovantes *</label>
+                        <label for="pi">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                            Número da PI *
+                        </label>
+                        <input type="text" id="pi" name="n_pi" required placeholder="Digite o número da PI">
+                        <div id="piStatus"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cliente">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            Cliente
+                        </label>
+                        <input type="text" id="cliente" name="cliente" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campanha">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                            Campanha
+                        </label>
+                        <input type="text" id="campanha" name="campanha" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produto">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            Produto
+                        </label>
+                        <input type="text" id="produto" name="produto" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="periodo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Período
+                        </label>
+                        <input type="text" id="periodo" name="periodo" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="veiculo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
+                            Veículo
+                        </label>
+                        <input type="text" id="veiculo" name="veiculo" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meio">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            Meio
+                        </label>
+                        <select id="meio" name="meio" class="campo-bloqueado">
+                            <option value="">Aguardando PI...</option>
+                            <option value="AT">Ativacao</option>
+                            <option value="BD">Busdoor</option>
+                            <option value="CI">Cinema</option>
+                            <option value="DO">Digital Out of Home</option>
+                            <option value="FL">Frontlight</option>
+                            <option value="IN">Internet</option>
+                            <option value="JO">Jornal</option>
+                            <option value="MO">Metro</option>
+                            <option value="ME">Midia Externa</option>
+                            <option value="MI">Midia Interna</option>
+                            <option value="OD">Outdoor</option>
+                            <option value="TP">Patrocinios</option>
+                            <option value="RD">Radio</option>
+                            <option value="RF">Rádio Frequência</option>
+                            <option value="RV">Revista</option>
+                            <option value="TV">TV</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="observacoes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Observações
+                        </label>
+                        <textarea id="observacoes" name="observacoes" rows="4" placeholder="Adicione observações sobre os comprovantes"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                            Comprovantes *
+                        </label>
                         <div class="size-info">Limite: <strong>500MB</strong> total por envio</div>
                         <div id="upload-area-dinamica" class="upload-container">
                             <p id="upload-placeholder">Preencha o número da PI para ver os campos de anexo.</p>
                             
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos *</label><input type="file" name="relatorio_fotografico_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Relatório de Exibições Automatizado *</label><input type="file" name="relatorio_exibicoes_do" multiple></div>
-                            <div class="upload-group" data-meio="DO" style="display: none;"><label>Vídeo Diurno *</label><input type="file" name="video_diurno_do" multiple></div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>Relatório Fotográfico de Todos os Pontos *</label>
+                                <input type="file" name="relatorio_fotografico_do" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>Relatório de Exibições Automatizado *</label>
+                                <input type="file" name="relatorio_exibicoes_do" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="DO" style="display: none;">
+                                <label>Vídeo Diurno *</label>
+                                <input type="file" name="video_diurno_do" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Relatório com Endereço dos Pontos *</label><input type="file" name="relatorio_enderecos_me" multiple></div>
-                            <div class="upload-group" data-meio="ME" style="display: none;"><label>Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label><input type="file" name="fotos_pontos_me" multiple></div>
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label>Relatório com Endereço dos Pontos *</label>
+                                <input type="file" name="relatorio_enderecos_me" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="ME" style="display: none;">
+                                <label>Fotos Diurnas (Amostrais) / Noturnas (se iluminado) *</label>
+                                <input type="file" name="fotos_pontos_me" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Relatório com Listagem de Estações/Linhas/Carros *</label><input type="file" name="relatorio_estacoes_mo" multiple></div>
-                            <div class="upload-group" data-meio="MO" style="display: none;"><label>Fotos ou Vídeos (Amostrais) *</label><input type="file" name="fotos_videos_mo" multiple></div>
+                            <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label>Relatório com Listagem de Estações/Linhas/Carros *</label>
+                                <input type="file" name="relatorio_estacoes_mo" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="MO" style="display: none;">
+                                <label>Fotos ou Vídeos (Amostrais) *</label>
+                                <input type="file" name="fotos_videos_mo" multiple>
+                            </div>
 
-                            <div class="upload-group" data-meio="BD" style="display: none;"><label>Relatório Fotográfico de Todos os Ônibus/Carros *</label><input type="file" name="comprovante_bd" multiple></div>
-                            <div class="upload-group" data-meio="OD FL" style="display: none;"><label>Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label><input type="file" name="comprovante_od_fl" multiple></div>
-                            <div class="upload-group" data-meio="MI" style="display: none;"><label>Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label><input type="file" name="comprovante_mi" multiple></div>
-                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;"><label>Relatório / Comprovante Geral *</label><input type="file" name="comprovante_geral" multiple></div>
+                            <div class="upload-group" data-meio="BD" style="display: none;">
+                                <label>Relatório Fotográfico de Todos os Ônibus/Carros *</label>
+                                <input type="file" name="comprovante_bd" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="OD FL" style="display: none;">
+                                <label>Relatório Fotográfico com Endereço (Diurno/Noturno se iluminado) *</label>
+                                <input type="file" name="comprovante_od_fl" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="MI" style="display: none;">
+                                <label>Relatório Fotográfico de Todos os Pontos e Relação de Locais *</label>
+                                <input type="file" name="comprovante_mi" multiple>
+                            </div>
+                            <div class="upload-group" data-meio="AT CI IN JO RD RV TV TP" style="display: none;">
+                                <label>Relatório / Comprovante Geral *</label>
+                                <input type="file" name="comprovante_geral" multiple>
+                            </div>
                         </div>
-                        <div class="file-counter" id="fileCounter"></div>
+                        <div class="file-counter" id="fileCounter" style="display: none;"></div>
                         <div class="size-warning" id="sizeWarning">
                             ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
                         </div>
@@ -121,7 +639,7 @@
 
                     <div class="form-group full-width">
                         <div class="drive-link-section" id="driveLinkSection">
-                            <h3>📁 Link do Google Drive</h3>
+                            <h3>Link do Google Drive</h3>
                             <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
                             <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
                             <p style="margin-top: 1rem; font-size: 0.85em;">
@@ -130,9 +648,12 @@
                         </div>
                     </div>
                     
-                    <div class="form-group full-width"><button type="submit">Enviar Checking</button></div>
+                    <div class="form-group full-width">
+                        <button type="submit">Enviar Checking</button>
+                    </div>
                 </div>
             </form>
+            
             <div class="message-box" id="successMessage"></div>
             <div class="message-box" id="errorMessage"></div>
         </div>
@@ -146,7 +667,7 @@
 
 <script>
     (function () {
-        const MAX_SIZE = 500 * 1024 * 1024; // 500MB
+        const MAX_SIZE = 500 * 1024 * 1024;
         
         const form = document.getElementById('checkingForm');
         const piInput = document.getElementById('pi');
@@ -283,7 +804,7 @@
             
             piFetchController = new AbortController();
             piStatus.textContent = 'Buscando...';
-            piStatus.style.color = 'var(--cor-texto-claro)';
+            piStatus.style.color = '#4a5568';
             clearMessages();
             resetPIFields();
 
@@ -308,7 +829,7 @@
 
                 if (data.success) {
                     piStatus.textContent = 'Dados carregados com sucesso.';
-                    piStatus.style.color = 'var(--cor-sucesso)';
+                    piStatus.style.color = '#10b981';
                     const fieldsToFill = { cliente: clienteInput, campanha: campanhaInput, produto: produtoInput, periodo: periodoInput, veiculo: veiculoInput, meio: meioSelect };
                      for(const key in fieldsToFill) {
                         if(fieldsToFill[key] && data[key] !== undefined) {
@@ -318,13 +839,13 @@
                     atualizarCamposDeAnexo(data.meio);
                 } else {
                     piStatus.textContent = data.error || 'PI não encontrada ou inválida.';
-                    piStatus.style.color = 'var(--cor-erro)';
+                    piStatus.style.color = '#ef4444';
                     resetPIFields();
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     piStatus.textContent = 'Falha na comunicação ou PI inválida.';
-                    piStatus.style.color = 'var(--cor-erro)';
+                    piStatus.style.color = '#ef4444';
                     resetPIFields();
                 }
             }
@@ -368,7 +889,6 @@
             
             const formData = new FormData();
             
-            // Adicionar campos básicos
             formData.append('action', 'submissao_form');
             formData.append('nome', document.getElementById('nome').value);
             formData.append('email', document.getElementById('email').value);
