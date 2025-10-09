@@ -11,12 +11,13 @@
     <style>
         :root {
             --azul-om: #0033a0;
-            --cinza-escuro: #2d3748;
+            --cinza-escuro: #1a202c;
             --cinza-medio: #4a5568;
             --cinza-claro: #cbd5e0;
             --cinza-bg: #f7fafc;
             --branco: #ffffff;
             --borda: #e2e8f0;
+            --sombra: rgba(0, 0, 0, 0.05);
         }
         
         * {
@@ -26,20 +27,22 @@
         }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--cinza-bg);
             color: var(--cinza-escuro);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .main-content {
             width: 100%;
             display: flex;
             justify-content: center;
-            padding: 3rem 1.5rem;
+            padding: 4rem 1.5rem;
             flex: 1;
         }
         
@@ -47,11 +50,11 @@
             max-width: 1200px;
             width: 100%;
             background: var(--branco);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px var(--sombra);
             position: relative;
             overflow: hidden;
-            padding: 3rem 4rem;
+            padding: 4rem 5rem;
         }
         
         .container::before {
@@ -60,74 +63,77 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(110deg, 
+            height: 8px;
+            background: linear-gradient(90deg, 
                 #ef4444 0%, 
-                #f59e0b 20%, 
-                #10b981 40%, 
-                #3b82f6 60%, 
-                #8b5cf6 80%, 
+                #f59e0b 14.28%, 
+                #eab308 28.56%,
+                #10b981 42.84%, 
+                #06b6d4 57.12%,
+                #3b82f6 71.4%, 
+                #8b5cf6 85.68%, 
                 #ec4899 100%
             );
         }
         
         .header {
             text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
+            margin-bottom: 4rem;
+            padding-bottom: 3rem;
             border-bottom: 1px solid var(--borda);
         }
         
         .header img.logo-opusmultipla {
-            max-width: 450px;
+            max-width: 480px;
             width: 100%;
             height: auto;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .header h1 {
-            font-size: 2rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 900;
             color: var(--cinza-escuro);
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             text-transform: uppercase;
             margin: 0;
         }
         
         .attention-box {
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
         
         .warning-text {
             background: #fffbeb;
             border: 1px solid #fbbf24;
-            border-left: 4px solid #f59e0b;
+            border-left: 6px solid #f59e0b;
             color: #92400e;
-            padding: 1.5rem 2rem;
-            border-radius: 4px;
+            padding: 2rem 2.5rem;
+            border-radius: 0;
             font-weight: 500;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             line-height: 1.8;
             font-size: 0.95rem;
         }
         
         .warning-text strong {
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 1.05em;
         }
         
         .attention-box img {
             max-width: 100%;
             height: auto;
             display: block;
-            border-radius: 4px;
+            border-radius: 0;
             border: 1px solid var(--borda);
         }
         
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: 2rem;
         }
         
         .form-group {
@@ -140,31 +146,34 @@
         }
         
         label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
             color: var(--cinza-escuro);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         label svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             stroke: var(--cinza-medio);
+            flex-shrink: 0;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.25rem;
             background: var(--branco);
-            border: 1px solid var(--borda);
-            border-radius: 4px;
-            font-size: 0.95rem;
+            border: 2px solid var(--borda);
+            border-radius: 0;
+            font-size: 1rem;
             font-family: 'Inter', sans-serif;
             color: var(--cinza-escuro);
-            transition: all 0.2s ease;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
             font-weight: 400;
         }
         
@@ -175,63 +184,62 @@
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--azul-om);
-            box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.08);
         }
         
         input::placeholder, textarea::placeholder {
             color: #a0aec0;
+            font-weight: 400;
         }
         
         input[readonly], .campo-bloqueado {
-            background: var(--cinza-bg);
+            background: #fafafa;
             border-color: var(--borda);
             cursor: not-allowed;
             pointer-events: none;
             color: var(--cinza-medio);
+            font-weight: 500;
         }
         
         select {
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 16px;
-            padding-right: 2.5rem;
+            background-position: right 1rem center;
+            background-size: 14px;
+            padding-right: 3rem;
+            font-weight: 500;
         }
         
         textarea {
-            min-height: 120px;
+            min-height: 140px;
             resize: vertical;
             line-height: 1.6;
         }
         
         .upload-container {
-            border: 2px dashed var(--borda);
-            padding: 2rem;
-            border-radius: 4px;
-            margin-top: 0.75rem;
-            background: var(--cinza-bg);
-            transition: all 0.2s ease;
-        }
-        
-        .upload-container:hover {
-            border-color: var(--cinza-claro);
+            border: 3px dashed var(--borda);
+            padding: 2.5rem;
+            border-radius: 0;
+            margin-top: 1rem;
+            background: #fafafa;
         }
         
         #upload-placeholder {
             color: var(--cinza-medio);
-            font-size: 0.95rem;
+            font-size: 1rem;
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
+            font-weight: 500;
         }
         
         .upload-group {
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 2rem;
             background: var(--branco);
-            border-radius: 4px;
-            border: 1px solid var(--borda);
+            border-radius: 0;
+            border: 2px solid var(--borda);
         }
         
         .upload-group:last-child {
@@ -239,26 +247,29 @@
         }
         
         .upload-group label {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
         
         input[type="file"] {
             font-size: 0.9rem;
-            padding: 0.5rem;
+            padding: 0.75rem;
             cursor: pointer;
+            border: 2px solid var(--borda);
         }
         
         input[type="file"]::file-selector-button {
             background: var(--azul-om);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0;
+            font-weight: 700;
             cursor: pointer;
-            margin-right: 0.75rem;
-            transition: background 0.2s ease;
-            font-size: 0.875rem;
+            margin-right: 1rem;
+            transition: background 0.15s ease;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         input[type="file"]::file-selector-button:hover {
@@ -267,18 +278,18 @@
         
         button[type="submit"] {
             width: 100%;
-            padding: 1rem 2rem;
+            padding: 1.4rem 2.5rem;
             background: var(--azul-om);
             color: white;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.1rem;
+            font-weight: 800;
             border: none;
-            border-radius: 4px;
+            border-radius: 0;
             cursor: pointer;
-            transition: background 0.2s ease;
-            margin-top: 2rem;
+            transition: background 0.15s ease;
+            margin-top: 3rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 2px;
         }
         
         button[type="submit"]:hover {
@@ -291,13 +302,13 @@
         }
         
         .message-box {
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
-            margin-top: 1.5rem;
+            padding: 1.5rem 2rem;
+            border-radius: 0;
+            margin-top: 2rem;
             display: none;
             text-align: center;
-            font-weight: 500;
-            border: 1px solid;
+            font-weight: 600;
+            border: 2px solid;
         }
         
         #successMessage {
@@ -314,75 +325,34 @@
         
         #piStatus {
             font-size: 0.85rem;
-            margin-top: 0.5rem;
-            font-weight: 600;
+            margin-top: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
         
         .size-info {
             font-size: 0.85rem;
             color: var(--cinza-medio);
-            margin-top: 0.75rem;
-            font-weight: 500;
+            margin-top: 1rem;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+            background: #fafafa;
+            border-radius: 0;
+            border: 1px solid var(--borda);
         }
         
         .size-info strong {
             color: var(--azul-om);
-            font-weight: 700;
-        }
-        
-        .size-warning {
-            background: #fffbeb;
-            border: 1px solid #fbbf24;
-            border-left: 4px solid #f59e0b;
-            color: #92400e;
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
-            margin-top: 1.5rem;
-            display: none;
-            font-weight: 500;
-        }
-        
-        .drive-link-section {
-            display: none;
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #fffbeb;
-            border: 2px solid #fbbf24;
-            border-radius: 4px;
-        }
-        
-        .drive-link-section h3 {
-            color: #78350f;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        
-        .drive-link-section p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            color: #92400e;
-            line-height: 1.6;
-        }
-        
-        .file-counter {
-            font-size: 0.875rem;
-            color: var(--azul-om);
-            font-weight: 600;
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--cinza-bg);
-            border-radius: 4px;
-            border: 1px solid var(--borda);
+            font-weight: 800;
         }
 
         .progress-container {
             display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
+            margin-top: 2rem;
+            padding: 2rem;
             background: var(--branco);
-            border: 2px solid var(--azul-om);
-            border-radius: 4px;
+            border: 3px solid var(--azul-om);
+            border-radius: 0;
         }
 
         .progress-container.active {
@@ -391,17 +361,17 @@
 
         .progress-bar-wrapper {
             width: 100%;
-            height: 30px;
-            background: var(--cinza-bg);
-            border-radius: 15px;
+            height: 40px;
+            background: #fafafa;
+            border-radius: 0;
             overflow: hidden;
             position: relative;
-            border: 1px solid var(--borda);
+            border: 2px solid var(--borda);
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #0033a0 0%, #0055d4 100%);
+            background: var(--azul-om);
             width: 0%;
             transition: width 0.3s ease;
             display: flex;
@@ -410,113 +380,112 @@
             position: relative;
         }
 
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
         .progress-text {
             position: absolute;
             width: 100%;
             text-align: center;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-weight: 800;
+            font-size: 0.9rem;
             color: var(--cinza-escuro);
-            line-height: 30px;
+            line-height: 40px;
             z-index: 1;
+            letter-spacing: 1px;
         }
 
         .progress-info {
-            margin-top: 1rem;
+            margin-top: 1.25rem;
             text-align: center;
             font-size: 0.9rem;
             color: var(--cinza-medio);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .progress-info strong {
             color: var(--azul-om);
+            font-weight: 800;
+        }
+        
+        .file-counter {
+            font-size: 0.9rem;
+            color: var(--azul-om);
+            font-weight: 700;
+            margin-top: 1.25rem;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 0;
+            border: 2px solid var(--borda);
         }
         
         .footer-final {
             width: 100%;
             background: #54595F;
             text-align: center;
-            padding: 3rem 1.5rem;
+            padding: 4rem 1.5rem;
             margin-top: auto;
+            position: relative;
         }
         
         .footer-final::before {
             content: '';
             position: absolute;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(110deg, 
+            height: 8px;
+            background: linear-gradient(90deg, 
                 #ef4444 0%, 
-                #f59e0b 20%, 
-                #10b981 40%, 
-                #3b82f6 60%, 
-                #8b5cf6 80%, 
+                #f59e0b 14.28%, 
+                #eab308 28.56%,
+                #10b981 42.84%, 
+                #06b6d4 57.12%,
+                #3b82f6 71.4%, 
+                #8b5cf6 85.68%, 
                 #ec4899 100%
             );
             top: 0;
             left: 0;
         }
         
-        .footer-final {
-            position: relative;
-        }
-        
         .footer-final .logo-principal {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 3rem;
+            font-weight: 900;
             color: var(--branco);
-            margin-bottom: 0.5rem;
-            letter-spacing: 3px;
+            margin-bottom: 0.75rem;
+            letter-spacing: 6px;
         }
         
         .footer-final .subtitulo {
             font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 4px;
+            font-weight: 700;
+            letter-spacing: 5px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
         
         .footer-final .copyright {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.5);
-            margin-top: 1.5rem;
+            margin-top: 2rem;
+            font-weight: 500;
         }
         
         @media (max-width: 768px) {
             .container {
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 2rem;
             }
             
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 1.25rem;
+                gap: 1.5rem;
             }
             
             .header h1 {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+                letter-spacing: 2px;
             }
             
             .footer-final .logo-principal {
-                font-size: 2rem;
+                font-size: 2.25rem;
+                letter-spacing: 4px;
             }
         }
     </style>
@@ -531,8 +500,7 @@
             
             <div class="attention-box">
                 <div class="warning-text">
-                    ARQUIVOS ATÉ <strong>500MB</strong>: Envie diretamente pelo formulário.<br>
-                    ARQUIVOS ACIMA DE <strong>500MB</strong>: Faça upload no Google Drive e cole o link da pasta abaixo.<br>
+                    <strong>IMPORTANTE:</strong> Arquivos até <strong>500MB</strong> serão enviados diretamente pelo formulário. Para arquivos maiores, o sistema criará automaticamente uma pasta no Google Drive e você receberá o link por e-mail.<br><br>
                     O não envio dos relatórios de acordo com especificações acarretará no não pagamento das veiculações.
                 </div>
                 <img src="comunicado.jpg" alt="Comunicado sobre relatórios de veiculação">
@@ -705,20 +673,6 @@
                             </div>
                         </div>
                         <div class="file-counter" id="fileCounter" style="display: none;"></div>
-                        <div class="size-warning" id="sizeWarning">
-                            ⚠️ Tamanho total excede 500MB! Os campos de upload foram desabilitados. Por favor, use o campo de link do Google Drive abaixo.
-                        </div>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <div class="drive-link-section" id="driveLinkSection">
-                            <h3>Link do Google Drive</h3>
-                            <p>Como seus arquivos ultrapassam 500MB, faça upload para o Google Drive e cole o link da pasta abaixo:</p>
-                            <input type="url" id="driveLink" name="drive_link" placeholder="https://drive.google.com/drive/folders/...">
-                            <p style="margin-top: 1rem; font-size: 0.85em;">
-                                <strong>Importante:</strong> Configure a pasta como "Qualquer pessoa com o link pode visualizar"
-                            </p>
-                        </div>
                     </div>
 
                     <div class="form-group full-width">
@@ -769,9 +723,6 @@
         const uploadArea = document.getElementById('upload-area-dinamica');
         const uploadPlaceholder = document.getElementById('upload-placeholder');
         const allUploadGroups = uploadArea.querySelectorAll('.upload-group');
-        const sizeWarning = document.getElementById('sizeWarning');
-        const driveLinkSection = document.getElementById('driveLinkSection');
-        const driveLink = document.getElementById('driveLink');
         const fileCounter = document.getElementById('fileCounter');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
@@ -828,31 +779,6 @@
             } else {
                 fileCounter.style.display = 'none';
             }
-
-            if (totalSize > MAX_SIZE) {
-                sizeWarning.style.display = 'block';
-                driveLinkSection.style.display = 'block';
-                driveLink.required = true;
-                
-                visibleFileInputs.forEach(input => {
-                    input.disabled = true;
-                    input.required = false;
-                });
-            } else {
-                sizeWarning.style.display = 'none';
-                driveLinkSection.style.display = 'none';
-                driveLink.required = false;
-                driveLink.value = '';
-                
-                visibleFileInputs.forEach(input => {
-                    input.disabled = false;
-                    const meiosDoGrupo = input.closest('.upload-group').dataset.meio.split(' ');
-                    const meioAtual = meioSelect.value;
-                    if (meioAtual && meiosDoGrupo.includes(meioAtual)) {
-                        input.required = true;
-                    }
-                });
-            }
         }
 
         uploadArea.addEventListener('change', function(e) {
@@ -891,12 +817,7 @@
                 }
             });
             uploadPlaceholder.style.display = algumCampoVisivel ? 'none' : 'block';
-            
             fileCounter.style.display = 'none';
-            sizeWarning.style.display = 'none';
-            driveLinkSection.style.display = 'none';
-            driveLink.required = false;
-            driveLink.value = '';
         }
 
         async function buscarDadosPI(npi) {
@@ -961,27 +882,18 @@
             clearMessages();
             hideProgress();
 
-            const usandoLink = driveLinkSection.style.display === 'block' && driveLink.value.trim();
+            let camposAnexoObrigatoriosPreenchidos = true;
+            const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]');
             
-            if (usandoLink) {
-                if (!driveLink.value.includes('drive.google.com')) {
-                    showMessage(errorMessage, 'Por favor, forneça um link válido do Google Drive.');
-                    return;
+            camposAnexoVisiveis.forEach(input => {
+                if (input.required && input.files.length === 0) {
+                    camposAnexoObrigatoriosPreenchidos = false;
                 }
-            } else {
-                let camposAnexoObrigatoriosPreenchidos = true;
-                const camposAnexoVisiveis = uploadArea.querySelectorAll('.upload-group[style*="display: block"] input[type="file"]:not([disabled])');
-                
-                camposAnexoVisiveis.forEach(input => {
-                    if (input.required && input.files.length === 0) {
-                        camposAnexoObrigatoriosPreenchidos = false;
-                    }
-                });
+            });
 
-                if (!camposAnexoObrigatoriosPreenchidos) {
-                    showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
-                    return;
-                }
+            if (!camposAnexoObrigatoriosPreenchidos) {
+                showMessage(errorMessage, 'Preencha todos os campos obrigatórios (*) e anexe pelo menos um arquivo em cada campo de comprovante solicitado.');
+                return;
             }
 
             if (!form.checkValidity()) {
@@ -1008,26 +920,20 @@
             formData.append('veiculo', document.getElementById('veiculo').value);
             formData.append('meio', document.getElementById('meio').value);
             formData.append('observacoes', document.getElementById('observacoes').value);
+            formData.append('upload_method', 'binary');
             
             let totalSize = 0;
-            if (usandoLink) {
-                formData.append('upload_method', 'drive_link');
-                formData.append('drive_link', driveLink.value.trim());
-                updateProgress(50, 'Enviando informações do Google Drive...');
-            } else {
-                formData.append('upload_method', 'binary');
-                
-                const allFileInputs = form.querySelectorAll('input[type="file"]:not([disabled])');
-                allFileInputs.forEach(input => {
-                    if (input.files.length > 0) {
-                        for (let i = 0; i < input.files.length; i++) {
-                            formData.append(input.name, input.files[i]);
-                            totalSize += input.files[i].size;
-                        }
+            const allFileInputs = form.querySelectorAll('input[type="file"]');
+            allFileInputs.forEach(input => {
+                if (input.files.length > 0) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        formData.append(input.name, input.files[i]);
+                        totalSize += input.files[i].size;
                     }
-                });
-                updateProgress(25, `Preparando <strong>${formatFileSize(totalSize)}</strong> para upload...`);
-            }
+                }
+            });
+            
+            updateProgress(10, `Preparando <strong>${formatFileSize(totalSize)}</strong> para upload...`);
 
             try {
                 const xhr = new XMLHttpRequest();
@@ -1062,9 +968,7 @@
                     } catch (error) {
                         hideProgress();
                         let errorMessageText = 'Ocorreu um erro inesperado.';
-                        if (error.message.includes('fetch')) {
-                            errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                        } else if (error instanceof SyntaxError) {
+                        if (error instanceof SyntaxError) {
                             errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
                         } else {
                             errorMessageText = error.message;
@@ -1085,7 +989,7 @@
 
                 xhr.addEventListener('timeout', function() {
                     hideProgress();
-                    showMessage(errorMessage, 'Tempo esgotado. O arquivo pode ser muito grande. Tente usar o Google Drive.');
+                    showMessage(errorMessage, 'Tempo esgotado. O arquivo pode ser muito grande.');
                     submitButton.textContent = originalButtonText;
                     submitButton.disabled = false;
                 });
@@ -1096,15 +1000,7 @@
                 
             } catch (error) {
                 hideProgress();
-                let errorMessageText = 'Ocorreu um erro inesperado.';
-                if (error.message.includes('fetch')) {
-                    errorMessageText = 'Falha na comunicação com o servidor. Verifique sua conexão.';
-                } else if (error instanceof SyntaxError) {
-                    errorMessageText = 'O servidor retornou uma resposta inválida. Contate o suporte.';
-                } else {
-                    errorMessageText = error.message;
-                }
-                showMessage(errorMessage, errorMessageText);
+                showMessage(errorMessage, 'Ocorreu um erro inesperado.');
                 submitButton.textContent = originalButtonText;
                 submitButton.disabled = false;
             }
