@@ -84,7 +84,7 @@ O projeto automatiza completamente o processo de "Checking" de Propostas de Inse
 | **n8n (Self-Hosted)** | Orquestração e automação |
 | **Google Sheets API** | Fonte de dados e registro de logs |
 | **Google Drive API** | Armazenamento de arquivos |
-| **GitHub Pages** | Hospedagem do formulário |
+| **Plesk** | Hospedagem do formulário |
 | **Docker + Traefik** | Infraestrutura n8n |
 
 ## 🏗️ Arquitetura
@@ -398,7 +398,7 @@ if ($json.body.n_pi.startsWith('TESTE-')) {
 return true;
 ```
 
-## 🌍 Domínio Personalizado
+## 🌍 Domínio Personalizado Para teste
 
 ### Configuração no GitHub Pages
 
@@ -503,7 +503,7 @@ Para dúvidas ou problemas:
 
 1. **Documentação Técnica:** Consulte [WORKFLOW.md](./WORKFLOW.md)
 2. **Issues:** Abra uma issue neste repositório
-3. **E-mail:** phillipe.barros@grupoom.com.br
+3. **E-mail:** allti@grupoom.com.br
 
 ## 📝 Changelog
 
