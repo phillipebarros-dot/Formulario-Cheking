@@ -1,587 +1,524 @@
-# Documentação Técnica do Workflow n8n
+# Formulário de Checking - OpusMúltipla
+
+![Status do Projeto](https://img.shields.io/badge/status-ativo-brightgreen)
+![n8n](https://img.shields.io/badge/n8n-1.110.1%2B-blueviolet)
+![Google Sheets](https://img.shields.io/badge/Google-Sheets-green)
+![Google Drive](https://img.shields.io/badge/Google-Drive-yellow)
+
+Sistema automatizado para submissão e gerenciamento de checkings de Propostas de Inserção (PIs) da OpusMúltipla, integrando interface web inteligente com workflow de automação robusto em n8n.
 
 ## 📋 Índice
 
-- [Visão Geral](#visão-geral)
-- [Arquitetura do Workflow](#arquitetura-do-workflow)
-- [Fluxo Detalhado](#fluxo-detalhado)
-- [Documentação dos Nós](#documentação-dos-nós)
-- [Códigos JavaScript](#códigos-javascript)
-- [Tratamento de Erros](#tratamento-de-erros)
-- [Otimizações e Performance](#otimizações-e-performance)
-- [Manutenção e Monitoramento](#manutenção-e-monitoramento)
+- [Visão Geral](#-visão-geral)
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias](#-tecnologias)
+- [Arquitetura](#-arquitetura)
+- [Como Usar](#-como-usar)
+- [Configuração Técnica](#-configuração-técnica)
+- [Desenvolvimento](#-desenvolvimento)
+- [Domínio Personalizado](#-domínio-personalizado)
+- [Troubleshooting](#-troubleshooting)
 
-## Visão Geral
+## 🎯 Visão Geral
 
-O workflow n8n do formulário de checking processa duas operações principais através de um único webhook:
+O projeto automatiza completamente o processo de "Checking" de Propostas de Inserção (PIs), substituindo o fluxo manual de e-mails e validações por um sistema centralizado que garante:
 
-1. **Busca de PI:** Consulta dados da planilha para auto-preenchimento
-2. **Submissão de Checking:** Valida, organiza no Drive e notifica
+- ✅ **Integridade dos dados** através de validação híbrida (front-end + back-end)
+- 📁 **Organização automática** de arquivos no Google Drive
+- 🔔 **Notificações em tempo real** para equipes responsáveis
+- 📊 **Rastreabilidade completa** com logs auditáveis
+- ⚡ **Eficiência operacional** com redução significativa de erros
 
-### Especificações Técnicas
+## ✨ Funcionalidades
 
-| Item | Valor |
-|------|-------|
-| **Webhook URL** | `https://n8n.grupoom.com.br/webhook/CheckingForm` |
-| **Método HTTP** | POST |
-| **Timeout** | 3600s (60 minutos) |
-| **Max Payload** | 800MB |
-| **Total de Nós** | 19 nós |
-| **Execuções Paralelas** | Suportado |
+### 🔄 Auto-preenchimento Inteligente
+- Busca automática de dados da PI no Google Sheets
+- Preenchimento instantâneo de: Cliente, Campanha, Produto, Período, Veículo e Meio
+- Redução de digitação manual e prevenção de erros
 
-## Arquitetura do Workflow
+### ✅ Validação Híbrida
 
-### Diagrama Visual
+**Front-end (Feedback Imediato):**
+- Validação de campos obrigatórios antes do envio
+- Verificação de anexos por tipo de meio
+- Validação de tamanho de arquivos (limite 500MB)
+- Feedback visual instantâneo
 
-```mermaid
-graph TD
-    A[Webhook POST] --> B{É Busca de PI?}
-    
-    B -->|Sim| C[Buscar PI no Sheets]
-    C --> D[Formatar Resposta PI]
-    D --> E[Responder JSON PI]
-    
-    B -->|Não| F[Validar Submissão]
-    F --> G{Validação OK?}
-    
-    G -->|Não| H[Responder Erro]
-    
-    G -->|Sim| I{É Link do Drive?}
-    
-    I -->|Sim| J[Preparar Log Link]
-    J --> K[Unificar Fluxos]
-    
-    I -->|Não| L[Buscar Pasta Cliente]
-    L --> M{Pasta Existe?}
-    
-    M -->|Não| N[Criar Pasta Cliente]
-    N --> O[Definir ID Cliente]
-    M -->|Sim| O
-    
-    O --> P[Criar Pasta PI]
-    P --> Q[Separar Cada Arquivo]
-    Q --> R[Upload Arquivo Drive]
-    R --> S[Aguardar Todos Uploads]
-    S --> T[Preparar Log Binary]
-    T --> K
-    
-    K --> U[Registrar Log Sheets]
-    K --> V[Enviar E-mail]
-    V --> W[Responder Sucesso]
+**Back-end (Segurança):**
+- Revalidação da existência e status da PI
+- Verificação de quantidade mínima de arquivos
+- Validação de integridade dos dados
+- Proteção contra manipulação de requisições
+
+### 📂 Organização Automática
+- Criação automática de estrutura de pastas no Google Drive
+- Nomenclatura padronizada: `PI_{NUMERO} - {CLIENTE} - {DATA}`
+- Hierarquia: `Checkings > Cliente > PI específica`
+- Links diretos para acesso rápido
+
+### 📧 Notificações Automáticas
+- E-mail HTML profissional com todos os detalhes
+- Enviado imediatamente após validação
+- Contém link direto para pasta no Drive
+- Template responsivo e moderno
+
+### 📊 Registro e Auditoria
+- Log completo em aba dedicada do Google Sheets
+- Registro de: Data/Hora, PI, Cliente, Veículo, Quantidade de arquivos
+- Histórico completo de todas as submissões
+- Facilita auditorias e rastreamento
+
+### 🎨 Interface Amigável
+- Design moderno e profissional
+- Barra de progresso visual durante upload
+- Mensagens de status claras e informativas
+- Contador de arquivos em tempo real
+- Responsivo para mobile e desktop
+
+## 🛠️ Tecnologias
+
+| Tecnologia | Uso |
+|------------|-----|
+| **HTML5, CSS3, JavaScript** | Interface do usuário |
+| **Google Fonts (Inter)** | Tipografia moderna |
+| **n8n (Self-Hosted)** | Orquestração e automação |
+| **Google Sheets API** | Fonte de dados e registro de logs |
+| **Google Drive API** | Armazenamento de arquivos |
+| **GitHub Pages** | Hospedagem do formulário |
+| **Docker + Traefik** | Infraestrutura n8n |
+
+## 🏗️ Arquitetura
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    GitHub Pages                              │
+│              (formschecking.grupoom.com.br)                  │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │         index.html (Formulário Web)                │    │
+│  │  • Validação front-end                             │    │
+│  │  • Busca automática de PI                          │    │
+│  │  • Upload com barra de progresso                   │    │
+│  └────────────────┬───────────────────────────────────┘    │
+└───────────────────┼─────────────────────────────────────────┘
+                    │
+                    │ HTTPS POST
+                    │ (CORS habilitado)
+                    ▼
+┌─────────────────────────────────────────────────────────────┐
+│              n8n Workflow (n8n.grupoom.com.br)              │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │  1. Webhook Receiver                               │    │
+│  │     ├─ Busca PI (action: "buscar_pi")              │    │
+│  │     └─ Submissão (action: "submissao_form")        │    │
+│  └────────────────┬───────────────────────────────────┘    │
+│                   │                                          │
+│  ┌────────────────▼───────────────────────────────────┐    │
+│  │  2. Validação e Processamento                      │    │
+│  │     ├─ Validar campos obrigatórios                 │    │
+│  │     ├─ Verificar status da PI                      │    │
+│  │     ├─ Validar arquivos por meio                   │    │
+│  │     └─ Preparar dados para upload                  │    │
+│  └────────────────┬───────────────────────────────────┘    │
+│                   │                                          │
+│  ┌────────────────▼───────────────────────────────────┐    │
+│  │  3. Organização no Drive                           │    │
+│  │     ├─ Buscar/Criar pasta Cliente                  │    │
+│  │     ├─ Criar pasta da PI                           │    │
+│  │     └─ Upload de arquivos                          │    │
+│  └────────────────┬───────────────────────────────────┘    │
+│                   │                                          │
+│  ┌────────────────▼───────────────────────────────────┐    │
+│  │  4. Registro e Notificação                         │    │
+│  │     ├─ Registrar log no Sheets                     │    │
+│  │     ├─ Enviar e-mail de notificação                │    │
+│  │     └─ Responder sucesso ao front-end              │    │
+│  └────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  Google Workspace                            │
+│                                                              │
+│  ┌──────────────────────┐  ┌──────────────────────┐        │
+│  │   Google Sheets      │  │   Google Drive       │        │
+│  │  • Base de PIs       │  │  • Pasta Checkings   │        │
+│  │  • Log de envios     │  │  • Pastas por Cliente│        │
+│  └──────────────────────┘  │  • Arquivos da PI    │        │
+│                             └──────────────────────┘        │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Estrutura de Dados
+## 🌐 Como Usar
 
-#### Entrada - Busca de PI
-```json
+### Acesso ao Formulário
+1. Acesse: **[https://formschecking.grupoom.com.br](https://formschecking.grupoom.com.br)**
+2. Digite o número da PI no campo específico
+3. Aguarde o preenchimento automático dos dados
+4. Preencha seus dados de contato (Nome, E-mail, Telefone)
+5. Adicione observações, se necessário
+6. Anexe os arquivos de comprovação conforme o meio especificado
+7. Clique em "Enviar Checking"
+8. Aguarde a confirmação de sucesso
+
+### Tipos de Comprovantes por Meio
+
+| Meio | Comprovantes Necessários |
+|------|--------------------------|
+| **DO** (Digital Out of Home) | • Relatório Fotográfico<br>• Relatório de Exibições<br>• Vídeo Diurno |
+| **ME** (Mídia Externa) | • Relatório com Endereços<br>• Fotos Diurnas/Noturnas |
+| **MO** (Metrô) | • Listagem Estações/Linhas<br>• Fotos/Vídeos |
+| **BD** (Busdoor) | • Relatório Fotográfico dos Ônibus |
+| **OD/FL** (Outdoor/Frontlight) | • Relatório Fotográfico com Endereço |
+| **MI** (Mídia Interna) | • Relatório Fotográfico e Locais |
+| **Outros** | • Relatório/Comprovante Geral |
+
+## ⚙️ Configuração Técnica
+
+### Requisitos de Infraestrutura
+
+#### Servidor n8n
+- **Sistema Operacional:** Linux (Ubuntu 20.04+ recomendado)
+- **Docker:** 20.10+
+- **Docker Compose:** 2.0+
+- **Memória RAM:** Mínimo 4GB (8GB recomendado)
+- **Disco:** 20GB+ disponível
+- **Certificado SSL:** Let's Encrypt via Traefik
+
+#### APIs Necessárias
+1. **Google Sheets API**
+   - Acesso à planilha de PIs
+   - Permissões de leitura e escrita
+
+2. **Google Drive API**
+   - Acesso à pasta raiz de Checkings
+   - Permissões para criar pastas e fazer upload
+
+3. **SMTP** (Gmail recomendado)
+   - Conta de serviço para envio de e-mails
+   - Senha de aplicativo configurada
+
+### Configuração CORS (Essencial)
+
+Para permitir que o formulário hospedado no GitHub Pages se comunique com o n8n, configure as variáveis de ambiente:
+
+```bash
+# No arquivo .env ou docker-compose.yml
+N8N_CORS_ALLOWED_ORIGINS=https://formschecking.grupoom.com.br
+N8N_CORS_ALLOWED_METHODS=GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS
+N8N_CORS_ALLOWED_HEADERS=Origin,X-Requested-With,Content-Type,Accept,Authorization,X-N8N-API-KEY
+```
+
+**⚠️ Importante:** Reinicie o n8n após alterar essas variáveis.
+
+### Limites e Timeouts
+
+```yaml
+# Configurações recomendadas no docker-compose.yml
+environment:
+  - N8N_PAYLOAD_SIZE_MAX=800              # 800MB
+  - N8N_FORMDATA_FILE_SIZE_MAX=800        # 800MB
+  - N8N_WEBHOOK_TIMEOUT=3600000           # 60 minutos
+  - N8N_EXECUTIONS_TIMEOUT=7200           # 2 horas
+  - N8N_EXECUTIONS_TIMEOUT_MAX=10800      # 3 horas
+  - NODE_OPTIONS=--max-old-space-size=4096 # 4GB heap
+```
+
+### Estrutura do Google Sheets
+
+#### Aba Principal (PIs)
+| Coluna | Descrição | Tipo |
+|--------|-----------|------|
+| N_PI | Número da PI | Texto |
+| CLIENTE | Nome do cliente | Texto |
+| CAMPANHA | Nome da campanha | Texto |
+| PRODUTO | Produto anunciado | Texto |
+| PERIODO | Período de veiculação | Texto |
+| VEICULO | Veículo de mídia | Texto |
+| MEIO | Código do meio (AT, BD, CI, etc.) | Texto |
+| STATUS | Status da PI (ativa/inativa) | Texto |
+
+#### Aba Log_Checkings
+| Coluna | Descrição | Tipo |
+|--------|-----------|------|
+| PI | Número da PI | Texto |
+| Veículo | Veículo de mídia | Texto |
+| Cliente | Nome do cliente | Texto |
+| Data | Data/hora do envio | Data/Hora |
+| Qtd_Arquivos | Quantidade de arquivos | Número |
+| Status | Status do envio | Texto |
+
+## 👨‍💻 Desenvolvimento
+
+### Estrutura do Projeto
+
+```
+formulario-checking/
+├── index.html                 # Formulário principal
+├── logo-opus.png             # Logo OpusMúltipla
+├── comunicado.jpg            # Imagem de aviso
+├── favicon.png               # Ícone do site
+├── README.md                 # Este arquivo
+├── WORKFLOW.md               # Documentação técnica do n8n
+└── docker-compose.yml        # Configuração da infraestrutura
+```
+
+### Comunicação Front-end ↔ n8n
+
+O formulário se comunica com o webhook n8n através de duas ações:
+
+#### 1. Busca de PI (Auto-preenchimento)
+```javascript
+// Requisição
+POST https://n8n.grupoom.com.br/webhook/CheckingForm
+Content-Type: application/json
+
 {
   "action": "buscar_pi",
   "n_pi": "182429"
 }
-```
 
-#### Entrada - Submissão
-```json
+// Resposta de Sucesso
 {
-  "action": "submissao_form",
-  "nome": "string",
-  "email": "string",
-  "telefone": "string",
-  "n_pi": "string",
-  "cliente": "string",
-  "campanha": "string",
-  "produto": "string",
-  "periodo": "string",
-  "veiculo": "string",
-  "meio": "string",
-  "observacoes": "string",
-  "upload_method": "binary",
-  "relatorio_fotografico_do": "File[]",
-  // ... outros arquivos
+  "success": true,
+  "cliente": "NOME DO CLIENTE",
+  "campanha": "NOME DA CAMPANHA",
+  "produto": "PRODUTO",
+  "periodo": "01/01/2025 - 31/01/2025",
+  "veiculo": "VEÍCULO",
+  "meio": "DO"
+}
+
+// Resposta de Erro
+{
+  "success": false,
+  "error": "PI não encontrada"
 }
 ```
 
-## Fluxo Detalhado
-
-### 1️⃣ Rota de Busca de PI
-
-#### Nó 1: Webhook POST
-**Tipo:** `n8n-nodes-base.webhook`
-**Configuração:**
-```yaml
-httpMethod: POST
-path: CheckingForm
-responseMode: responseNode
-webhookId: checking-form-post
-```
-
-**Descrição:** Recebe todas as requisições POST. O corpo da requisição é disponibilizado em `$json.body`.
-
----
-
-#### Nó 2: É Busca de PI?
-**Tipo:** `n8n-nodes-base.if`
-**Condição:**
+#### 2. Submissão do Formulário
 ```javascript
-$json.body.action === "buscar_pi"
-```
+// Requisição
+POST https://n8n.grupoom.com.br/webhook/CheckingForm
+Content-Type: multipart/form-data
 
-**Descrição:** Roteia para busca se `action` for `"buscar_pi"`, caso contrário vai para submissão.
-
----
-
-#### Nó 3: Buscar PI no Sheets
-**Tipo:** `n8n-nodes-base.googleSheets`
-**Operação:** Read
-**Configuração:**
-```yaml
-documentId: "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_Q"
-sheetName: "gid=0"  # Aba principal
-filtersUI:
-  - lookupColumn: "N_PI"
-    lookupValue: "={{ $json.body.n_pi }}"
-```
-
-**Descrição:** Busca linha onde coluna `N_PI` corresponde ao número fornecido.
-
-**Saída Esperada:**
-```json
-[
-  {
-    "N_PI": "182429",
-    "CLIENTE": "NOME CLIENTE",
-    "CAMPANHA": "CAMPANHA",
-    "PRODUTO": "PRODUTO",
-    "PERIODO": "01/01/2025 - 31/01/2025",
-    "VEICULO": "VEICULO",
-    "MEIO": "DO",
-    "STATUS": "ativa"
-  }
-]
-```
-
----
-
-#### Nó 4: Formatar Resposta PI
-**Tipo:** `n8n-nodes-base.code`
-**Código:**
-```javascript
-const items = $input.all();
-
-if (items.length === 0 || !items[0].json.N_PI) {
-  return [{ 
-    json: { 
-      success: false, 
-      error: 'PI não encontrada' 
-    } 
-  }];
+FormData {
+  action: "submissao_form",
+  nome: "João Silva",
+  email: "joao@example.com",
+  telefone: "(11) 98765-4321",
+  n_pi: "182429",
+  cliente: "CLIENTE",
+  campanha: "CAMPANHA",
+  produto: "PRODUTO",
+  periodo: "01/01/2025 - 31/01/2025",
+  veiculo: "VEICULO",
+  meio: "DO",
+  observacoes: "Observações...",
+  upload_method: "binary",
+  relatorio_fotografico_do: [File],
+  relatorio_exibicoes_do: [File],
+  video_diurno_do: [File]
 }
 
-const pi = items[0].json;
-
-return [{
-  json: {
-    success: true,
-    cliente: pi.CLIENTE || '',
-    campanha: pi.CAMPANHA || '',
-    produto: pi.PRODUTO || '',
-    periodo: pi.PERIODO || '',
-    veiculo: pi.VEICULO || '',
-    meio: pi.MEIO || ''
-  }
-}];
-```
-
-**Descrição:** Transforma dados do Sheets em resposta JSON padronizada.
-
----
-
-#### Nó 5: Responder JSON PI
-**Tipo:** `n8n-nodes-base.respondToWebhook`
-**Configuração:**
-```yaml
-respondWith: json
-responseBody: "={{ $json }}"
-```
-
-**Descrição:** Envia resposta de volta ao formulário.
-
----
-
-### 2️⃣ Rota de Submissão
-
-#### Nó 6: Validar Submissão
-**Tipo:** `n8n-nodes-base.code`
-**Código Completo:**
-```javascript
-const item = $input.item;
-const body = item.json.body || {};
-const binary = item.binary || {};
-const erros = [];
-
-// 1. Validar campos obrigatórios
-const camposObrigatorios = ['nome', 'email', 'telefone', 'n_pi'];
-const camposFaltando = camposObrigatorios.filter(
-  campo => !body[campo] || body[campo].trim() === ''
-);
-
-if (camposFaltando.length > 0) {
-  erros.push(`Campos obrigatórios faltando: ${camposFaltando.join(', ')}`);
+// Resposta de Sucesso
+{
+  "success": true,
+  "message": "Checking enviado com sucesso!"
 }
 
-// 2. Verificar método de upload
-const uploadMethod = body.upload_method;
-const driveLink = body.drive_link;
-
-if (uploadMethod === 'drive_link') {
-  // Validar link do Drive
-  if (!driveLink || !driveLink.includes('drive.google.com')) {
-    erros.push('Link do Google Drive inválido.');
-  } else {
-    const matchFolder = driveLink.match(/folders\/([a-zA-Z0-9_-]+)/);
-    const matchFile = driveLink.match(/[-\w]{25,}/);
-    
-    if (matchFolder) {
-      item.json.driveFolderId = matchFolder[1];
-      item.json.uploadMethod = 'drive_link';
-    } else if (matchFile) {
-      item.json.driveFolderId = matchFile[0];
-      item.json.uploadMethod = 'drive_link';
-    } else {
-      erros.push('Não foi possível extrair o ID do link do Drive.');
-    }
-  }
-} else {
-  // Validar anexos binários
-  item.json.uploadMethod = 'binary';
-  const meio = body.meio;
-  
-  const anexosRequeridosPorMeio = {
-    'DO': ['relatorio_fotografico_do', 'relatorio_exibicoes_do', 'video_diurno_do'],
-    'ME': ['relatorio_enderecos_me', 'fotos_pontos_me'],
-    'MO': ['relatorio_estacoes_mo', 'fotos_videos_mo'],
-    'BD': ['comprovante_bd'],
-    'OD': ['comprovante_od_fl'],
-    'FL': ['comprovante_od_fl'],
-    'MI': ['comprovante_mi'],
-    'AT': ['comprovante_geral'],
-    'CI': ['comprovante_geral'],
-    'IN': ['comprovante_geral'],
-    'JO': ['comprovante_geral'],
-    'RD': ['comprovante_geral'],
-    'RV': ['comprovante_geral'],
-    'TV': ['comprovante_geral'],
-    'TP': ['comprovante_geral']
-  };
-
-  const camposAnexoRequeridos = anexosRequeridosPorMeio[meio];
-
-  if (!meio) {
-    erros.push('Campo Meio não preenchido.');
-  } else if (!camposAnexoRequeridos) {
-    erros.push(`Meio '${meio}' não possui regras de anexo definidas.`);
-  } else {
-    const anexosFaltando = [];
-    
-    camposAnexoRequeridos.forEach(campo => {
-      const temArquivo = Object.keys(binary).some(key => {
-        return key === campo || key.startsWith(campo + '_');
-      });
-      
-      if (!temArquivo) {
-        anexosFaltando.push(campo);
-      }
-    });
-    
-    if (anexosFaltando.length > 0) {
-      erros.push(`Anexos obrigatórios faltando: ${anexosFaltando.join(', ')}`);
-    }
-  }
+// Resposta de Erro
+{
+  "success": false,
+  "message": "Descrição do erro"
 }
-
-item.json.validationResult = erros.length > 0
-  ? { success: false, message: erros.join('; ') }
-  : { success: true, message: 'Validação concluída.' };
-
-return [item];
 ```
 
-**Descrição:** Validação completa de campos e arquivos. Suporta dois métodos de upload:
-- **binary:** Arquivos anexados diretamente (< 500MB)
-- **drive_link:** Link para pasta do Drive já criada (≥ 500MB)
+### Testando Localmente
 
----
+#### 1. Clone o Repositório
+```bash
+git clone https://github.com/phillipebarros-dot/Formulario-Cheking.git
+cd Formulario-Cheking
+```
 
-#### Nó 7: Validação OK?
-**Tipo:** `n8n-nodes-base.if`
-**Condição:**
+#### 2. Teste com Servidor Local
+```bash
+# Python 3
+python -m http.server 8000
+
+# Ou Node.js (http-server)
+npx http-server -p 8000
+```
+
+#### 3. Acesse
+```
+http://localhost:8000
+```
+
+### Depuração
+
+#### Front-end (Console do Navegador)
 ```javascript
-Boolean($json.validationResult?.success) === true
-```
+// Verificar dados antes do envio
+console.log('FormData:', Object.fromEntries(formData));
 
-**Descrição:** Verifica se não houve erros na validação. Caso contrário, retorna erro 400.
-
----
-
-#### Nó 8: Responder Erro
-**Tipo:** `n8n-nodes-base.respondToWebhook`
-**Configuração:**
-```yaml
-respondWith: json
-responseBody: "={{ { \"success\": false, \"message\": $json.validationResult.message || \"Erro na validação.\" } }}"
-options:
-  responseCode: 400
-```
-
-**Descrição:** Retorna mensagem de erro detalhada ao front-end.
-
----
-
-#### Nó 9: É Link do Drive?
-**Tipo:** `n8n-nodes-base.if`
-**Condição:**
-```javascript
-$json.uploadMethod === "drive_link"
-```
-
-**Descrição:** Separa fluxo para uploads via link (≥500MB) vs binários (<500MB).
-
----
-
-### 3️⃣ Rota: Link do Drive (≥500MB)
-
-#### Nó 10: Preparar Log Link
-**Tipo:** `n8n-nodes-base.code`
-**Código:**
-```javascript
-const submissionData = $items('Validar Submissão')[0].json;
-const body = submissionData.body;
-
-return [{
-  json: {
-    n_pi: body.n_pi || 'N/A',
-    cliente: body.cliente || 'N/A',
-    veiculo: body.veiculo || 'N/A',
-    nome: body.nome || 'N/A',
-    email: body.email || 'N/A',
-    telefone: body.telefone || 'N/A',
-    meio: body.meio || 'N/A',
-    observacoes: body.observacoes || '',
-    totalArquivos: 'Via Link Drive',
-    uploadMethod: 'drive_link',
-    webViewLink: body.drive_link || 'Link não fornecido'
-  }
-}];
-```
-
-**Descrição:** Prepara dados para log quando usuário fornece link do Drive.
-
----
-
-### 4️⃣ Rota: Upload Binário (<500MB)
-
-#### Nó 11: Buscar Pasta Cliente
-**Tipo:** `n8n-nodes-base.googleDrive`
-**Operação:** Search
-**Configuração:**
-```yaml
-searchMethod: query
-queryString: "={{ \"name='\" + $items('Validar Submissão')[0].json.body.cliente.trim().toUpperCase() + \"' and mimeType='application/vnd.google-apps.folder' and '1OEL4MtYKd5Tg-ZOmsIRG9RQkvfX-xs_s' in parents and trashed=false\" }}"
-```
-
-**Descrição:** Busca pasta do cliente dentro da pasta raiz "Checkings". O ID `1OEL4MtYKd5Tg-ZOmsIRG9RQkvfX-xs_s` é a pasta raiz.
-
-**Query traduzida:**
-```
-name='NOME_CLIENTE' 
-and mimeType='application/vnd.google-apps.folder' 
-and '1OEL4MtYKd5Tg-ZOmsIRG9RQkvfX-xs_s' in parents 
-and trashed=false
-```
-
----
-
-#### Nó 12: Pasta Cliente Existe?
-**Tipo:** `n8n-nodes-base.if`
-**Condição:**
-```javascript
-$json.id != null
-```
-
-**Descrição:** Verifica se a busca retornou uma pasta. Se não, cria nova pasta.
-
----
-
-#### Nó 13: Criar Pasta Cliente
-**Tipo:** `n8n-nodes-base.googleDrive`
-**Operação:** Create Folder
-**Configuração:**
-```yaml
-name: "={{ $items('Validar Submissão')[0].json.body.cliente.toUpperCase() }}"
-folderId: "1OEL4MtYKd5Tg-ZOmsIRG9RQkvfX-xs_s"  # Pasta raiz Checkings
-```
-
-**Descrição:** Cria pasta com nome do cliente em UPPERCASE dentro da pasta raiz.
-
----
-
-#### Nó 14: Definir ID da Pasta Cliente
-**Tipo:** `n8n-nodes-base.set`
-**Configuração:**
-```yaml
-assignments:
-  - name: clientFolderId
-    value: "={{ $json.id }}"
-    type: string
-```
-
-**Descrição:** Captura o ID da pasta (encontrada ou criada) para usar na próxima etapa.
-
----
-
-#### Nó 15: Criar Pasta PI
-**Tipo:** `n8n-nodes-base.googleDrive`
-**Operação:** Create Folder
-**Configuração:**
-```yaml
-name: "={{ 'PI ' + $items('Validar Submissão')[0].json.body.n_pi + ' - ' + $items('Validar Submissão')[0].json.body.cliente.replace(/[\/\\?%*:|\"<>]/g, '-') + ' - ' + $now.toFormat(\"dd-MM-yyyy HH'h'mm\") }}"
-folderId: "={{ $json.clientFolderId }}"
-```
-
-**Exemplo de nome gerado:**
-```
-PI 182429 - CLIENTE XYZ - 15-10-2025 14h30
-```
-
-**Descrição:** Cria pasta específica da PI dentro da pasta do cliente, com timestamp.
-
----
-
-#### Nó 16: Separar Cada Arquivo
-**Tipo:** `n8n-nodes-base.code`
-**Código:**
-```javascript
-const submissionItem = $items('Validar Submissão')[0];
-const piFolderId = $json.id;
-
-const binary = submissionItem.binary || {};
-const arquivos = [];
-
-let totalArquivos = 0;
-
-for (const key in binary) {
-  totalArquivos++;
-  arquivos.push({
-    json: {
-      ...submissionItem.json,
-      piFolderId: piFolderId,
-      nomeArquivoOriginal: binary[key].fileName || `arquivo_${totalArquivos}`,
-      mimeType: binary[key].mimeType || 'application/octet-stream',
-      totalArquivos: 0
-    },
-    binary: {
-      data: binary[key]
-    }
-  });
-}
-
-// Atualizar total em todos os itens
-arquivos.forEach(item => {
-  item.json.totalArquivos = totalArquivos;
+// Monitorar progresso do upload
+xhr.upload.addEventListener('progress', (e) => {
+  console.log(`Progresso: ${(e.loaded / e.total * 100).toFixed(2)}%`);
 });
-
-return arquivos.length > 0 ? arquivos : [{ json: { erro: 'Nenhum arquivo encontrado' } }];
 ```
 
-**Descrição:** Converte objeto com múltiplos arquivos binários em array de itens individuais para upload paralelo.
+#### Back-end (n8n)
+1. Acesse o workflow no n8n
+2. Ative "Save manual executions"
+3. Execute manualmente com dados de teste
+4. Analise cada nó clicando nele
+5. Verifique logs em "Executions"
 
-**Entrada:**
+### Testes com Dados de Teste
+
+Para evitar criar pastas reais durante testes:
+
+**Opção 1: Desativar Nós de Produção**
+- No n8n, desative temporariamente:
+  - "Criar Pasta Cliente"
+  - "Criar Pasta PI"
+  - "Upload Arquivo no Drive"
+  - "Enviar E-mail Notificação"
+
+**Opção 2: PI de Teste**
+- Crie uma PI específica: `TESTE-999`
+- Adicione um nó IF antes das operações:
 ```javascript
-{
-  binary: {
-    relatorio_fotografico_do: File1,
-    relatorio_exibicoes_do: File2,
-    video_diurno_do: File3
-  }
+if ($json.body.n_pi.startsWith('TESTE-')) {
+  return false; // Para a execução
 }
+return true;
 ```
 
-**Saída:**
-```javascript
-[
-  { json: {...}, binary: { data: File1 } },
-  { json: {...}, binary: { data: File2 } },
-  { json: {...}, binary: { data: File3 } }
-]
+## 🌍 Domínio Personalizado
+
+### Configuração no GitHub Pages
+
+1. **Adicionar Arquivo CNAME**
+```bash
+echo "formschecking.grupoom.com.br" > CNAME
+git add CNAME
+git commit -m "Add custom domain"
+git push
 ```
+
+2. **Configurar DNS**
+```
+Tipo: CNAME
+Nome: formschecking
+Destino: phillipebarros-dot.github.io.
+TTL: 3600
+```
+
+3. **Configurar no GitHub**
+- Vá em: Settings > Pages
+- Em "Custom domain", digite: `formschecking.grupoom.com.br`
+- Marque "Enforce HTTPS"
+
+4. **Atualizar CORS no n8n**
+```bash
+N8N_CORS_ALLOWED_ORIGINS=https://formschecking.grupoom.com.br
+```
+
+### Verificação
+
+```bash
+# Verificar DNS
+nslookup formschecking.grupoom.com.br
+
+# Testar conectividade
+curl -I https://formschecking.grupoom.com.br
+
+# Testar CORS
+curl -X OPTIONS https://n8n.grupoom.com.br/webhook/CheckingForm \
+  -H "Origin: https://formschecking.grupoom.com.br" \
+  -H "Access-Control-Request-Method: POST"
+```
+
+## 🔧 Troubleshooting
+
+### Erro de CORS
+
+**Sintoma:** Console mostra erro "CORS policy"
+
+**Solução:**
+1. Verifique variáveis de ambiente do n8n
+2. Confirme que o domínio está correto
+3. Reinicie o container n8n
+4. Limpe cache do navegador
+
+### PI Não Encontrada
+
+**Sintoma:** Mensagem "PI não encontrada ou inválida"
+
+**Verificações:**
+1. ✅ PI existe na planilha?
+2. ✅ Coluna `N_PI` tem o valor correto?
+3. ✅ Planilha está acessível pelo n8n?
+4. ✅ Credenciais do Google Sheets estão válidas?
+
+### Upload Falha
+
+**Sintoma:** "Erro ao enviar arquivos"
+
+**Verificações:**
+1. ✅ Tamanho total < 500MB?
+2. ✅ Timeout configurado corretamente?
+3. ✅ Pasta raiz do Drive existe?
+4. ✅ Permissões do Google Drive OK?
+5. ✅ Espaço disponível no Drive?
+
+### E-mail Não Enviado
+
+**Sintoma:** Formulário sucesso, mas sem e-mail
+
+**Verificações:**
+1. ✅ Credenciais SMTP corretas?
+2. ✅ Porta 465 liberada no firewall?
+3. ✅ Senha de aplicativo válida?
+4. ✅ E-mail destino correto?
+5. ✅ Verificar logs do n8n
+
+### Campos Não Preenchem
+
+**Sintoma:** Dados da PI não aparecem
+
+**Verificações:**
+1. ✅ Estrutura da planilha correta?
+2. ✅ Nomes das colunas exatos (case-sensitive)?
+3. ✅ Webhook respondendo?
+4. ✅ Console do navegador mostra erros?
+
+## 📞 Suporte
+
+Para dúvidas ou problemas:
+
+1. **Documentação Técnica:** Consulte [WORKFLOW.md](./WORKFLOW.md)
+2. **Issues:** Abra uma issue neste repositório
+3. **E-mail:** phillipe.barros@grupoom.com.br
+
+## 📝 Changelog
+
+### v1.0.0 (2025-01-15)
+- ✨ Lançamento inicial
+- ✅ Auto-preenchimento de PIs
+- ✅ Validação híbrida
+- ✅ Upload automático para Drive
+- ✅ Sistema de notificações
+- ✅ Logs auditáveis
+
+## 📄 Licença
+
+© 2025 OpusMúltipla - Todos os direitos reservados.
 
 ---
 
-#### Nó 17: Upload Arquivo no Drive
-**Tipo:** `n8n-nodes-base.googleDrive`
-**Operação:** Upload
-**Configuração:**
-```yaml
-folderId: "={{ $json.piFolderId }}"
-```
-
-**Descrição:** Faz upload de cada arquivo individualmente na pasta da PI. Executa em paralelo para todos os arquivos.
-
----
-
-#### Nó 18: Aguardar Todos Uploads
-**Tipo:** `n8n-nodes-base.merge`
-**Modo:** Combine All
-**Configuração:**
-```yaml
-mode: combine
-combineBy: combineAll
-```
-
-**Descrição:** Aguarda conclusão de todos os uploads paralelos antes de prosseguir.
-
----
-
-#### Nó 19: Preparar Log Binary
-**Tipo:** `n8n-nodes-base.code`
-**Código:**
-```javascript
-const todosUploads = $input.all();
-const submissionData = $items('Validar Submissão')[0].json.body;
-const pastaPi = $items('Criar Pasta PI')[0].json;
-
-return [{
-  json: {
-    n_pi: submissionData.n_pi || 'N/A',
-    cliente: submissionData.cliente || 'N/A',
-    veiculo: submissionData.veiculo || 'N/A',
-    nome: submissionData.nome || 'N/A',
-    email: submissionData.email || 'N/A',
-    telefone: submissionData.telefone || 'N/A',
-    meio: submissionData.meio || 'N/A',
-    observacoes: submissionData.observacoes || '',
-    totalArquivos: todosUploads.length,
-    uploadMethod: 'binary',
-    webViewLink: pastaPi.webViewLink || 'https://drive.google.com/drive/folders/' + pastaPi.id
-  }
-}];
-```
-
-**Descrição:** Consolida informações de todos os uploads em um único objeto para log.
-
----
-
-### 5️⃣ Unificação e Finalização
-
-#### Nó 20: Unificar Fluxos
-**Tipo:** `n8n-nodes-base.merge`
-**Descrição:** Une os dados vindos do fluxo de link e do fluxo binário em um único fluxo.
-
----
-
-#### Nó 21: Registrar Log no Sheets
-**Tipo:** `n8n-nodes-base.googleSheets`
-**Operação:** Append
-**Configuração:**
-```yaml
-documentId: "1iwUay2RE8k1PumivMbEjuzIyw4CBaktJ2YPsR1iwe_
+**Desenvolvido por:** Grupo OM - Comunicação Integrada
