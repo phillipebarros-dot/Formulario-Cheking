@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+README.md
+DEPLOYMENT_GUIDE.md
+.env.local
+.env.development
+.env.test
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,27 @@
+services:
+  checking-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: checking-opusmultipla
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    networks:
+      - checking-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  checking-network:
+    driver: bridge
